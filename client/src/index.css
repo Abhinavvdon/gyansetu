@@ -7,6 +7,44 @@
     @apply bg-slate-50 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100 antialiased selection:bg-amber-200 selection:text-amber-900 transition-colors duration-200;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+
+  /* Universal input readability: Inputs on light backgrounds MUST always have dark, visible text */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    color: #0f172a !important; /* Slate 900 */
+    caret-color: #0f172a !important;
+  }
+
+  /* When inside dark mode, make sure light-container inputs still stay dark */
+  .dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([class*="bg-slate-800"]):not([class*="bg-slate-900"]):not([class*="bg-[#"]):not([class*="dark:bg-slate-800"]):not([class*="dark:bg-slate-900"]),
+  .dark select:not([class*="bg-slate-800"]):not([class*="bg-slate-900"]),
+  .dark textarea:not([class*="bg-slate-800"]):not([class*="bg-slate-900"]) {
+    color: #0f172a !important;
+    caret-color: #0f172a !important;
+  }
+
+  /* Inputs explicitly placed on dark surfaces */
+  .dark input[class*="bg-slate-800"],
+  .dark input[class*="bg-slate-900"],
+  .dark input[class*="bg-gray-800"],
+  .dark input[class*="bg-gray-900"],
+  .dark textarea[class*="bg-slate-800"],
+  .dark textarea[class*="bg-slate-900"] {
+    color: #f8fafc !important; /* Slate 50 */
+    caret-color: #f8fafc !important;
+  }
+
+  /* Browser autofill styling fix (Prevent faint/invisible text when Chrome/Edge autofills) */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 /* Custom scrollbars for clean dashboards */
@@ -22,7 +60,6 @@
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #334155;

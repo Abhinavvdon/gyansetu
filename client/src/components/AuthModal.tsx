@@ -173,7 +173,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div className="relative w-full max-w-md bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header Ribbon */}
         <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-indigo-600 px-6 py-4 text-white relative">
           <button
@@ -207,7 +207,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <span className="text-slate-400">•</span>
             <span className="text-emerald-600 font-semibold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Port 5434
+              {typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')
+                ? 'Render Cloud DB (Port 5432)'
+                : 'Local Port 5434'}
             </span>
           </div>
           <div className="flex items-center gap-1 text-slate-500 font-medium">
@@ -283,7 +285,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="student@example.com"
-                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-indigo-100"
                   />
                 </div>
               </div>
@@ -305,7 +307,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-indigo-100"
                   />
                   <button
                     type="button"
@@ -360,7 +362,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Aarav Sharma"
-                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-amber-100"
                   />
                 </div>
               </div>
@@ -377,7 +379,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="student@example.com"
-                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-amber-100"
                   />
                 </div>
               </div>
@@ -394,7 +396,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Create a strong password"
-                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-amber-100"
                   />
                   <button
                     type="button"
@@ -433,7 +435,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter password"
-                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                    className="w-full pl-9 pr-10 py-2 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition text-slate-900 bg-white placeholder-slate-400 font-semibold selection:bg-amber-100"
                   />
                   <button
                     type="button"
@@ -465,7 +467,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <span>
                   {lang === 'hi'
                     ? 'आपका पासवर्ड कभी भी सादे टेक्स्ट (Plain Text) में सेव नहीं होगा। यह स्प्रिंग बूट के BCrypt अल्गोरिदम द्वारा हैश होकर PostgreSQL में स्टोर होता है।'
-                    : 'Your password is never stored in plain text. It is encrypted via Spring Boot BCrypt and stored in your local PostgreSQL database.'}
+                    : 'Your password is never stored in plain text. It is encrypted via Spring Boot BCrypt and stored securely in your PostgreSQL database.'}
                 </span>
               </div>
 
