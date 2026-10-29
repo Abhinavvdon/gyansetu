@@ -4,9 +4,9 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/client
 
-# Copy dependency manifests first for optimal Docker layer caching
+# Copy dependency manifests (package.json and package-lock.json)
 COPY client/package*.json ./
-RUN npm ci || npm install
+RUN npm ci
 
 # Copy source and build production bundle
 COPY client/ ./
@@ -40,18 +40,19 @@ WORKDIR /app
 # Install curl for container health checks
 RUN apk add --no-cache curl
 
-# Security: Run as unprivileged non-root user
-RUN addgroup -S gyansetu && adduser -S gyansetu -G gyansetu
+# Security: Set up non-root user and ensure directory ownership
+RUN addgroup -S gyansetu && adduser -S gyansetu -G gyansetu && \
+    mkdir -p /app && chown -R gyansetu:gyansetu /app
+
 USER gyansetu:gyansetu
 
-# Copy built application JAR
-COPY --from=backend-builder /app/server/target/gyansetu-backend-*.jar app.jar
+# Copy built application JAR with non-root ownership
+COPY --chown=gyansetu:gyansetu --from=backend-builder /app/server/target/gyansetu-backend-*.jar /app/app.jar
 
-# Render assigns dynamic port via $PORT (defaults to 10000 on Render)
+# Render dynamic port binding (defaults to 10000 on Render)
 ENV PORT=10000
 EXPOSE ${PORT}
 
 # Tuned for Render Free Tier (512MB RAM constraints):
-# - Container-aware memory sizing (75% of container RAM allocated to JVM heap)
-# - Fast non-blocking entropy source
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+# Uses sh -c to ensure $PORT is evaluated at startup
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-10000} -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar"]

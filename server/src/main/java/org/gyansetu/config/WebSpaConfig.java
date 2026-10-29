@@ -27,8 +27,8 @@ public class WebSpaConfig implements WebMvcConfigurer {
                 .addResolver(new PathResourceResolver() {
                     @Override
                     protected Resource getResource(@NonNull String resourcePath, @NonNull Resource location) throws IOException {
-                        // Bypass REST API and monitoring routes
-                        if (resourcePath.startsWith("api") || resourcePath.startsWith("actuator")) {
+                        // Bypass REST API, actuator, and healthcheck routes
+                        if (resourcePath.startsWith("api") || resourcePath.startsWith("actuator") || resourcePath.equals("health")) {
                             return null;
                         }
 
