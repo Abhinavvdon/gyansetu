@@ -62,9 +62,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const govtExamsCount = opportunities.filter((o) => o.type === 'GOVT_EXAM').length;
   const higherStudiesCount = opportunities.filter((o) => o.type === 'HIGHER_STUDIES').length;
 
-  // Recommended opportunities (top matches based on confidence score)
+  // Recommended opportunities (curated top matches across categories)
   const reportMap = new Map(eligibilityReports.map((r) => [r.opportunityId, r]));
-  const recommendedOpps = opportunities.slice(0, 4);
+  
+  const topScholarship = opportunities.find((o) => o.id === 'reliance_foundation') || opportunities.find((o) => o.type === 'SCHOLARSHIP') || opportunities[0];
+  const topGovt = opportunities.find((o) => o.id === 'ssc_cgl_2027') || opportunities.find((o) => o.type === 'GOVT_EXAM') || opportunities[1];
+  const topHigherEd = opportunities.find((o) => o.id === 'gate_2027') || opportunities.find((o) => o.type === 'HIGHER_STUDIES') || opportunities[2];
+  const secondScholarshipOrGovt = opportunities.find((o) => o.id === 'post_matric_sc') || opportunities.find((o) => o.id === 'rrb_ntpc_2027') || opportunities[3];
+
+  const recommendedOpps = [topScholarship, topGovt, topHigherEd, secondScholarshipOrGovt].filter(Boolean);
 
   return (
     <div className="space-y-7 pb-10">
@@ -244,8 +250,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         lang={lang}
       />
 
-      {/* 4. Bottom Split Section: Recommended For You + Quick Actions (matching screenshot) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* 4. Bottom Split Section: Recommended For You + Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Left Column: Recommended for you (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
           <div>
@@ -253,11 +259,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               {lang === 'hi' ? 'आपके लिए अनुशंसित' : 'Recommended for you'}
             </h3>
             <p className="text-xs text-slate-400 font-medium">
-              {lang === 'hi' ? 'पात्रता और समय-सीमा के अनुसार चुनिंदा अवसर' : 'Sample opportunities to explore'}
+              {lang === 'hi' ? 'पात्रता और समय-सीमा के अनुसार चुनिंदा अवसर' : 'Sample opportunities to explore based on your profile'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5 sm:gap-5">
             {recommendedOpps.map((opp) => {
               const rep = reportMap.get(opp.id);
               const isSaved = profile.savedOpportunityIds.includes(opp.id);
@@ -266,9 +272,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               return (
                 <div
                   key={opp.id}
-                  className="bg-white rounded-2xl border border-slate-200/80 p-4.5 hover:shadow-sm hover:border-[#5034df]/40 transition-all flex flex-col justify-between space-y-3 relative group"
+                  className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-5.5 hover:shadow-md hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-4 relative group"
                 >
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <span
                         className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
@@ -282,65 +288,79 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         {opp.type === 'SCHOLARSHIP'
                           ? 'Scholarships'
                           : opp.type === 'GOVT_EXAM'
-                          ? 'Govt Exams'
+                          ? 'Govt Schemes'
                           : 'Higher Studies'}
                       </span>
 
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-[#5034df] bg-[#ece8ff] px-2 py-0.5 rounded-md">
+                          {confidenceScore}% {lang === 'hi' ? 'मैच' : 'Match'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleSave(opp.id);
+                          }}
+                          className={`cursor-pointer p-1.5 rounded-lg transition ${
+                            isSaved
+                              ? 'text-amber-600 bg-amber-50'
+                              : 'text-slate-300 hover:text-slate-600 hover:bg-slate-100'
+                          }`}
+                          title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
+                        >
+                          <Bookmark className="w-4 h-4 fill-current" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#5034df] transition line-clamp-2 leading-snug">
+                        {opp.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 font-medium mt-1 line-clamp-1">
+                        {opp.organization}
+                      </p>
+                    </div>
+
+                    {opp.benefitsOrSalary && (
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-700">
+                        <span className="text-emerald-600 font-bold">●</span>
+                        <span className="line-clamp-1">{opp.benefitsOrSalary}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-3 pt-3 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                        <Clock className="w-3.5 h-3.5 text-amber-500" />
+                        <span className="font-medium">{opp.applicationDeadline}</span>
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-medium">
+                        {lang === 'hi' ? 'अंतिम तिथि' : 'Deadline'}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggleSave(opp.id);
-                        }}
-                        className={`cursor-pointer p-1 rounded-full transition ${
-                          isSaved
-                            ? 'text-amber-600 bg-amber-50'
-                            : 'text-slate-300 hover:text-slate-600 hover:bg-slate-100'
-                        }`}
-                        title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
+                        onClick={() => onInspectOpportunity(opp.id)}
+                        className="cursor-pointer flex-1 py-2 px-3 rounded-xl bg-slate-50 hover:bg-[#ece8ff] text-slate-700 hover:text-[#5034df] font-bold text-xs transition text-center border border-slate-200/60 hover:border-[#5034df]/30"
                       >
-                        <Bookmark className="w-4 h-4 fill-current" />
+                        {lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
                       </button>
+
+                      <a
+                        href={opp.officialUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="cursor-pointer p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition"
+                        title="Open official portal"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
                     </div>
-
-                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#5034df] transition line-clamp-2">
-                      {opp.title}
-                    </h4>
-
-                    <p className="text-[11px] text-slate-500 font-medium line-clamp-1">
-                      {opp.organization}
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-600 text-[11px]">
-                      <Clock className="w-3.5 h-3.5 text-amber-500" />
-                      <span>{opp.applicationDeadline}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1 font-bold text-[#5034df] text-xs">
-                      <span>{confidenceScore}% Match</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => onInspectOpportunity(opp.id)}
-                      className="cursor-pointer flex-1 py-1.5 px-3 rounded-xl bg-slate-50 hover:bg-[#ece8ff] text-slate-700 hover:text-[#5034df] font-semibold text-xs transition text-center"
-                    >
-                      {lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
-                    </button>
-
-                    <a
-                      href={opp.officialUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="cursor-pointer p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition"
-                      title="Open official portal"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
                   </div>
                 </div>
               );
@@ -348,28 +368,37 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Quick actions (matching screenshot bottom-right) (4 cols) */}
+        {/* Right Column: Quick actions (4 cols) shifted downwards with matching outer header */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-extrabold text-slate-900 tracking-tight">
-                {lang === 'hi' ? 'त्वरित कार्य' : 'Quick actions'}
-              </h3>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                GET STARTED
+          <div>
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+              {lang === 'hi' ? 'त्वरित कार्य' : 'Quick actions'}
+            </h3>
+            <p className="text-xs text-slate-400 font-medium">
+              {lang === 'hi' ? 'शुरुआत करने के लिए शॉर्टकट' : 'Shortcuts to get started fast'}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-5.5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                {lang === 'hi' ? 'प्लेटफॉर्म टूल्स' : 'Platform Tools'}
+              </span>
+              <span className="text-[10px] font-bold text-[#5034df] bg-[#ece8ff] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                Get Started
               </span>
             </div>
 
-            {/* Quick Action Buttons Grid (matching screenshot) */}
+            {/* Quick Action Buttons Grid */}
             <div className="grid grid-cols-3 gap-2.5">
               {/* Action 1: Find matches */}
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/70 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#f0edff] flex items-center justify-center text-[#5034df] group-hover:scale-105 transition-transform">
-                  <Search className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-[#f0edff] flex items-center justify-center text-[#5034df] group-hover:scale-105 transition-transform">
+                  <Search className="w-4.5 h-4.5" />
                 </div>
                 <span className="text-[11px] font-bold text-slate-700 leading-tight">
                   {lang === 'hi' ? 'मैच खोजें' : 'Find matches'}
@@ -380,10 +409,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/70 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
               >
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-105 transition-transform">
-                  <Calendar className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-105 transition-transform">
+                  <Calendar className="w-4.5 h-4.5" />
                 </div>
                 <span className="text-[11px] font-bold text-slate-700 leading-tight">
                   {lang === 'hi' ? 'समय-सारिणी' : 'Plan deadlines'}
@@ -394,10 +423,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/70 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
               >
-                <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-105 transition-transform">
-                  <SlidersHorizontal className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-105 transition-transform">
+                  <SlidersHorizontal className="w-4.5 h-4.5" />
                 </div>
                 <span className="text-[11px] font-bold text-slate-700 leading-tight">
                   {lang === 'hi' ? 'सिम्युलेटर' : 'What-if simulator'}
@@ -406,13 +435,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
 
             {/* Additional Feature Shortcuts */}
-            <div className="pt-2 border-t border-slate-100 space-y-2">
+            <div className="pt-2 border-t border-slate-100 space-y-2.5">
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}
-                className="cursor-pointer w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
+                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <FileCheck2 className="w-4 h-4 text-emerald-600" />
                   <span>{lang === 'hi' ? 'दस्तावेज़ तत्परता जांचें' : 'Document Readiness Check'}</span>
                 </div>
@@ -422,9 +451,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('trust and scams')}
-                className="cursor-pointer w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
+                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <ShieldCheck className="w-4 h-4 text-[#5034df]" />
                   <span>{lang === 'hi' ? 'सत्यापित नोटिस व फ्रॉड अलर्ट' : 'Verified Notice & Scam Radar'}</span>
                 </div>
