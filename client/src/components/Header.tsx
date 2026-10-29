@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-[#5034df] text-white shadow-xs'
               : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
           }`}
-          title="Family & Parent Mode in Hindi"
+          title={lang === 'hi' ? 'परिवार व अभिभावक मार्गदर्शन मोड' : 'Family & Parent Guidance Mode'}
         >
           <Users className="w-3.5 h-3.5" />
           <span className="hidden md:inline">

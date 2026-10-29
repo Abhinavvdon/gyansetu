@@ -217,10 +217,12 @@ export function App() {
   };
 
   const toggleParentMode = () => {
-    setIsParentMode(!isParentMode);
-    if (!isParentMode) {
+    const nextState = !isParentMode;
+    setIsParentMode(nextState);
+    if (nextState) {
       setActiveTab('family');
-      setLang('hi');
+    } else {
+      setActiveTab('home');
     }
   };
 
@@ -732,8 +734,16 @@ export function App() {
           {activeTab === 'family' && (
             <FamilyModeView
               profile={profile}
+              currentUser={currentUser}
+              opportunities={opportunities}
               digest={digest}
               costPlan={costPlan}
+              lang={lang}
+              onToggleLanguage={toggleLanguage}
+              onNavigateTab={(t) => {
+                setActiveTab(t);
+                if (t !== 'family') setIsParentMode(false);
+              }}
             />
           )}
         </main>
