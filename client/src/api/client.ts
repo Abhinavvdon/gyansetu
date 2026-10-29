@@ -733,6 +733,23 @@ export const GyanSetuApi = {
     }
   },
 
+  resetOpportunityCatalog: async (): Promise<{
+    success: boolean;
+    total?: number;
+    message?: string;
+    error?: string;
+  }> => {
+    try {
+      const res = await api.post('/opportunities/reset-catalog');
+      return res.data;
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || 'Failed to reset catalog.'
+      };
+    }
+  },
+
   // Eligibility
   getEligibilityReports: async (): Promise<EligibilityReport[]> => {
     try {

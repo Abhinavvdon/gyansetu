@@ -95,6 +95,24 @@ public class GeminiOpportunityController {
         }
     }
 
+    @PostMapping("/reset-catalog")
+    public ResponseEntity<Map<String, Object>> resetOpportunityCatalog() {
+        repository.resetCatalog();
+        Map<String, Opportunity> map = repository.getOpportunities();
+        long scholarships = map.values().stream().filter(o -> o.getType() == OpportunityType.SCHOLARSHIP).count();
+        long govtExams = map.values().stream().filter(o -> o.getType() == OpportunityType.GOVT_EXAM).count();
+        long higherEd = map.values().stream().filter(o -> o.getType() == OpportunityType.HIGHER_STUDIES).count();
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("message", "Catalog successfully reset to pristine 51 verified opportunities.");
+        resp.put("total", map.size());
+        resp.put("scholarships", scholarships);
+        resp.put("govtExams", govtExams);
+        resp.put("higherStudies", higherEd);
+        return ResponseEntity.ok(resp);
+    }
+
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getOpportunityCatalogStats() {
         Map<String, Opportunity> map = repository.getOpportunities();

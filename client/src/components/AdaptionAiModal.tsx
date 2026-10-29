@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ShieldCheck,
   RefreshCw,
+  RotateCcw,
   Sparkles,
   Key,
   Eye,
@@ -152,6 +153,31 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
     };
 
     reader.readAsText(file);
+  };
+
+  const handleResetCatalog = async () => {
+    setError(null);
+    setIsProcessing(true);
+    setStatusMessage(lang === 'hi' ? 'कैटलॉग को रीसेट किया जा रहा है...' : 'Resetting catalog to 51 clean verified opportunities...');
+
+    try {
+      const res = await GyanSetuApi.resetOpportunityCatalog();
+      if (res.success) {
+        const opps = await GyanSetuApi.getOpportunities();
+        onOpportunitiesAdded(opps);
+        setImportedOpps([]);
+        setStatusMessage(lang === 'hi' ? 'कैटलॉग सफलतापूर्वक रीसेट हुआ!' : 'Catalog successfully reset to clean 51 opportunities!');
+        setTimeout(() => {
+          onClose();
+        }, 800);
+      } else {
+        setError(res.error || 'Failed to reset catalog.');
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Error resetting catalog.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleGeminiGenerate = async (e: React.FormEvent) => {
@@ -485,6 +511,23 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
                     </div>
                   </form>
                 </details>
+              </div>
+
+              {/* Emergency Clean / Reset to 51 Verified button */}
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  {lang === 'hi' ? 'गलत आयात साफ़ करें या मूल डेटा बहाल करें:' : 'Clear malformed records & restore authentic catalog:'}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResetCatalog}
+                  disabled={isProcessing}
+                  className="cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-[11px] font-bold transition disabled:opacity-50 shrink-0"
+                  title="Wipe any malformed records and restore clean 51 verified opportunities"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>{lang === 'hi' ? 'मूल 51 अवसर रीसेट करें' : 'Reset to 51 Clean Opportunities'}</span>
+                </button>
               </div>
 
               {/* Processing Spinner */}

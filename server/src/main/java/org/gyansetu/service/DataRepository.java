@@ -499,6 +499,12 @@ public class DataRepository {
         peerStories.add(story3);
     }
 
+    public synchronized void resetCatalog() {
+        opportunities.clear();
+        seedOpportunities();
+        loadFiftyDataset();
+    }
+
     public StudentProfile getDefaultProfile() { return defaultProfile; }
     public Map<String, Opportunity> getOpportunities() { return opportunities; }
     public List<DocumentItem> getDefaultDocuments() { return defaultDocuments; }
