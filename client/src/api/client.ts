@@ -28,6 +28,19 @@ const api = axios.create({
   timeout: 3000,
 });
 
+api.interceptors.request.use((config) => {
+  try {
+    const rawUser = localStorage.getItem('gyansetu_user');
+    if (rawUser) {
+      const user = JSON.parse(rawUser);
+      if (user && user.id) {
+        config.headers['X-User-Id'] = String(user.id);
+      }
+    }
+  } catch {}
+  return config;
+});
+
 // Seed data for standalone client fallback
 let mockProfile: StudentProfile = {
   id: 'student_default',
@@ -1020,18 +1033,21 @@ export const GyanSetuApi = {
   },
 
   // Documents
-  getDocuments: async (): Promise<DocumentItem[]> => {
+  getDocuments: async (userId?: number): Promise<DocumentItem[]> => {
     try {
-      const res = await api.get('/documents');
+      const params = userId ? { userId } : undefined;
+      const res = await api.get('/documents', { params });
       return res.data;
     } catch {
       return mockDocuments;
     }
   },
 
-  updateDocumentStatus: async (id: string, status: 'READY' | 'IN_PROGRESS' | 'MISSING'): Promise<DocumentItem> => {
+  updateDocumentStatus: async (id: string, status: 'READY' | 'IN_PROGRESS' | 'MISSING', userId?: number): Promise<DocumentItem> => {
     try {
-      const res = await api.patch(`/documents/${id}/status`, null, { params: { status } });
+      const params: Record<string, any> = { status };
+      if (userId) params.userId = userId;
+      const res = await api.patch(`/documents/${id}/status`, null, { params });
       return res.data;
     } catch {
       const doc = mockDocuments.find(d => d.id === id);

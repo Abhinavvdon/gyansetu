@@ -212,10 +212,16 @@ export function App() {
   };
 
   const handleUpdateDocumentStatus = async (id: string, status: 'READY' | 'IN_PROGRESS' | 'MISSING') => {
-    await GyanSetuApi.updateDocumentStatus(id, status);
-    setDocuments((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, status } : d))
-    );
+    const updated = await GyanSetuApi.updateDocumentStatus(id, status, user?.id);
+    if (updated) {
+      setDocuments((prev) =>
+        prev.map((d) => (d.id === id ? updated : d))
+      );
+    } else {
+      setDocuments((prev) =>
+        prev.map((d) => (d.id === id ? { ...d, status } : d))
+      );
+    }
   };
 
   const handleRefreshOverlap = async (examIds: string[]) => {

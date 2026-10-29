@@ -158,13 +158,21 @@ public class GyanSetuApiController {
 
     // --- 7. DOCUMENT READINESS CHECKER API ---
     @GetMapping("/documents")
-    public ResponseEntity<List<DocumentItem>> getDocuments() {
-        return ResponseEntity.ok(documentService.getReadinessChecklist(repository.getDefaultProfile()));
+    public ResponseEntity<List<DocumentItem>> getDocuments(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(documentService.getReadinessChecklist(effUserId));
     }
 
     @PatchMapping("/documents/{id}/status")
-    public ResponseEntity<DocumentItem> updateDocStatus(@PathVariable String id, @RequestParam String status) {
-        DocumentItem updated = documentService.updateStatus(id, status);
+    public ResponseEntity<DocumentItem> updateDocStatus(
+            @PathVariable String id,
+            @RequestParam String status,
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        DocumentItem updated = documentService.updateStatus(effUserId, id, status);
         if (updated == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updated);
     }
