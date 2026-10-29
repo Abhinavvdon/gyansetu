@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Sidebar } from './components/Sidebar';
 import type { MainNavTab } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -8,20 +8,29 @@ import { ProfileDrawer } from './components/ProfileDrawer';
 import { DiscoveryView } from './components/DiscoveryView';
 import { EligibilityEngineView } from './components/EligibilityEngineView';
 import { SmartPlannerView } from './components/SmartPlannerView';
-import { PreparationOverlapView } from './components/PreparationOverlapView';
-import { WhatIfSimulatorView } from './components/WhatIfSimulatorView';
-import { DocumentReadinessView } from './components/DocumentReadinessView';
 import { NotificationTrackerView } from './components/NotificationTrackerView';
 import { GapAnalysisView } from './components/GapAnalysisView';
 import { EligibilityTimelineView } from './components/EligibilityTimelineView';
-import { CostAndClashView } from './components/CostAndClashView';
-import { ScamAndTrustView } from './components/ScamAndTrustView';
-import { PeerSuccessView } from './components/PeerSuccessView';
-import { FamilyModeView } from './components/FamilyModeView';
-import { WeeklyDigestModal } from './components/WeeklyDigestModal';
-import { AuthModal } from './components/AuthModal';
-import { StudyChatbot } from './components/StudyChatbot';
-import { AdaptionAiModal } from './components/AdaptionAiModal';
+import { DocumentReadinessView } from './components/DocumentReadinessView';
+
+// Code-split heavy views & modals for optimal bundle size
+const PreparationOverlapView = lazy(() => import('./components/PreparationOverlapView').then(m => ({ default: m.PreparationOverlapView })));
+const WhatIfSimulatorView = lazy(() => import('./components/WhatIfSimulatorView').then(m => ({ default: m.WhatIfSimulatorView })));
+const CostAndClashView = lazy(() => import('./components/CostAndClashView').then(m => ({ default: m.CostAndClashView })));
+const ScamAndTrustView = lazy(() => import('./components/ScamAndTrustView').then(m => ({ default: m.ScamAndTrustView })));
+const PeerSuccessView = lazy(() => import('./components/PeerSuccessView').then(m => ({ default: m.PeerSuccessView })));
+const FamilyModeView = lazy(() => import('./components/FamilyModeView').then(m => ({ default: m.FamilyModeView })));
+const WeeklyDigestModal = lazy(() => import('./components/WeeklyDigestModal').then(m => ({ default: m.WeeklyDigestModal })));
+const AuthModal = lazy(() => import('./components/AuthModal').then(m => ({ default: m.AuthModal })));
+const StudyChatbot = lazy(() => import('./components/StudyChatbot').then(m => ({ default: m.StudyChatbot })));
+const AdaptionAiModal = lazy(() => import('./components/AdaptionAiModal').then(m => ({ default: m.AdaptionAiModal })));
+
+const ViewLoadingFallback = () => (
+  <div className="flex flex-col items-center justify-center min-h-[220px] text-slate-400 gap-2">
+    <div className="w-6 h-6 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></div>
+    <span className="text-xs font-medium">Loading view...</span>
+  </div>
+);
 
 import type {
   StudentProfile,
@@ -450,8 +459,9 @@ export function App() {
           )}
 
           {/* VIEW 0: HOME / DASHBOARD OVERVIEW (Matching Screenshot) */}
-          {activeTab === 'home' && (
-            <DashboardOverview
+          <Suspense fallback={<ViewLoadingFallback />}>
+            {activeTab === 'home' && (
+              <DashboardOverview
               opportunities={searchFilteredOpportunities}
               eligibilityReports={eligibilityReports}
               profile={profile}
@@ -823,6 +833,7 @@ export function App() {
               }}
             />
           )}
+          </Suspense>
         </main>
       </div>
 
@@ -835,33 +846,35 @@ export function App() {
         lang={lang}
       />
 
-      {/* Weekly Action Digest Modal */}
-      <WeeklyDigestModal
-        isOpen={isDigestOpen}
-        onClose={() => setIsDigestOpen(false)}
-        digest={digest}
-        lang={lang}
-      />
+      <Suspense fallback={null}>
+        {/* Weekly Action Digest Modal */}
+        <WeeklyDigestModal
+          isOpen={isDigestOpen}
+          onClose={() => setIsDigestOpen(false)}
+          digest={digest}
+          lang={lang}
+        />
 
-      {/* GyanSetu Study Timetable & Scheduling AI Chatbot (Bottom-Right) */}
-      <StudyChatbot lang={lang} profile={profile} />
+        {/* GyanSetu Study Timetable & Scheduling AI Chatbot (Bottom-Right) */}
+        <StudyChatbot lang={lang} profile={profile} />
 
-      {/* Authentication Modal (PostgreSQL & BCrypt) */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onAuthSuccess={handleAuthSuccess}
-        initialMode={authModalMode}
-        lang={lang}
-      />
+        {/* Authentication Modal (PostgreSQL & BCrypt) */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onAuthSuccess={handleAuthSuccess}
+          initialMode={authModalMode}
+          lang={lang}
+        />
 
-      {/* Adaption AI Dataset Importer Modal */}
-      <AdaptionAiModal
-        isOpen={isGeminiModalOpen}
-        onClose={() => setIsGeminiModalOpen(false)}
-        onOpportunitiesAdded={handleOpportunitiesAdded}
-        lang={lang}
-      />
+        {/* Adaption AI Dataset Importer Modal */}
+        <AdaptionAiModal
+          isOpen={isGeminiModalOpen}
+          onClose={() => setIsGeminiModalOpen(false)}
+          onOpportunitiesAdded={handleOpportunitiesAdded}
+          lang={lang}
+        />
+      </Suspense>
     </div>
   );
 }
