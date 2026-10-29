@@ -6,12 +6,28 @@ export interface StudentProfile {
   id: string;
   fullName: string;
   educationLevel: string;
+  
+  // Already Pursued (Completed Education)
+  alreadyPursuedLevel?: '10th' | '12th' | 'Diploma' | 'UG' | 'PG' | 'PhD' | string;
+  alreadyPursuedStream?: string;
+  alreadyPursuedCourse?: string;
+  tenthMarksPercent: number;
+  twelfthMarksPercent: number;
+  diplomaMarksPercent?: number;
+  ugMarksPercent: number;
+  pgMarksPercent?: number;
+  phdStatus?: string;
+
+  // Currently Pursuing (Ongoing Education)
+  currentlyPursuingLevel?: 'None' | '10th' | '12th' | 'Diploma' | 'UG' | 'PG' | 'PhD' | string;
+  currentlyPursuingCourse?: string;
+  currentlyPursuingYear?: number;
+  currentlyPursuingStream?: string;
+  currentCgpaOrAggregate?: number;
+
   currentDegree: string;
   currentYear: number;
   stream: string;
-  tenthMarksPercent: number;
-  twelfthMarksPercent: number;
-  ugMarksPercent: number;
   category: 'General' | 'OBC-NCL' | 'SC' | 'ST' | 'EWS' | 'PwD';
   annualFamilyIncome: number;
   stateDomicile: string;

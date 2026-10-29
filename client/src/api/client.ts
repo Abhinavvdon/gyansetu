@@ -31,19 +31,29 @@ const api = axios.create({
 // Seed data for standalone client fallback
 let mockProfile: StudentProfile = {
   id: 'student_default',
-  fullName: 'Aarav Sharma',
+  fullName: 'Abhinav Dongre',
   educationLevel: 'UG Pursuing',
-  currentDegree: 'B.Tech Computer Science',
+  alreadyPursuedLevel: '12th',
+  alreadyPursuedStream: 'Science PCM',
+  alreadyPursuedCourse: '',
+  diplomaMarksPercent: 0,
+  pgMarksPercent: 0,
+  currentlyPursuingLevel: 'UG',
+  currentlyPursuingCourse: 'B.Tech Electronics and Telecommunication',
+  currentlyPursuingYear: 3,
+  currentlyPursuingStream: 'Engineering / Technology',
+  currentCgpaOrAggregate: 0,
+  currentDegree: 'B.Tech Electronics and Telecommunication',
   currentYear: 3,
   stream: 'Engineering / Technology',
-  tenthMarksPercent: 88.5,
-  twelfthMarksPercent: 84.0,
-  ugMarksPercent: 74.2,
+  tenthMarksPercent: 96.0,
+  twelfthMarksPercent: 73.0,
+  ugMarksPercent: 0.0,
   category: 'OBC-NCL',
-  annualFamilyIncome: 240000.0,
+  annualFamilyIncome: 700000.0,
   stateDomicile: 'Madhya Pradesh',
-  dateOfBirth: '2004-03-12',
-  age: 22,
+  dateOfBirth: '2006-03-12',
+  age: 20,
   gender: 'Male',
   careerGoals: [
     'Govt Jobs (SSC / UPSC / State PSC)',
@@ -1265,6 +1275,8 @@ function evaluateEligibilityMock(profile: StudentProfile): EligibilityReport[] {
     if (opp.minGraduationMarksPercent > 0) {
       if (profile.ugMarksPercent >= opp.minGraduationMarksPercent) {
         reasons.push(`Graduation Marks met: You have ${profile.ugMarksPercent}% (Required: ${opp.minGraduationMarksPercent}%).`);
+      } else if (profile.ugMarksPercent === 0 && (profile.currentlyPursuingLevel === 'UG' || profile.educationLevel?.includes('Pursuing') || (profile.currentlyPursuingYear && profile.currentlyPursuingYear >= 3))) {
+        reasons.push(`Final Year Appearing Student: Currently enrolled in UG (${profile.currentlyPursuingCourse || profile.currentDegree}). Final-year appearing students are eligible to apply.`);
       } else {
         missing.push(`Graduation Marks gap: Minimum required is ${opp.minGraduationMarksPercent}% (You have ${profile.ugMarksPercent}%).`);
         score -= 35;
