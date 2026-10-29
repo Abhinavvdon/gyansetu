@@ -206,8 +206,8 @@ export function App() {
     return (
       <div className="min-h-screen bg-[#f8f9fc] flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#5034df] to-[#7f5af0] flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-[#5034df]/20 mx-auto animate-bounce">
-            🎓
+          <div className="w-16 h-16 rounded-3xl bg-white border border-[#ede9fe] flex items-center justify-center p-2.5 shadow-lg shadow-[#5034df]/15 mx-auto animate-bounce">
+            <img src="/logo-icon.png" alt="GyanSetu Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">

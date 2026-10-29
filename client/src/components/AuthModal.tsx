@@ -182,9 +182,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           >
             <X className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-lg font-black">
-              🎓
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-white/20 p-1.5 flex items-center justify-center shadow-xs">
+              <img src="/logo-icon.png" alt="GyanSetu" className="w-full h-full object-contain filter brightness-125" />
             </div>
             <div>
               <h2 className="text-lg font-black tracking-tight">

@@ -105,10 +105,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           </div>
 
-          {/* Right Hero Graphic (matching screenshot) */}
+          {/* Right Hero Graphic */}
           <div className="hidden lg:flex items-center gap-4 pr-6 shrink-0">
-            <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-inner">
-              <GraduationCap className="w-10 h-10 text-white" />
+            <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center p-3 shadow-inner">
+              <img src="/logo-icon.png" alt="GyanSetu Symbol" className="w-full h-full object-contain filter drop-shadow brightness-125" />
             </div>
             <div className="text-left">
               <div className="text-base font-extrabold text-white tracking-tight leading-tight">

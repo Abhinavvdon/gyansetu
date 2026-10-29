@@ -116,11 +116,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div className="p-5 pb-4 border-b border-slate-100 flex items-center justify-between">
         <div
-          onClick={() => setActiveTab('Scholarship')}
+          onClick={() => setActiveTab('home')}
           className="cursor-pointer flex items-center gap-3 group"
+          title="GyanSetu Overview Dashboard"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#5034df] to-[#7956f5] flex items-center justify-center text-white shadow-md shadow-[#5034df]/25 group-hover:scale-105 transition-transform">
-            <GraduationCap className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-2xl bg-[#f5f3ff] border border-[#ede9fe] flex items-center justify-center p-1.5 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+            <img src="/logo-icon.png" alt="GyanSetu Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
