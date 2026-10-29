@@ -20,6 +20,7 @@ import { PeerSuccessView } from './components/PeerSuccessView';
 import { FamilyModeView } from './components/FamilyModeView';
 import { WeeklyDigestModal } from './components/WeeklyDigestModal';
 import { AuthModal } from './components/AuthModal';
+import { StudyChatbot } from './components/StudyChatbot';
 
 import type {
   StudentProfile,
@@ -754,6 +755,9 @@ export function App() {
         digest={digest}
         lang={lang}
       />
+
+      {/* GyanSetu Study Timetable & Scheduling AI Chatbot (Bottom-Right) */}
+      <StudyChatbot lang={lang} profile={profile} />
 
       {/* Authentication Modal (PostgreSQL & BCrypt) */}
       <AuthModal
