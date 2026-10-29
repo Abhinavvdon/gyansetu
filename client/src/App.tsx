@@ -226,6 +226,10 @@ export function App() {
     }
   };
 
+  const toggleLanguage = () => {
+    setLang((prev) => (prev === 'en' ? 'hi' : 'en'));
+  };
+
   if (loading || !profile || !digest || !costPlan) {
     return (
       <div className="min-h-screen bg-[#f8f9fc] flex items-center justify-center">
@@ -320,7 +324,7 @@ export function App() {
           isParentMode={isParentMode}
           toggleParentMode={toggleParentMode}
           lang={lang}
-          toggleLanguage={() => setLang(lang === 'en' ? 'hi' : 'en')}
+          toggleLanguage={toggleLanguage}
         />
 
         {/* Workspace Body */}
