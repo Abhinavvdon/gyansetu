@@ -21,6 +21,7 @@ import {
 import type { Opportunity, StudentProfile, EligibilityReport, User } from '../types';
 import type { MainNavTab } from './Sidebar';
 import { PriorityBarGraph } from './PriorityBarGraph';
+import { formatStudentName } from '../utils/languageUtils';
 
 interface DashboardOverviewProps {
   opportunities: Opportunity[];
@@ -51,11 +52,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     return lang === 'hi' ? 'शुभ संध्या' : 'Good evening';
   };
 
-  const studentName = currentUser?.name
+  const rawStudentName = currentUser?.name
     ? currentUser.name.split(' ')[0]
     : profile.fullName
     ? profile.fullName.split(' ')[0]
     : 'Student';
+
+  const studentName = formatStudentName(rawStudentName, lang);
 
   // Counts
   const scholarshipCount = opportunities.filter((o) => o.type === 'SCHOLARSHIP').length;
@@ -119,10 +122,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
             <div className="text-left">
               <div className="text-base font-extrabold text-white tracking-tight leading-tight">
-                Dream big.
+                {lang === 'hi' ? 'बड़ा सोचें।' : 'Dream big.'}
               </div>
               <div className="text-sm font-semibold text-indigo-200 leading-tight">
-                Plan smart.
+                {lang === 'hi' ? 'सही योजना बनाएं।' : 'Plan smart.'}
               </div>
             </div>
           </div>
@@ -134,11 +137,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
-              {lang === 'hi' ? 'आपकी अवसरों की रूपरेखा' : 'Your opportunity overview'}
+              {lang === 'hi' ? 'आपके अवसरों की रूपरेखा' : 'Your opportunity overview'}
             </h3>
             <p className="text-xs text-slate-400 font-medium">
               {lang === 'hi'
-                ? 'आपकी योग्यता और प्रोफाइल के आधार पर एक समग्र दृष्टिकोण।'
+                ? 'आपकी योग्यता और प्रोफ़ाइल के आधार पर एक समग्र दृष्टिकोण।'
                 : 'A smarter view of what is possible for you.'}
             </p>
           </div>

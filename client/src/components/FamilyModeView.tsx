@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import type { StudentProfile, WeeklyDigest, ApplicationCostPlan, User, Opportunity } from '../types';
 import type { MainNavTab } from './Sidebar';
+import { formatStudentName } from '../utils/languageUtils';
 
 interface FamilyModeViewProps {
   profile: StudentProfile;
@@ -75,8 +76,9 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
     }
   }, [lang]);
 
-  const studentName = currentUser?.name || profile.fullName || 'Student';
-  const firstName = studentName.split(' ')[0];
+  const rawFullName = currentUser?.name || profile.fullName || 'Student';
+  const studentName = formatStudentName(rawFullName, lang);
+  const firstName = formatStudentName(rawFullName.split(' ')[0], lang);
 
   // Calculate actual or eligible fee savings (fallback to standard category concessions if costPlan is 0)
   const feeSavings = costPlan.totalSavedViaWaivers > 0

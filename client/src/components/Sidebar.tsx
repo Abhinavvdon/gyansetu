@@ -12,6 +12,7 @@ import {
   LogIn
 } from 'lucide-react';
 import type { User } from '../types';
+import { formatStudentName } from '../utils/languageUtils';
 
 export type MainNavTab =
   | 'Profile'
@@ -51,49 +52,49 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'Profile' as MainNavTab,
       label: 'Profile',
-      labelHi: 'प्रोफ़ाइल (Profile)',
+      labelHi: 'प्रोफ़ाइल',
       icon: UserIcon,
       badge: currentUser ? 'PostgreSQL' : undefined
     },
     {
       id: 'Scholarship' as MainNavTab,
       label: 'Scholarship',
-      labelHi: 'छात्रवृत्ति (Scholarship)',
+      labelHi: 'छात्रवृत्ति',
       icon: Award,
-      badge: 'Matches'
+      badge: lang === 'hi' ? 'मैच' : 'Matches'
     },
     {
       id: 'Government Schemes' as MainNavTab,
       label: 'Government Schemes',
-      labelHi: 'सरकारी योजनाएं (Govt Schemes)',
+      labelHi: 'सरकारी योजनाएं',
       icon: Landmark,
-      badge: 'Exams'
+      badge: lang === 'hi' ? 'परीक्षाएं' : 'Exams'
     },
     {
       id: 'Higher Studies' as MainNavTab,
       label: 'Higher Studies',
-      labelHi: 'उच्च शिक्षा (Higher Studies)',
+      labelHi: 'उच्च शिक्षा',
       icon: GraduationCap,
-      badge: 'Entrances'
+      badge: lang === 'hi' ? 'प्रवेश' : 'Entrances'
     },
     {
       id: 'Documents' as MainNavTab,
       label: 'Documents',
-      labelHi: 'दस्तावेज़ (Documents)',
+      labelHi: 'दस्तावेज़',
       icon: FileText,
-      badge: 'Readiness'
+      badge: lang === 'hi' ? 'तैयारी' : 'Readiness'
     },
     {
       id: 'trust and scams' as MainNavTab,
       label: 'trust and scams',
-      labelHi: 'सत्यापन व फ्रॉड अलर्ट (Trust & Scams)',
+      labelHi: 'सत्यापन व फ्रॉड अलर्ट',
       icon: ShieldAlert,
-      badge: 'Verified'
+      badge: lang === 'hi' ? 'सत्यापित' : 'Verified'
     },
     {
       id: 'logout' as MainNavTab,
       label: 'logout',
-      labelHi: 'लॉगआउट (Logout)',
+      labelHi: 'लॉगआउट',
       icon: LogOut,
       isAction: true
     }
@@ -205,7 +206,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {currentUser ? (
             <div className="pt-1 text-[11px]">
-              <div className="text-slate-800 font-bold truncate">{currentUser.name}</div>
+              <div className="text-slate-800 font-bold truncate">
+                {formatStudentName(currentUser.name, lang)}
+              </div>
               <div className="text-[10px] text-slate-400 truncate">{currentUser.email}</div>
             </div>
           ) : (

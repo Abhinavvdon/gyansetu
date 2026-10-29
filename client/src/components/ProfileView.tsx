@@ -13,6 +13,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import type { StudentProfile, User } from '../types';
+import { formatStudentName } from '../utils/languageUtils';
 
 interface ProfileViewProps {
   profile: StudentProfile;
@@ -70,7 +71,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                {formData.fullName}
+                {formatStudentName(formData.fullName, lang)}
               </h2>
               <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-[#ece8ff] text-[#5034df]">
                 {formData.category}

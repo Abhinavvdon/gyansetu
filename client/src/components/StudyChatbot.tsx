@@ -26,6 +26,7 @@ import {
   type ChatbotCategory
 } from '../data/studyChatbotData';
 import type { StudentProfile } from '../types';
+import { formatStudentName } from '../utils/languageUtils';
 
 interface Message {
   id: string;
@@ -59,7 +60,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
   // Initialize initial welcome message
   useEffect(() => {
     if (messages.length === 0) {
-      const studentName = profile?.name ? ` ${profile.name}` : '';
+      const rawName = profile?.fullName ? profile.fullName.split(' ')[0] : '';
+      const studentName = rawName ? ` ${formatStudentName(rawName, lang)}` : '';
       const initialGreeting =
         lang === 'hi'
           ? `नमस्ते${studentName}! 🙏 मैं आपका **ज्ञानसेतु स्टडी टाइमटेबल व शेड्यूल असिस्टेंट** हूँ।\n\nकॉलेज शेड्यूल, सरकारी परीक्षाओं, बैकलाग रिकवरी या सीमित समय के लिए टाइमटेबल की योजना बनानी हो—आप नीचे दिए गए **30 विशिष्ट अध्ययन प्रश्नों** में से कोई भी प्रश्न चुन सकते हैं:`
@@ -177,7 +179,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
   };
 
   const handleResetChat = () => {
-    const studentName = profile?.name ? ` ${profile.name}` : '';
+    const rawName = profile?.fullName ? profile.fullName.split(' ')[0] : '';
+    const studentName = rawName ? ` ${formatStudentName(rawName, lang)}` : '';
     setMessages([
       {
         id: 'welcome',

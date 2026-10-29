@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { StudentProfile, User, DeadlineNotification } from '../types';
 import { NotificationPopover } from './NotificationPopover';
+import { formatStudentName } from '../utils/languageUtils';
 
 interface HeaderProps {
   searchQuery: string;
@@ -171,11 +172,11 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="hidden sm:block text-left">
               <div className="text-xs font-bold text-slate-900 leading-tight flex items-center gap-1">
-                <span>{currentUser.name.split(' ')[0]}</span>
+                <span>{formatStudentName(currentUser.name.split(' ')[0], lang)}</span>
                 <CheckCircle2 className="w-3 h-3 text-emerald-500" />
               </div>
               <div className="text-[10px] text-slate-400 font-medium">
-                Student account
+                {lang === 'hi' ? 'छात्र खाता' : 'Student account'}
               </div>
             </div>
           </button>
@@ -191,10 +192,10 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               <div className="hidden sm:block text-left">
                 <div className="text-xs font-bold text-slate-900 leading-tight">
-                  {profile.fullName.split(' ')[0]}
+                  {formatStudentName(profile.fullName.split(' ')[0], lang)}
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium">
-                  Student account
+                  {lang === 'hi' ? 'छात्र खाता' : 'Student account'}
                 </div>
               </div>
             </button>
