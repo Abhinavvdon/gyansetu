@@ -67,6 +67,25 @@ export function App() {
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isDigestOpen, setIsDigestOpen] = useState<boolean>(false);
 
+  // Theme state (Light / Dark mode persistence)
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('gyansetu-theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('gyansetu-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('gyansetu-theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
+
   // Authentication State (PostgreSQL + BCrypt)
   const [currentUser, setCurrentUser] = useState<User | null>(() => GyanSetuApi.getCurrentUser());
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
@@ -273,7 +292,7 @@ export function App() {
   const higherEdReports = eligibilityReports.filter((r) => r.opportunityType === 'HIGHER_STUDIES');
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] flex text-slate-800 font-sans selection:bg-[#ede9fe] selection:text-[#5034df]">
+    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b0f19] flex text-slate-800 dark:text-slate-100 font-sans selection:bg-[#ede9fe] selection:text-[#5034df] transition-colors duration-200">
       {/* 1. Left Sidebar Navigation:
           Options displayed strictly in this order:
           "Profile", "Scholarship", "Government Schemes", "Higher Studies", "Documents", "trust and scams", "logout"
@@ -325,24 +344,26 @@ export function App() {
           toggleParentMode={toggleParentMode}
           lang={lang}
           toggleLanguage={toggleLanguage}
+          isDarkMode={isDarkMode}
+          toggleDarkMode={toggleDarkMode}
         />
 
         {/* Workspace Body */}
         <main className="flex-1 p-6 max-w-7xl w-full mx-auto">
           {/* Quick Tab Header / Back to Overview Button */}
           {activeTab !== 'home' && (
-            <div className="mb-5 flex items-center justify-between pb-3 border-b border-slate-200/80">
+            <div className="mb-5 flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab('home')}
-                  className="cursor-pointer text-xs font-bold text-slate-500 hover:text-[#5034df] flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition"
+                  className="cursor-pointer text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-[#5034df] dark:hover:text-[#a594fd] flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5" />
                   <span>{lang === 'hi' ? 'अवलोकन (Overview)' : 'Overview Dashboard'}</span>
                 </button>
-                <span className="text-slate-300">/</span>
-                <span className="text-xs font-bold text-slate-900 capitalize">
+                <span className="text-slate-300 dark:text-slate-600">/</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white capitalize">
                   {activeTab}
                 </span>
               </div>
@@ -352,25 +373,25 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('planner')}
-                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 transition flex items-center gap-1"
+                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
-                  <CalendarCheck className="w-3 h-3 text-emerald-600" />
+                  <CalendarCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                   <span>Planner</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('overlap')}
-                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 transition flex items-center gap-1"
+                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
-                  <GitCompare className="w-3 h-3 text-[#5034df]" />
+                  <GitCompare className="w-3 h-3 text-[#5034df] dark:text-[#a594fd]" />
                   <span>Prep Overlap</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('whatif')}
-                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 transition flex items-center gap-1"
+                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
-                  <SlidersHorizontal className="w-3 h-3 text-amber-600" />
+                  <SlidersHorizontal className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                   <span>What-If Lab</span>
                 </button>
               </div>

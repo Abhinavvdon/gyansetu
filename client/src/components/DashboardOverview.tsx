@@ -160,20 +160,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* Card 1: Scholarships (Soft Pink Pastel) */}
           <div
             onClick={() => onNavigate('Scholarship')}
-            className="cursor-pointer p-5 rounded-2xl bg-[#fff1f2] border border-[#ffe4e6] hover:border-rose-200 hover:shadow-xs transition-all space-y-3 group"
+            className="cursor-pointer p-5 rounded-2xl bg-[#fff1f2] dark:bg-rose-950/20 border border-[#ffe4e6] dark:border-rose-900/40 hover:border-rose-200 dark:hover:border-rose-800 hover:shadow-xs transition-all space-y-3 group"
           >
-            <div className="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600">
+            <div className="w-9 h-9 rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-300">
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                 {lang === 'hi' ? 'छात्रवृत्तियां' : 'Scholarships'}
               </div>
-              <div className="text-2xl font-black text-slate-900 mt-0.5">
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {scholarshipCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 font-medium">
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'वित्तीय सहायता देखें' : 'Explore financial support'}
             </div>
           </div>
@@ -181,20 +181,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* Card 2: Government exams (Soft Mint Pastel) */}
           <div
             onClick={() => onNavigate('Government Schemes')}
-            className="cursor-pointer p-5 rounded-2xl bg-[#f0fdf4] border border-[#dcfce7] hover:border-emerald-200 hover:shadow-xs transition-all space-y-3 group"
+            className="cursor-pointer p-5 rounded-2xl bg-[#f0fdf4] dark:bg-emerald-950/20 border border-[#dcfce7] dark:border-emerald-900/40 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-xs transition-all space-y-3 group"
           >
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
               <Landmark className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                 {lang === 'hi' ? 'सरकारी परीक्षाएं व योजनाएं' : 'Government exams'}
               </div>
-              <div className="text-2xl font-black text-slate-900 mt-0.5">
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {govtExamsCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 font-medium">
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'अपने भविष्य की तैयारी करें' : 'Prepare for your future'}
             </div>
           </div>
@@ -202,20 +202,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* Card 3: Higher studies (Soft Lavender Pastel) */}
           <div
             onClick={() => onNavigate('Higher Studies')}
-            className="cursor-pointer p-5 rounded-2xl bg-[#f5f3ff] border border-[#ede9fe] hover:border-purple-200 hover:shadow-xs transition-all space-y-3 group"
+            className="cursor-pointer p-5 rounded-2xl bg-[#f5f3ff] dark:bg-purple-950/20 border border-[#ede9fe] dark:border-purple-900/40 hover:border-purple-200 dark:hover:border-purple-800 hover:shadow-xs transition-all space-y-3 group"
           >
-            <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-[#5034df]">
+            <div className="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-[#5034df] dark:text-[#a594fd]">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                 {lang === 'hi' ? 'उच्च शिक्षा प्रवेश' : 'Higher studies'}
               </div>
-              <div className="text-2xl font-black text-slate-900 mt-0.5">
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {higherStudiesCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 font-medium">
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'अपना पसंदीदा कैंपस चुनें' : 'Find your next campus'}
             </div>
           </div>
@@ -223,20 +223,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* Card 4: Internships / Smart Overlap (Soft Blue Pastel) */}
           <div
             onClick={() => onNavigate('Documents')}
-            className="cursor-pointer p-5 rounded-2xl bg-[#f0f9ff] border border-[#e0f2fe] hover:border-sky-200 hover:shadow-xs transition-all space-y-3 group"
+            className="cursor-pointer p-5 rounded-2xl bg-[#f0f9ff] dark:bg-sky-950/20 border border-[#e0f2fe] dark:border-sky-900/40 hover:border-sky-200 dark:hover:border-sky-800 hover:shadow-xs transition-all space-y-3 group"
           >
-            <div className="w-9 h-9 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
+            <div className="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-900/50 flex items-center justify-center text-sky-600 dark:text-sky-300">
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600">
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                 {lang === 'hi' ? 'दस्तावेज़ व तैयारी' : 'Documents & Internships'}
               </div>
-              <div className="text-2xl font-black text-slate-900 mt-0.5">
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 100%
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 font-medium">
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'कागजात तैयार रखें' : 'Build real-world readiness'}
             </div>
           </div>
@@ -258,7 +258,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* Left Column: Recommended for you (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'आपके लिए अनुशंसित' : 'Recommended for you'}
             </h3>
             <p className="text-xs text-slate-400 font-medium">
@@ -275,17 +275,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               return (
                 <div
                   key={opp.id}
-                  className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-5.5 hover:shadow-md hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-4 relative group"
+                  className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-5 sm:p-5.5 hover:shadow-md hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-4 relative group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <span
                         className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
                           opp.type === 'SCHOLARSHIP'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
                             : opp.type === 'GOVT_EXAM'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-purple-50 text-[#5034df] border border-purple-200'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                            : 'bg-purple-50 dark:bg-purple-950/40 text-[#5034df] dark:text-[#c4b5fd] border border-purple-200 dark:border-purple-800'
                         }`}
                       >
                         {opp.type === 'SCHOLARSHIP'
@@ -296,7 +296,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       </span>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-[#5034df] bg-[#ece8ff] px-2 py-0.5 rounded-md">
+                        <span className="text-[11px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2 py-0.5 rounded-md">
                           {confidenceScore}% {lang === 'hi' ? 'मैच' : 'Match'}
                         </span>
                         <button
@@ -307,8 +307,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           }}
                           className={`cursor-pointer p-1.5 rounded-lg transition ${
                             isSaved
-                              ? 'text-amber-600 bg-amber-50'
-                              : 'text-slate-300 hover:text-slate-600 hover:bg-slate-100'
+                              ? 'text-amber-600 bg-amber-50 dark:bg-amber-950/50'
+                              : 'text-slate-300 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                           }`}
                           title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
                         >
@@ -318,25 +318,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#5034df] transition line-clamp-2 leading-snug">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition line-clamp-2 leading-snug">
                         {opp.title}
                       </h4>
-                      <p className="text-xs text-slate-500 font-medium mt-1 line-clamp-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 line-clamp-1">
                         {opp.organization}
                       </p>
                     </div>
 
                     {opp.benefitsOrSalary && (
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-700">
-                        <span className="text-emerald-600 font-bold">●</span>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">●</span>
                         <span className="line-clamp-1">{opp.benefitsOrSalary}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-3 pt-3 border-t border-slate-100">
+                  <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700/80">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px]">
                         <Clock className="w-3.5 h-3.5 text-amber-500" />
                         <span className="font-medium">{opp.applicationDeadline}</span>
                       </div>
@@ -349,7 +349,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       <button
                         type="button"
                         onClick={() => onInspectOpportunity(opp.id)}
-                        className="cursor-pointer flex-1 py-2 px-3 rounded-xl bg-slate-50 hover:bg-[#ece8ff] text-slate-700 hover:text-[#5034df] font-bold text-xs transition text-center border border-slate-200/60 hover:border-[#5034df]/30"
+                        className="cursor-pointer flex-1 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-700/60 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 text-slate-700 dark:text-slate-200 hover:text-[#5034df] dark:hover:text-[#c4b5fd] font-bold text-xs transition text-center border border-slate-200/60 dark:border-slate-600 hover:border-[#5034df]/30"
                       >
                         {lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
                       </button>
@@ -358,7 +358,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         href={opp.officialUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="cursor-pointer p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition"
+                        className="cursor-pointer p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition"
                         title="Open official portal"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -374,7 +374,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* Right Column: Quick actions (4 cols) shifted downwards with matching outer header */}
         <div className="lg:col-span-4 space-y-4">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'त्वरित कार्य' : 'Quick actions'}
             </h3>
             <p className="text-xs text-slate-400 font-medium">
@@ -382,12 +382,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-5.5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-5 sm:p-5.5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                 {lang === 'hi' ? 'प्लेटफॉर्म टूल्स' : 'Platform Tools'}
               </span>
-              <span className="text-[10px] font-bold text-[#5034df] bg-[#ece8ff] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Get Started
               </span>
             </div>
@@ -398,12 +398,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-[#f0edff] flex items-center justify-center text-[#5034df] group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-[#f0edff] dark:bg-[#5034df]/20 flex items-center justify-center text-[#5034df] dark:text-[#c4b5fd] group-hover:scale-105 transition-transform">
                   <Search className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 leading-tight">
+                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'मैच खोजें' : 'Find matches'}
                 </span>
               </button>
@@ -412,12 +412,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
                   <Calendar className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 leading-tight">
+                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'समय-सारिणी' : 'Plan deadlines'}
                 </span>
               </button>
@@ -426,26 +426,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
                   <SlidersHorizontal className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 leading-tight">
+                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'सिम्युलेटर' : 'What-if simulator'}
                 </span>
               </button>
             </div>
 
             {/* Additional Feature Shortcuts */}
-            <div className="pt-2 border-t border-slate-100 space-y-2.5">
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-2.5">
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}
-                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
+                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-xs font-semibold text-slate-700 dark:text-slate-200"
               >
                 <div className="flex items-center gap-2.5">
-                  <FileCheck2 className="w-4 h-4 text-emerald-600" />
+                  <FileCheck2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>{lang === 'hi' ? 'दस्तावेज़ तत्परता जांचें' : 'Document Readiness Check'}</span>
                 </div>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -454,10 +454,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('trust and scams')}
-                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition text-xs font-semibold text-slate-700"
+                className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-xs font-semibold text-slate-700 dark:text-slate-200"
               >
                 <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-[#5034df]" />
+                  <ShieldCheck className="w-4 h-4 text-[#5034df] dark:text-[#a594fd]" />
                   <span>{lang === 'hi' ? 'सत्यापित नोटिस व फ्रॉड अलर्ट' : 'Verified Notice & Scam Radar'}</span>
                 </div>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />

@@ -113,22 +113,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none">
+    <aside className="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200/90 dark:border-slate-800 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none transition-colors duration-200">
       {/* Brand Header */}
-      <div className="p-5 pb-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="p-5 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
         <div
           onClick={() => setActiveTab('home')}
           className="cursor-pointer flex items-center gap-3 group"
           title="GyanSetu Overview Dashboard"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#f5f3ff] border border-[#ede9fe] flex items-center justify-center p-1.5 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+          <div className="w-10 h-10 rounded-2xl bg-[#f5f3ff] dark:bg-[#5034df]/15 border border-[#ede9fe] dark:border-[#5034df]/30 flex items-center justify-center p-1.5 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
             <img src="/logo-icon.png" alt="GyanSetu Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Gyan<span className="text-[#5034df]">Setu</span>
+            <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Gyan<span className="text-[#5034df] dark:text-[#a594fd]">Setu</span>
             </h1>
-            <p className="text-[11px] text-slate-400 font-medium tracking-tight">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium tracking-tight">
               Your Future, Connected.
             </p>
           </div>
@@ -137,7 +137,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Navigation Options List */}
       <nav className="p-3.5 space-y-1.5 flex-1">
-        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
           {lang === 'hi' ? 'मुख्य मेनू' : 'Main Menu'}
         </div>
 
@@ -153,20 +153,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleItemClick(item)}
               className={`cursor-pointer w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? 'bg-[#ece8ff] text-[#5034df] font-bold shadow-xs'
+                  ? 'bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd] font-bold shadow-xs'
                   : isLogout
-                  ? 'text-slate-500 hover:text-rose-600 hover:bg-rose-50/70 mt-4'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                  ? 'text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/70 dark:hover:bg-rose-950/30 mt-4'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
               }`}
             >
               <div className="flex items-center gap-3 truncate">
                 <Icon
                   className={`w-4 h-4 shrink-0 transition-colors ${
                     isActive
-                      ? 'text-[#5034df]'
+                      ? 'text-[#5034df] dark:text-[#c4b5fd]'
                       : isLogout
-                      ? 'text-slate-400 group-hover:text-rose-600'
-                      : 'text-slate-400 group-hover:text-slate-700'
+                      ? 'text-slate-400 dark:text-slate-500 group-hover:text-rose-600 dark:group-hover:text-rose-400'
+                      : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200'
                   }`}
                 />
                 <span className="truncate">
@@ -179,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tight shrink-0 ${
                     isActive
                       ? 'bg-[#5034df] text-white'
-                      : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
                   }`}
                 >
                   {item.badge}
@@ -191,14 +191,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Database / Account Status Card at Bottom */}
-      <div className="p-3.5 pt-0 border-t border-slate-100/80 bg-slate-50/50">
-        <div className="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2">
+      <div className="p-3.5 pt-0 border-t border-slate-100/80 dark:border-slate-800 bg-slate-50/50 dark:bg-[#0b0f19]/40">
+        <div className="p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="font-semibold text-slate-700 flex items-center gap-1.5">
-              <Database className="w-3.5 h-3.5 text-[#5034df]" />
+            <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Database className="w-3.5 h-3.5 text-[#5034df] dark:text-[#a594fd]" />
               PostgreSQL 14
             </span>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-bold">
+            <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Port 5434
             </span>
@@ -206,10 +206,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {currentUser ? (
             <div className="pt-1 text-[11px]">
-              <div className="text-slate-800 font-bold truncate">
+              <div className="text-slate-800 dark:text-slate-100 font-bold truncate">
                 {formatStudentName(currentUser.name, lang)}
               </div>
-              <div className="text-[10px] text-slate-400 truncate">{currentUser.email}</div>
+              <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{currentUser.email}</div>
             </div>
           ) : (
             <button

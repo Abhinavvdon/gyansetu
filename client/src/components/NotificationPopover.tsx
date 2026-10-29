@@ -108,7 +108,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
   };
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-[390px] sm:w-[440px] bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+    <div className="absolute right-0 top-full mt-2 w-[390px] sm:w-[440px] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
       {/* Top Header Ribbon */}
       <div className="bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white p-4.5 pb-3.5">
         <div className="flex items-center justify-between">
@@ -208,14 +208,14 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
       </div>
 
       {/* Notifications Scroll List */}
-      <div className="max-h-[380px] overflow-y-auto p-3 space-y-2.5 divide-y divide-slate-100/70">
+      <div className="max-h-[380px] overflow-y-auto p-3 space-y-2.5 divide-y divide-slate-100/70 dark:divide-slate-800">
         {filteredNotifications.length === 0 ? (
           <div className="p-8 text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+            <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-5 h-5" />
             </div>
-            <p className="text-xs font-bold text-slate-700">All caught up!</p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-300">All caught up!</p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">
               No pending alerts under this category.
             </p>
           </div>
@@ -228,7 +228,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
               <div
                 key={notif.id}
                 className={`pt-2.5 first:pt-0 transition-all rounded-xl p-2.5 ${
-                  notif.read ? 'bg-white opacity-80' : 'bg-slate-50/70 border border-slate-200/60'
+                  notif.read ? 'bg-white dark:bg-slate-900 opacity-80' : 'bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -240,7 +240,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                       <span>{badge.label}</span>
                     </span>
 
-                    <span className="text-[10px] font-semibold text-slate-400">
+                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-400">
                       {notif.opportunityTitle}
                     </span>
                   </div>
@@ -249,18 +249,18 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                     <button
                       type="button"
                       onClick={() => onMarkRead(notif.id)}
-                      className="cursor-pointer text-[10px] text-[#5034df] hover:underline font-bold shrink-0"
+                      className="cursor-pointer text-[10px] text-[#5034df] dark:text-indigo-400 hover:underline font-bold shrink-0"
                     >
                       Mark read
                     </button>
                   )}
                 </div>
 
-                <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
                   {notif.title}
                 </h4>
 
-                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                   {notif.message}
                 </p>
 
@@ -268,7 +268,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                 <div className="mt-2.5 flex items-center justify-between text-[11px] pt-1">
                   <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
                     {notif.emailSent && (
-                      <span className="flex items-center gap-1 text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">
+                      <span className="flex items-center gap-1 text-emerald-600 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">
                         <Mail className="w-3 h-3" />
                         <span>Email Sent</span>
                       </span>
@@ -283,7 +283,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                           onSelectOpportunity(notif.opportunityId);
                           onClose();
                         }}
-                        className="cursor-pointer text-[#5034df] hover:text-[#3821b0] font-bold text-[11px]"
+                        className="cursor-pointer text-[#5034df] dark:text-indigo-400 hover:text-[#3821b0] font-bold text-[11px]"
                       >
                         View Details
                       </button>
@@ -294,7 +294,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                         href={notif.officialUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="cursor-pointer inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 font-semibold text-[11px] bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-lg transition"
+                        className="cursor-pointer inline-flex items-center gap-1 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg transition"
                       >
                         <span>Official Portal</span>
                         <ExternalLink className="w-3 h-3" />
@@ -309,7 +309,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
       </div>
 
       {/* Bottom Email Alert Dispatcher Section */}
-      <div className="bg-slate-50 border-t border-slate-200/80 p-3.5 space-y-2.5">
+      <div className="bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200/80 dark:border-slate-800 p-3.5 space-y-2.5">
         {testEmailResult && (
           <div
             className={`p-2.5 rounded-xl text-xs flex items-start gap-2 animate-in fade-in ${
@@ -342,11 +342,11 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
 
         <div className="flex items-center justify-between gap-2">
           <div className="truncate text-left">
-            <div className="text-[11px] font-bold text-slate-800 flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5 text-[#5034df]" />
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+              <Mail className="w-3.5 h-3.5 text-[#5034df] dark:text-indigo-400" />
               <span>Email Deadline Alerts</span>
             </div>
-            <div className="text-[10px] text-slate-400 truncate">
+            <div className="text-[10px] text-slate-400 dark:text-slate-400 truncate">
               {currentUser?.email ? (
                 <span>Connected: {currentUser.email}</span>
               ) : (
@@ -360,10 +360,10 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
               href="/api/deadline-alerts/email-preview"
               target="_blank"
               rel="noreferrer"
-              className="cursor-pointer px-2.5 py-1.5 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-700 text-[11px] font-bold flex items-center gap-1 transition"
+              className="cursor-pointer px-2.5 py-1.5 rounded-xl bg-slate-200/80 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-bold flex items-center gap-1 transition"
               title="Open generated GyanSetu HTML email in new browser tab"
             >
-              <Eye className="w-3 h-3 text-slate-600" />
+              <Eye className="w-3 h-3 text-slate-600 dark:text-slate-300" />
               <span>Preview HTML</span>
             </a>
 
