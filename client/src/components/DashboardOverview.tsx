@@ -234,12 +234,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      {/* 3. Priority Bar Graph for All Features (Scholarships, Govt Schemes, Higher Ed, Docs, Deadlines) */}
+      {/* 3. Three Separate Priority Bar Graphs (1. Scholarship, 2. Govt Schemes, 3. Higher Studies) in Decreasing Order */}
       <PriorityBarGraph
         opportunities={opportunities}
         eligibilityReports={eligibilityReports}
         profile={profile}
         onNavigate={onNavigate}
+        onInspectOpportunity={onInspectOpportunity}
         lang={lang}
       />
 
