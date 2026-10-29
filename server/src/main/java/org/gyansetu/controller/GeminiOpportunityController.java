@@ -77,10 +77,21 @@ public class GeminiOpportunityController {
     }
 
     @PostMapping("/import-adaption-dataset")
-    public ResponseEntity<Map<String, Object>> importAdaptionDataset(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<Map<String, Object>> importAdaptionDataset(@RequestBody Map<String, Object> payload) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String content = payload.get("content");
+            Object rawContent = payload != null ? payload.get("content") : null;
+            String content;
+            if (rawContent instanceof String) {
+                content = (String) rawContent;
+            } else if (rawContent instanceof Map && ((Map<?, ?>) rawContent).containsKey("value")) {
+                Object val = ((Map<?, ?>) rawContent).get("value");
+                content = val instanceof String ? (String) val : new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(val);
+            } else if (rawContent != null) {
+                content = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(rawContent);
+            } else {
+                content = "";
+            }
             List<Opportunity> imported = adaptionService.importFromRawText(content);
             resp.put("success", true);
             resp.put("count", imported.size());

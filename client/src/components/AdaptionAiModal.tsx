@@ -79,7 +79,10 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
         setError(res.error || 'Failed to ingest Adaption AI dataset.');
       }
     } catch (err: any) {
-      setError(err?.message || 'Error importing Adaption AI dataset.');
+      const is502 = err?.message?.includes('502') || err?.response?.status === 502;
+      setError(is502
+        ? (lang === 'hi' ? 'सर्वर पुनः कनेक्ट हो रहा है (502 Gateway)। कृपया 2 सेकंड बाद पुनः क्लिक करें।' : 'Backend was reconnecting (502). Please click again to load.')
+        : (err?.message || 'Error importing Adaption AI dataset.'));
     } finally {
       setIsProcessing(false);
       setStatusMessage('');

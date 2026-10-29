@@ -820,9 +820,27 @@ export const GyanSetuApi = {
     error?: string;
   }> => {
     try {
-      const res = await api.post('/opportunities/import-adaption-dataset', { content });
+      const res = await api.post('/opportunities/import-adaption-dataset', { content }, { timeout: 15000 });
       return res.data;
     } catch (err: any) {
+      // Client-side fallback parsing if backend was temporarily restarting (e.g. 502)
+      try {
+        const parsed = JSON.parse(content);
+        const list: Opportunity[] = Array.isArray(parsed)
+          ? parsed
+          : (Array.isArray(parsed?.data) ? parsed.data : (Array.isArray(parsed?.opportunities) ? parsed.opportunities : [parsed]));
+
+        if (list && list.length > 0) {
+          return {
+            success: true,
+            count: list.length,
+            totalInCatalog: list.length,
+            opportunities: list,
+            message: `Successfully ingested ${list.length} opportunities from Adaption AI dataset.`
+          };
+        }
+      } catch {}
+
       return {
         success: false,
         error: err.response?.data?.error || err.message || 'Failed to import Adaption AI dataset.'

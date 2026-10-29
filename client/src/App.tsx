@@ -59,7 +59,8 @@ import {
   GitCompare,
   SlidersHorizontal,
   CalendarCheck,
-  LayoutDashboard
+  LayoutDashboard,
+  IndianRupee
 } from 'lucide-react';
 
 export function App() {

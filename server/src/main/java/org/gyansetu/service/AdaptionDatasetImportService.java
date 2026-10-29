@@ -48,10 +48,17 @@ public class AdaptionDatasetImportService {
                     }
                 } else if (root.isObject()) {
                     JsonNode arrayNode = null;
-                    for (String key : Arrays.asList("data", "dataset", "records", "items", "opportunities")) {
-                        if (root.has(key) && root.get(key).isArray()) {
-                            arrayNode = root.get(key);
-                            break;
+                    for (String key : Arrays.asList("data", "dataset", "records", "items", "opportunities", "value", "content")) {
+                        if (root.has(key)) {
+                            if (root.get(key).isArray()) {
+                                arrayNode = root.get(key);
+                                break;
+                            } else if (root.get(key).isTextual()) {
+                                String inner = root.get(key).asText().trim();
+                                if (inner.startsWith("[") || inner.startsWith("{")) {
+                                    return importFromRawText(inner);
+                                }
+                            }
                         }
                     }
                     if (arrayNode != null) {
