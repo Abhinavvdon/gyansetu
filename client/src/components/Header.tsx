@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Search,
   Bell,
@@ -7,13 +7,19 @@ import {
   CheckCircle2,
   LogIn
 } from 'lucide-react';
-import type { StudentProfile, User } from '../types';
+import type { StudentProfile, User, DeadlineNotification } from '../types';
+import { NotificationPopover } from './NotificationPopover';
 
 interface HeaderProps {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   profile: StudentProfile;
   currentUser: User | null;
+  notifications: DeadlineNotification[];
+  unreadAlertCount: number;
+  onMarkAlertRead: (id: number) => void;
+  onMarkAllAlertsRead: () => void;
+  onSelectOpportunity?: (oppId: string) => void;
   onOpenAuth: () => void;
   onOpenProfile: () => void;
   onOpenDigest: () => void;
@@ -28,6 +34,11 @@ export const Header: React.FC<HeaderProps> = ({
   setSearchQuery,
   profile,
   currentUser,
+  notifications,
+  unreadAlertCount,
+  onMarkAlertRead,
+  onMarkAllAlertsRead,
+  onSelectOpportunity,
   onOpenAuth,
   onOpenProfile,
   onOpenDigest,
@@ -36,6 +47,24 @@ export const Header: React.FC<HeaderProps> = ({
   lang,
   toggleLanguage
 }) => {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState<boolean>(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  // Close popover when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+    if (isNotificationsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotificationsOpen]);
+
   return (
     <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 flex items-center justify-between gap-4">
       {/* Search Input Bar (matching screenshot pill) */}
@@ -97,16 +126,37 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
 
-        {/* Notification Bell */}
-        <div className="relative">
+        {/* Notification Bell & Dropdown Popover */}
+        <div className="relative" ref={popoverRef}>
           <button
             type="button"
-            className="cursor-pointer p-2 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition"
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            className={`cursor-pointer p-2 rounded-full transition relative ${
+              isNotificationsOpen
+                ? 'bg-[#ece8ff] text-[#5034df]'
+                : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
+            }`}
             title="Official Notice & Deadline Alerts"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+            {unreadAlertCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center px-1 shadow-xs ring-2 ring-white animate-pulse">
+                {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
+              </span>
+            )}
           </button>
+
+          {/* Interactive Popover Dropdown */}
+          <NotificationPopover
+            isOpen={isNotificationsOpen}
+            onClose={() => setIsNotificationsOpen(false)}
+            notifications={notifications}
+            onMarkRead={onMarkAlertRead}
+            onMarkAllRead={onMarkAllAlertsRead}
+            currentUser={currentUser}
+            onSelectOpportunity={onSelectOpportunity}
+            lang={lang}
+          />
         </div>
 
         {/* User Account / Profile Pill (matching screenshot) */}

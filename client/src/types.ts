@@ -291,3 +291,20 @@ export interface RegisterCredentials {
   password: string;
   confirmPassword: string;
 }
+
+export interface DeadlineNotification {
+  id: number;
+  userId?: number | null;
+  opportunityId: string;
+  opportunityTitle: string;
+  type: 'DEADLINE_URGENT' | 'DEADLINE_APPROACHING' | 'DATE_EXTENDED' | 'DOCUMENT_ALERT';
+  severity: 'CRITICAL' | 'WARNING' | 'INFO';
+  title: string;
+  message: string;
+  daysRemaining: number;
+  officialUrl?: string;
+  actionLabel?: string;
+  read: boolean;
+  emailSent: boolean;
+  createdAt: string;
+}

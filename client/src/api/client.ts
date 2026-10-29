@@ -19,7 +19,8 @@ import type {
   User,
   AuthResponse,
   LoginCredentials,
-  RegisterCredentials
+  RegisterCredentials,
+  DeadlineNotification
 } from '../types';
 
 const api = axios.create({
@@ -505,6 +506,61 @@ export const GyanSetuApi = {
       localStorage.removeItem('gyansetu_token');
     } catch {
       // fallback
+    }
+  },
+
+  // Deadline Alerts & Notifications
+  getDeadlineAlerts: async (userId?: number): Promise<DeadlineNotification[]> => {
+    try {
+      const res = await api.get<DeadlineNotification[]>('/deadline-alerts', {
+        params: userId ? { userId } : {}
+      });
+      return res.data;
+    } catch {
+      return [];
+    }
+  },
+
+  getUnreadAlertCount: async (userId?: number): Promise<number> => {
+    try {
+      const res = await api.get<{ unreadCount: number }>('/deadline-alerts/unread-count', {
+        params: userId ? { userId } : {}
+      });
+      return res.data.unreadCount;
+    } catch {
+      return 0;
+    }
+  },
+
+  markAlertRead: async (id: number): Promise<DeadlineNotification | null> => {
+    try {
+      const res = await api.patch<DeadlineNotification>(`/deadline-alerts/${id}/read`);
+      return res.data;
+    } catch {
+      return null;
+    }
+  },
+
+  markAllAlertsRead: async (userId?: number): Promise<boolean> => {
+    try {
+      await api.post('/deadline-alerts/read-all', null, {
+        params: userId ? { userId } : {}
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  sendTestDeadlineEmail: async (email?: string, userId?: number): Promise<{ success: boolean; message: string; notification?: DeadlineNotification }> => {
+    try {
+      const res = await api.post('/deadline-alerts/send-test-alert', { email, userId });
+      return res.data;
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Could not trigger test deadline alert.'
+      };
     }
   },
 

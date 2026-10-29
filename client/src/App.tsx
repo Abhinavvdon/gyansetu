@@ -36,7 +36,8 @@ import type {
   ScamAlert,
   PeerSuccessStory,
   WeeklyDigest,
-  User
+  User,
+  DeadlineNotification
 } from './types';
 import { GyanSetuApi } from './api/client';
 import {
@@ -85,6 +86,8 @@ export function App() {
   const [scamAlerts, setScamAlerts] = useState<ScamAlert[]>([]);
   const [peerStories, setPeerStories] = useState<PeerSuccessStory[]>([]);
   const [digest, setDigest] = useState<WeeklyDigest | null>(null);
+  const [deadlineAlerts, setDeadlineAlerts] = useState<DeadlineNotification[]>([]);
+  const [unreadAlertCount, setUnreadAlertCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Initial Data Fetching
@@ -94,7 +97,7 @@ export function App() {
       const p = await GyanSetuApi.getProfile();
       setProfile(p);
 
-      const [opps, eligs, plan, ovlp, docs, notifs, gaps, time, costs, clsh, scams, peers, dig] =
+      const [opps, eligs, plan, ovlp, docs, notifs, gaps, time, costs, clsh, scams, peers, dig, alerts, unread] =
         await Promise.all([
           GyanSetuApi.getOpportunities(),
           GyanSetuApi.getEligibilityReports(),
@@ -108,7 +111,9 @@ export function App() {
           GyanSetuApi.getClashes(),
           GyanSetuApi.getScamAlerts(),
           GyanSetuApi.getPeerStories(),
-          GyanSetuApi.getWeeklyDigest()
+          GyanSetuApi.getWeeklyDigest(),
+          GyanSetuApi.getDeadlineAlerts(currentUser?.id),
+          GyanSetuApi.getUnreadAlertCount(currentUser?.id)
         ]);
 
       setOpportunities(opps);
@@ -124,6 +129,8 @@ export function App() {
       setScamAlerts(scams);
       setPeerStories(peers);
       setDigest(dig);
+      setDeadlineAlerts(alerts);
+      setUnreadAlertCount(unread);
     } finally {
       setLoading(false);
     }
@@ -179,6 +186,20 @@ export function App() {
   const handleRefreshOverlap = async (examIds: string[]) => {
     const data = await GyanSetuApi.analyzeOverlap(examIds);
     setOverlapData(data);
+  };
+
+  const handleMarkAlertRead = async (id: number) => {
+    await GyanSetuApi.markAlertRead(id);
+    setDeadlineAlerts((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, read: true } : a))
+    );
+    setUnreadAlertCount((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleMarkAllAlertsRead = async () => {
+    await GyanSetuApi.markAllAlertsRead(currentUser?.id);
+    setDeadlineAlerts((prev) => prev.map((a) => ({ ...a, read: true })));
+    setUnreadAlertCount(0);
   };
 
   const handleAuthSuccess = (user: User) => {
@@ -270,6 +291,23 @@ export function App() {
           setSearchQuery={setSearchQuery}
           profile={profile}
           currentUser={currentUser}
+          notifications={deadlineAlerts}
+          unreadAlertCount={unreadAlertCount}
+          onMarkAlertRead={handleMarkAlertRead}
+          onMarkAllAlertsRead={handleMarkAllAlertsRead}
+          onSelectOpportunity={(oppId) => {
+            const opp = opportunities.find((o) => o.id === oppId);
+            if (opp?.type === 'SCHOLARSHIP') {
+              setActiveTab('Scholarship');
+              setScholarshipSubTab('matching');
+            } else if (opp?.type === 'GOVT_EXAM') {
+              setActiveTab('Government Schemes');
+              setGovtSubTab('matching');
+            } else {
+              setActiveTab('Higher Studies');
+              setHigherEdSubTab('matching');
+            }
+          }}
           onOpenAuth={() => {
             setAuthModalMode('login');
             setIsAuthModalOpen(true);
