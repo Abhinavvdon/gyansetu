@@ -252,6 +252,19 @@ export interface ScamAlert {
   dateReported: string;
 }
 
+export interface UrlVerificationResult {
+  inputUrl: string;
+  domain: string;
+  trustScore: number;
+  verdict: 'GENUINE_OFFICIAL_PORTAL' | 'OFFICIAL_ACADEMIC_INSTITUTION' | 'SUSPICIOUS_PHISHING_RISK' | 'UNVERIFIED_THIRD_PARTY' | 'INVALID_URL';
+  isOfficialGovtDomain: boolean;
+  isSslSecure: boolean;
+  riskReasons: string[];
+  trustSignals: string[];
+  safeOfficialAlternative?: string;
+  guidance: string;
+}
+
 export interface PeerSuccessStory {
   id: string;
   studentAlias: string;

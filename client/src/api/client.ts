@@ -14,6 +14,7 @@ import type {
   ApplicationCostPlan,
   ExamClashWarning,
   ScamAlert,
+  UrlVerificationResult,
   PeerSuccessStory,
   WeeklyDigest,
   User,
@@ -1294,6 +1295,29 @@ export const GyanSetuApi = {
           dateReported: '2026-10-18'
         }
       ];
+    }
+  },
+
+  verifyUrl: async (url: string): Promise<UrlVerificationResult> => {
+    try {
+      const res = await api.post('/verify-url', { url });
+      return res.data;
+    } catch {
+      const cleanUrl = url.trim();
+      const isGov = cleanUrl.toLowerCase().includes('.gov.in') || cleanUrl.toLowerCase().includes('.nic.in');
+      const isEdu = cleanUrl.toLowerCase().includes('.ac.in') || cleanUrl.toLowerCase().includes('.edu.in');
+      return {
+        inputUrl: cleanUrl,
+        domain: cleanUrl.replace(/^https?:\/\//, '').split('/')[0],
+        trustScore: isGov ? 100 : (isEdu ? 90 : 20),
+        verdict: isGov ? 'GENUINE_OFFICIAL_PORTAL' : (isEdu ? 'OFFICIAL_ACADEMIC_INSTITUTION' : 'SUSPICIOUS_PHISHING_RISK'),
+        isOfficialGovtDomain: isGov,
+        isSslSecure: cleanUrl.toLowerCase().startsWith('https://'),
+        riskReasons: isGov || isEdu ? [] : ['Unverified private domain. Government portals end with .gov.in or .nic.in.'],
+        trustSignals: isGov ? ['Verified .gov.in domain'] : (isEdu ? ['Registered Academic Institution'] : []),
+        safeOfficialAlternative: 'https://ssc.gov.in',
+        guidance: isGov ? 'Verified government portal.' : 'Exercise caution. Never pay unverified third parties.'
+      };
     }
   },
 

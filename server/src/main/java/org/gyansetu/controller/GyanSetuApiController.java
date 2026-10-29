@@ -225,6 +225,12 @@ public class GyanSetuApiController {
         return ResponseEntity.ok(trustService.getScamAlerts());
     }
 
+    @PostMapping("/verify-url")
+    public ResponseEntity<UrlVerificationResult> verifyUrl(@RequestBody Map<String, String> payload) {
+        String url = payload != null ? payload.get("url") : "";
+        return ResponseEntity.ok(trustService.verifyUrl(url));
+    }
+
     @GetMapping("/peer-stories")
     public ResponseEntity<List<PeerSuccessStory>> getPeerStories() {
         return ResponseEntity.ok(trustService.getPeerStories());
