@@ -24,19 +24,27 @@ public class EmailService {
     @Value("${gyansetu.mail.sender-name:GyanSetu Deadline Alerts}")
     private String senderName;
 
+    @Value("${spring.mail.username:}")
+    private String mailUsername;
+
+    @Value("${spring.mail.host:localhost}")
+    private String mailHost;
+
+    public record EmailDispatchResult(boolean success, boolean liveSmtp, String message) {}
+
     public EmailService(@Autowired(required = false) JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-    public boolean sendDeadlineAlertEmail(String toEmail,
-                                         String studentName,
-                                         String opportunityTitle,
-                                         String organization,
-                                         String deadlineDate,
-                                         int daysRemaining,
-                                         String officialUrl,
-                                         String benefits,
-                                         List<String> requiredDocuments) {
+    public EmailDispatchResult sendDeadlineAlertEmail(String toEmail,
+                                                     String studentName,
+                                                     String opportunityTitle,
+                                                     String organization,
+                                                     String deadlineDate,
+                                                     int daysRemaining,
+                                                     String officialUrl,
+                                                     String benefits,
+                                                     List<String> requiredDocuments) {
         String subject = daysRemaining <= 2
                 ? "🚨 [URGENT] Only " + daysRemaining + " Days Left: " + opportunityTitle
                 : "⏰ Deadline Reminder: " + opportunityTitle + " closes in " + daysRemaining + " days";
@@ -52,9 +60,14 @@ public class EmailService {
                 requiredDocuments
         );
 
-        boolean dispatched = false;
+        boolean liveDispatched = false;
+        String dispatchMessage;
 
-        if (mailSender != null && !fromEmail.equals("alerts@gyansetu.edu.in")) {
+        boolean hasCredentials = mailSender != null
+                && mailUsername != null && !mailUsername.trim().isEmpty()
+                && fromEmail != null && !fromEmail.trim().isEmpty();
+
+        if (hasCredentials) {
             try {
                 MimeMessage message = mailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -64,26 +77,31 @@ public class EmailService {
                 helper.setText(htmlContent, true);
 
                 mailSender.send(message);
-                log.info("📧 Email successfully dispatched via SMTP to {}", toEmail);
-                dispatched = true;
+                log.info("📧 Email successfully dispatched via live SMTP ({}) to {}", mailHost, toEmail);
+                liveDispatched = true;
+                dispatchMessage = "Email delivered to " + toEmail + " via live SMTP!";
             } catch (Exception ex) {
                 log.warn("⚠️ SMTP dispatch failed: {}. Logging to GyanSetu email delivery stream.", ex.getMessage());
+                dispatchMessage = "SMTP dispatch failed (" + ex.getMessage() + "), logged to dev stream";
             }
+        } else {
+            dispatchMessage = "Alert saved & email logged to Dev Stream (Preview Mode). To deliver to Gmail inbox, configure your Gmail App Password in application.properties.";
         }
 
         // Development & Simulated Delivery Stream
         log.info("================================================================================");
-        log.info("📬 [GYANSETU EMAIL DELIVERY STREAM] - {}", dispatched ? "SENT (LIVE SMTP)" : "SIMULATED / PREVIEW");
+        log.info("📬 [GYANSETU EMAIL DELIVERY STREAM] - {}", liveDispatched ? "SENT (LIVE SMTP)" : "SIMULATED / PREVIEW");
         log.info("To: {} <{}>", studentName, toEmail);
         log.info("Subject: {}", subject);
         log.info("Target: {} (Days Remaining: {})", opportunityTitle, daysRemaining);
         log.info("Official Portal: {}", officialUrl);
+        log.info("Status: {}", dispatchMessage);
         log.info("================================================================================");
 
-        return true;
+        return new EmailDispatchResult(true, liveDispatched, dispatchMessage);
     }
 
-    private String buildHtmlEmailTemplate(String studentName,
+    public String buildHtmlEmailTemplate(String studentName,
                                          String opportunityTitle,
                                          String organization,
                                          String deadlineDate,

@@ -11,7 +11,8 @@ import {
   Sparkles,
   CheckCircle2,
   X,
-  FileText
+  FileText,
+  Eye
 } from 'lucide-react';
 import type { DeadlineNotification, User } from '../types';
 import { GyanSetuApi } from '../api/client';
@@ -39,7 +40,12 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
 }) => {
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'URGENT' | 'APPROACHING' | 'CHANGES'>('ALL');
   const [isSendingTestEmail, setIsSendingTestEmail] = useState<boolean>(false);
-  const [testEmailResult, setTestEmailResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [testEmailResult, setTestEmailResult] = useState<{
+    success: boolean;
+    message: string;
+    liveSmtp?: boolean;
+    previewUrl?: string;
+  } | null>(null);
 
   if (!isOpen) return null;
 
@@ -61,9 +67,11 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
       const res = await GyanSetuApi.sendTestDeadlineEmail(email, userId);
       setTestEmailResult({
         success: res.success,
-        message: res.message
+        message: res.message,
+        liveSmtp: res.liveSmtp,
+        previewUrl: res.previewUrl
       });
-      setTimeout(() => setTestEmailResult(null), 4000);
+      setTimeout(() => setTestEmailResult(null), 8000);
     } catch {
       setTestEmailResult({
         success: false,
@@ -301,21 +309,34 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
       </div>
 
       {/* Bottom Email Alert Dispatcher Section */}
-      <div className="bg-slate-50 border-t border-slate-200/80 p-3.5 space-y-2">
+      <div className="bg-slate-50 border-t border-slate-200/80 p-3.5 space-y-2.5">
         {testEmailResult && (
           <div
-            className={`p-2 rounded-xl text-xs flex items-center gap-2 animate-in fade-in ${
+            className={`p-2.5 rounded-xl text-xs flex items-start gap-2 animate-in fade-in ${
               testEmailResult.success
-                ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                ? testEmailResult.liveSmtp
+                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                  : 'bg-indigo-50 border border-indigo-200 text-indigo-900'
                 : 'bg-rose-50 border border-rose-200 text-rose-800'
             }`}
           >
             {testEmailResult.success ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             )}
-            <span className="text-[11px] font-semibold">{testEmailResult.message}</span>
+            <div className="flex-1 text-[11px] leading-tight space-y-1">
+              <div className="font-semibold">{testEmailResult.message}</div>
+              <div className="text-[10px] text-slate-500">
+                {testEmailResult.liveSmtp ? (
+                  <span className="text-emerald-700 font-bold">✓ Live SMTP Dispatch Succeeded</span>
+                ) : (
+                  <span>
+                    💡 In safe simulation mode. Click <strong>Preview HTML</strong> below to see the generated email or add a Gmail App Password in application.properties for live inbox delivery.
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -334,22 +355,35 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleSendTestEmail}
-            disabled={isSendingTestEmail}
-            className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white text-[11px] font-bold shadow-xs flex items-center gap-1.5 transition disabled:opacity-60 shrink-0"
-            title="Dispatch a test deadline email alert"
-          >
-            {isSendingTestEmail ? (
-              <span className="animate-spin text-xs">⏳</span>
-            ) : (
-              <>
-                <Send className="w-3 h-3" />
-                <span>Test Alert Email</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <a
+              href="/api/deadline-alerts/email-preview"
+              target="_blank"
+              rel="noreferrer"
+              className="cursor-pointer px-2.5 py-1.5 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-700 text-[11px] font-bold flex items-center gap-1 transition"
+              title="Open generated GyanSetu HTML email in new browser tab"
+            >
+              <Eye className="w-3 h-3 text-slate-600" />
+              <span>Preview HTML</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={handleSendTestEmail}
+              disabled={isSendingTestEmail}
+              className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white text-[11px] font-bold shadow-xs flex items-center gap-1.5 transition disabled:opacity-60"
+              title="Dispatch a test deadline email alert"
+            >
+              {isSendingTestEmail ? (
+                <span className="animate-spin text-xs">⏳</span>
+              ) : (
+                <>
+                  <Send className="w-3 h-3" />
+                  <span>Test Alert Email</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

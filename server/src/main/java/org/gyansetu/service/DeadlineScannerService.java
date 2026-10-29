@@ -24,6 +24,7 @@ public class DeadlineScannerService {
     private final NotificationRepository notificationRepository;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private EmailService.EmailDispatchResult lastDispatchResult;
 
     public DeadlineScannerService(DataRepository dataRepository,
                                   NotificationRepository notificationRepository,
@@ -33,6 +34,10 @@ public class DeadlineScannerService {
         this.notificationRepository = notificationRepository;
         this.emailService = emailService;
         this.userRepository = userRepository;
+    }
+
+    public EmailService.EmailDispatchResult getLastDispatchResult() {
+        return lastDispatchResult;
     }
 
     public List<Notification> scanAndGenerateAlerts(Long userId) {
@@ -148,7 +153,7 @@ public class DeadlineScannerService {
         Notification saved = notificationRepository.save(notif);
 
         // 2. Dispatch Email
-        emailService.sendDeadlineAlertEmail(
+        this.lastDispatchResult = emailService.sendDeadlineAlertEmail(
                 targetEmail,
                 studentName,
                 opp.getTitle(),

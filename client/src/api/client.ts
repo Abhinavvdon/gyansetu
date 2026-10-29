@@ -552,7 +552,7 @@ export const GyanSetuApi = {
     }
   },
 
-  sendTestDeadlineEmail: async (email?: string, userId?: number): Promise<{ success: boolean; message: string; notification?: DeadlineNotification }> => {
+  sendTestDeadlineEmail: async (email?: string, userId?: number): Promise<{ success: boolean; message: string; notification?: DeadlineNotification; liveSmtp?: boolean; previewUrl?: string }> => {
     try {
       const res = await api.post('/deadline-alerts/send-test-alert', { email, userId });
       return res.data;
