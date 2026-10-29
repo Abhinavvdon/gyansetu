@@ -1,11 +1,13 @@
 package org.gyansetu.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.gyansetu.model.Notification;
 import org.gyansetu.model.Opportunity;
 import org.gyansetu.repository.NotificationRepository;
 import org.gyansetu.service.DataRepository;
 import org.gyansetu.service.DeadlineScannerService;
 import org.gyansetu.service.EmailService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,18 +36,28 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getAllNotifications(@RequestParam(required = false) Long userId) {
-        List<Notification> list = userId != null
-                ? notificationRepository.findByUserIdOrderByCreatedAtDesc(userId)
-                : notificationRepository.findAllByOrderByCreatedAtDesc();
+    public ResponseEntity<List<Notification>> getAllNotifications(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId) {
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : userId;
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<Notification> list = notificationRepository.findByUserIdOrderByCreatedAtDesc(effUserId);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/unread-count")
-    public ResponseEntity<Map<String, Object>> getUnreadCount(@RequestParam(required = false) Long userId) {
-        long count = userId != null
-                ? notificationRepository.countByUserIdAndIsReadFalse(userId)
-                : notificationRepository.countByIsReadFalse();
+    public ResponseEntity<Map<String, Object>> getUnreadCount(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId) {
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : userId;
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        long count = notificationRepository.countByUserIdAndIsReadFalse(effUserId);
 
         Map<String, Object> res = new HashMap<>();
         res.put("unreadCount", count);
@@ -61,17 +73,17 @@ public class NotificationController {
     }
 
     @PostMapping("/read-all")
-    public ResponseEntity<Map<String, Object>> markAllAsRead(@RequestParam(required = false) Long userId) {
-        if (userId != null) {
-            notificationRepository.markAllAsReadForUser(userId);
-        } else {
-            List<Notification> all = notificationRepository.findAll();
-            all.forEach(n -> n.setRead(true));
-            notificationRepository.saveAll(all);
+    public ResponseEntity<Map<String, Object>> markAllAsRead(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId) {
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : userId;
+        if (effUserId != null) {
+            notificationRepository.markAllAsReadForUser(effUserId);
         }
         Map<String, Object> res = new HashMap<>();
         res.put("success", true);
-        res.put("message", "All notifications marked as read");
+        res.put("message", "Notifications marked as read");
         return ResponseEntity.ok(res);
     }
 

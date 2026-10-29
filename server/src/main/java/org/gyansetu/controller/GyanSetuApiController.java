@@ -1,7 +1,9 @@
 package org.gyansetu.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.gyansetu.model.*;
 import org.gyansetu.service.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,28 +57,43 @@ public class GyanSetuApiController {
     // --- 1. PROFILE API (PostgreSQL Persisted) ---
     @GetMapping("/profile")
     public ResponseEntity<StudentProfile> getProfile(
+            HttpServletRequest request,
             @RequestParam(required = false) Long userId,
             @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
-        Long effUserId = userId != null ? userId : headerUserId;
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : (userId != null ? userId : headerUserId);
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok(profileService.getOrCreateProfile(effUserId));
     }
 
     @PutMapping("/profile")
     public ResponseEntity<StudentProfile> updateProfile(
+            HttpServletRequest request,
             @RequestBody StudentProfile updated,
             @RequestParam(required = false) Long userId,
             @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
-        Long effUserId = updated.getUserId() != null ? updated.getUserId() : (userId != null ? userId : headerUserId);
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : (updated.getUserId() != null ? updated.getUserId() : (userId != null ? userId : headerUserId));
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         StudentProfile saved = profileService.saveOrUpdateProfile(effUserId, updated);
         return ResponseEntity.ok(saved);
     }
 
     @PostMapping("/profile/toggle-save/{id}")
     public ResponseEntity<Map<String, Object>> toggleSave(
+            HttpServletRequest request,
             @PathVariable String id,
             @RequestParam(required = false) Long userId,
             @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
-        Long effUserId = userId != null ? userId : headerUserId;
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : (userId != null ? userId : headerUserId);
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok(profileService.toggleSaveOpportunity(effUserId, id));
     }
 
@@ -239,9 +256,14 @@ public class GyanSetuApiController {
     // --- 14. WEEKLY ACTION DIGEST & PARENT MODE API ---
     @GetMapping("/digest")
     public ResponseEntity<WeeklyDigest> getWeeklyDigest(
+            HttpServletRequest request,
             @RequestParam(required = false) Long userId,
             @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
-        Long effUserId = userId != null ? userId : headerUserId;
+        Long authUserId = (Long) request.getAttribute("authenticatedUserId");
+        Long effUserId = authUserId != null ? authUserId : (userId != null ? userId : headerUserId);
+        if (effUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok(trustService.generateWeeklyDigest(profileService.getOrCreateProfile(effUserId)));
     }
 }

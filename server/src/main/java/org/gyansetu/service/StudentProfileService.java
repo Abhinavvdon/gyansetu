@@ -45,29 +45,22 @@ public class StudentProfileService {
             return profileRepository.save(profile);
         }
 
-        // Fallback for guest or default view
-        Optional<StudentProfile> first = profileRepository.findFirstByOrderByProfileIdAsc();
-        if (first.isPresent()) {
-            return first.get();
-        }
-
-        StudentProfile defaultP = dataRepository.getDefaultProfile();
-        return profileRepository.save(defaultP);
+        // For unauthenticated or guest fallback, return an isolated empty/default template.
+        // NEVER return another real student's persisted profile to a guest caller.
+        return dataRepository.getDefaultProfile();
     }
 
     @Transactional
     public StudentProfile saveOrUpdateProfile(Long userId, StudentProfile updated) {
-        StudentProfile target;
-
-        if (userId != null) {
-            target = profileRepository.findByUserId(userId).orElseGet(() -> {
-                StudentProfile p = new StudentProfile();
-                p.setUserId(userId);
-                return p;
-            });
-        } else {
-            target = profileRepository.findFirstByOrderByProfileIdAsc().orElseGet(StudentProfile::new);
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID is required to save or update profile");
         }
+
+        StudentProfile target = profileRepository.findByUserId(userId).orElseGet(() -> {
+            StudentProfile p = new StudentProfile();
+            p.setUserId(userId);
+            return p;
+        });
 
         // Validate marks bounds (0 to 100)
         target.setTenthMarksPercent(clamp(updated.getTenthMarksPercent()));

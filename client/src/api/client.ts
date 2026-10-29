@@ -35,6 +35,10 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   try {
+    const token = localStorage.getItem('gyansetu_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     const rawUser = localStorage.getItem('gyansetu_user');
     if (rawUser) {
       const user = JSON.parse(rawUser);
@@ -813,8 +817,21 @@ export const GyanSetuApi = {
     }
   },
 
+  isAuthenticated: (): boolean => {
+    try {
+      const token = localStorage.getItem('gyansetu_token');
+      const user = localStorage.getItem('gyansetu_user');
+      return Boolean(token && user);
+    } catch {
+      return false;
+    }
+  },
+
   // Deadline Alerts & Notifications
   getDeadlineAlerts: async (userId?: number): Promise<DeadlineNotification[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return [];
+    }
     try {
       const res = await api.get<DeadlineNotification[]>('/deadline-alerts', {
         params: userId ? { userId } : {}
@@ -826,6 +843,9 @@ export const GyanSetuApi = {
   },
 
   getUnreadAlertCount: async (userId?: number): Promise<number> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return 0;
+    }
     try {
       const res = await api.get<{ unreadCount: number }>('/deadline-alerts/unread-count', {
         params: userId ? { userId } : {}
@@ -870,6 +890,9 @@ export const GyanSetuApi = {
 
   // Profile
   getProfile: async (userId?: number): Promise<StudentProfile> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return mockProfile;
+    }
     try {
       const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
       const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
@@ -915,6 +938,18 @@ export const GyanSetuApi = {
 
   // Opportunities
   getOpportunities: async (params?: { type?: string; state?: string; search?: string }): Promise<Opportunity[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      let list = [...mockOpportunities];
+      if (params?.type) list = list.filter(o => o.type === params.type);
+      if (params?.state && params.state !== 'All India') {
+        list = list.filter(o => o.eligibleStates.includes('All India') || o.eligibleStates.includes(params.state!));
+      }
+      if (params?.search) {
+        const q = params.search.toLowerCase();
+        list = list.filter(o => o.title.toLowerCase().includes(q) || o.organization.toLowerCase().includes(q) || o.description.toLowerCase().includes(q));
+      }
+      return list;
+    }
     try {
       const res = await api.get('/opportunities', { params });
       return res.data;
@@ -1545,6 +1580,30 @@ export const GyanSetuApi = {
   },
 
   getWeeklyDigest: async (): Promise<WeeklyDigest> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return {
+        studentName: 'Student',
+        weekLabel: `Week of ${new Date().toISOString().split('T')[0]}`,
+        upcomingDeadlinesCount: 3,
+        newMatchesCount: 4,
+        documentsUrgentCount: 1,
+        feeSavingsToDate: 2800.0,
+        upcomingDeadlineHighlights: [
+          'GATE 2027: Registration closing on Oct 31 (3 days remaining)',
+          'CAT 2026: Application portal closing Nov 10',
+          'PM-USP Central Sector Scholarship: Form submission Nov 30'
+        ],
+        newMatchHighlights: [
+          'Railway RRB NTPC: 1,200 new vacancies added (+100% eligibility score)',
+          'Post-Matric OBC Scheme: 100% college tuition reimbursement active for MP Domicile'
+        ],
+        urgentDocumentAlerts: [
+          'Action needed: Family Income Certificate renewal required from Tehsil (takes 14-18 days). Apply now!'
+        ],
+        hindiParentSummary: 'इस सप्ताह छात्र के लिए 3 महत्वपूर्ण अंतिम तिथियां हैं: गेट 2027, कैट और पीएम-यूएसपी स्कॉलरशिप। आय प्रमाण पत्र का नवीनीकरण तहसील से तुरंत कराएं।',
+        whatsAppFormattedMessage: `*GyanSetu Weekly Action Digest (छात्र अवलोकन)*\n\nप्रिय अभिभावक/छात्र,\nइस सप्ताह 3 प्रमुख अवसरों की समय-सीमा समाप्त हो रही है:\n1. GATE 2027 (अंतिम तिथि 31 अक्टूबर)\n2. CAT 2026 (अंतिम तिथि 10 नवंबर)\n3. PM-USP स्कॉलरशिप (30 नवंबर)\n\nअनुमानित फीस बचत: ₹2,800\nतत्काल कदम: तहसील से आय प्रमाण पत्र रिन्यू कराएं।\n\n— ज्ञानसेतु (AI Opportunity Intelligence)`
+      };
+    }
     try {
       const res = await api.get('/digest');
       return res.data;

@@ -3,6 +3,8 @@ package org.gyansetu.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -10,14 +12,34 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 import java.io.IOException;
 
 /**
- * Single Page Application (SPA) Web Routing Configuration.
- * Enables Spring Boot to serve prebuilt React 19 / Vite frontend assets from
+ * Single Page Application (SPA) Web Routing & Security Configuration.
+ * Enables Spring Boot to serve prebuilt React / Vite frontend assets from
  * classpath:/static/ while gracefully routing client-side HTML5 history routes
- * (e.g. /opportunities, /timeline, /calculator) to index.html without interfering
- * with Spring Boot REST API endpoints (/api/**) or Actuator metrics.
+ * to index.html and enforcing authentication on sensitive REST API routes (/api/**).
  */
 @Configuration
 public class WebSpaConfig implements WebMvcConfigurer {
+
+    private final AuthenticationInterceptor authenticationInterceptor;
+
+    public WebSpaConfig(AuthenticationInterceptor authenticationInterceptor) {
+        this.authenticationInterceptor = authenticationInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(@NonNull InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor)
+                .addPathPatterns("/api/**");
+    }
+
+    @Override
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
 
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
