@@ -185,26 +185,38 @@ public class GyanSetuApiController {
 
     // --- 9. MISSED-IT-BY-HOW-MUCH GAP ANALYSIS API ---
     @GetMapping("/gap-analysis")
-    public ResponseEntity<List<GapAnalysis>> getGapAnalysis() {
-        return ResponseEntity.ok(gapAnalysisService.analyzeGaps(repository.getDefaultProfile()));
+    public ResponseEntity<List<GapAnalysis>> getGapAnalysis(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(gapAnalysisService.analyzeGaps(profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 10. ELIGIBILITY TIMELINE (FUTURE HORIZON) API ---
     @GetMapping("/timeline")
-    public ResponseEntity<List<CareerTimelineNode>> getCareerTimeline() {
-        return ResponseEntity.ok(careerService.generateTimeline(repository.getDefaultProfile()));
+    public ResponseEntity<List<CareerTimelineNode>> getCareerTimeline(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(careerService.generateTimeline(profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 11. APPLICATION COST PLANNER & CONCESSION FINDER API ---
     @GetMapping("/costs")
-    public ResponseEntity<ApplicationCostPlan> getCosts() {
-        return ResponseEntity.ok(costAndClashService.calculateCosts(repository.getDefaultProfile()));
+    public ResponseEntity<ApplicationCostPlan> getCosts(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(costAndClashService.calculateCosts(profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 12. EXAM CLASH DETECTOR API ---
     @GetMapping("/clashes")
-    public ResponseEntity<List<ExamClashWarning>> getClashes() {
-        return ResponseEntity.ok(costAndClashService.detectClashes(repository.getDefaultProfile()));
+    public ResponseEntity<List<ExamClashWarning>> getClashes(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(costAndClashService.detectClashes(profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 13. TRUST, SCAM ALERTS & PEER SUCCESS PATHS API ---
@@ -220,7 +232,10 @@ public class GyanSetuApiController {
 
     // --- 14. WEEKLY ACTION DIGEST & PARENT MODE API ---
     @GetMapping("/digest")
-    public ResponseEntity<WeeklyDigest> getWeeklyDigest() {
-        return ResponseEntity.ok(trustService.generateWeeklyDigest(repository.getDefaultProfile()));
+    public ResponseEntity<WeeklyDigest> getWeeklyDigest(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(trustService.generateWeeklyDigest(profileService.getOrCreateProfile(effUserId)));
     }
 }
