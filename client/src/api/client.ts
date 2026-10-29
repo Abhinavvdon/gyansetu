@@ -522,6 +522,72 @@ let mockDocuments: DocumentItem[] = [
   }
 ];
 
+export const callDirectGeminiChatbotApi = async (
+  apiKey: string,
+  payload: {
+    message: string;
+    lang?: 'en' | 'hi';
+    profile?: StudentProfile | null;
+    history?: { sender: 'user' | 'bot'; text: string }[];
+  }
+): Promise<{ success: boolean; reply?: string; model?: string; error?: string }> => {
+  const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  const profile = payload.profile;
+  const lang = payload.lang || 'en';
+
+  const prompt = `You are GyanSetu's AI Study Mentor & Timetable Architect (ज्ञानसेतु अध्ययन व समय-सारणी मार्गदर्शक) for Indian students.
+
+STUDENT PROFILE CONTEXT:
+- Name: ${profile?.fullName || 'Student'}
+- Current Degree/Course: ${profile?.currentDegree || 'Undergraduate'} (${profile?.stream || 'General'}, Year ${profile?.currentYear || 3})
+- Completed Education: ${profile?.alreadyPursuedLevel || '12th'} (10th: ${profile?.tenthMarksPercent || 0}%, 12th: ${profile?.twelfthMarksPercent || 0}%, UG: ${profile?.ugMarksPercent || 0}%)
+- Reservation Category: ${profile?.category || 'General'}, State Domicile: ${profile?.stateDomicile || 'All India'}
+- Career Goals / Target Exams: ${profile?.careerGoals?.join(', ') || 'GATE, Higher Studies, Govt Exams'}
+
+YOUR EXPERTISE & MISSION:
+1. Provide practical, high-yield study timetables (daily, weekly, 30/60/90 days), backlog clearance schedules, and subject distribution plans.
+2. If asked for a study timetable, format it with specific time slots (e.g. 6:30 AM - 8:00 AM, Evening blocks), factoring in typical Indian college hours (e.g. 9 AM - 5 PM) and commutes.
+3. For multi-exam preparation (e.g. GATE vs Placement vs Semester exams, or SSC CGL + Banking), highlight syllabus synergies and overlapping topics.
+4. Give actionable revision methods (Spaced repetition, Active recall, PYQ solving slots, and mock test cadence).
+5. Language instruction: ${lang === 'hi' ? 'Respond in clean Hindi (Devanagari script) with natural Hinglish terminology for technical/exam words.' : 'Respond in fluent, encouraging, well-structured English.'}
+6. Formatting Rules:
+   - Use '### ' for major headings.
+   - Use '#### ' for time slots/sub-sections.
+   - Use '* ' bullet points with bold '**' for clear key actions.
+   - Use '> ' for critical motivational tips or golden rules.
+
+STUDENT QUERY: "${payload.message}"
+Provide your comprehensive, structured, and empathetic study response:`;
+
+  let lastError = '';
+  for (const model of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 2048 }
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          return { success: true, reply: text.trim(), model };
+        }
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        lastError = errJson?.error?.message || `HTTP ${res.status}`;
+      }
+    } catch (e: any) {
+      lastError = e?.message || 'Network error';
+    }
+  }
+
+  return { success: false, error: lastError || 'Failed to generate response from Gemini API.' };
+};
+
 export const GyanSetuApi = {
   // Authentication (PostgreSQL + BCrypt)
   login: async (creds: LoginCredentials): Promise<AuthResponse> => {
@@ -756,6 +822,41 @@ export const GyanSetuApi = {
       return {
         success: false,
         error: err.response?.data?.error || err.message || 'Failed to reset catalog.'
+      };
+    }
+  },
+
+  // Study Chatbot Gemini AI Assistant
+  askStudyChatbot: async (payload: {
+    apiKey?: string;
+    message: string;
+    lang?: 'en' | 'hi';
+    profile?: StudentProfile | null;
+    history?: { sender: 'user' | 'bot'; text: string }[];
+  }): Promise<{ success: boolean; reply?: string; model?: string; error?: string }> => {
+    try {
+      const res = await api.post('/chatbot/ask', payload);
+      if (res.data?.success) {
+        return res.data;
+      }
+      throw new Error(res.data?.error || 'Backend AI generation failed');
+    } catch (err: any) {
+      // Direct client fallback to Gemini API if backend endpoint is unavailable or returns error
+      const apiKey = payload.apiKey?.trim() || localStorage.getItem('gyansetu-gemini-key')?.trim();
+      if (apiKey) {
+        try {
+          const directRes = await callDirectGeminiChatbotApi(apiKey, payload);
+          return directRes;
+        } catch (directErr: any) {
+          return {
+            success: false,
+            error: err.response?.data?.error || directErr.message || 'Failed to connect to Gemini AI.'
+          };
+        }
+      }
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || 'Failed to connect to AI study mentor.'
       };
     }
   },

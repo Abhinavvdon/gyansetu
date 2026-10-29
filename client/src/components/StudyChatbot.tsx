@@ -17,7 +17,11 @@ import {
   ChevronDown,
   HelpCircle,
   Flame,
-  Send
+  Send,
+  Key,
+  ExternalLink,
+  Trash2,
+  CheckCircle2
 } from 'lucide-react';
 import {
   CHATBOT_CATEGORIES,
@@ -27,6 +31,7 @@ import {
 } from '../data/studyChatbotData';
 import type { StudentProfile } from '../types';
 import { formatStudentName } from '../utils/languageUtils';
+import { GyanSetuApi } from '../api/client';
 
 interface Message {
   id: string;
@@ -35,6 +40,9 @@ interface Message {
   timestamp: string;
   questionData?: ChatbotQuestion;
   suggestedFollowUps?: string[];
+  isGeminiGenerated?: boolean;
+  geminiModel?: string;
+  showKeyPrompt?: boolean;
 }
 
 interface StudyChatbotProps {
@@ -51,21 +59,40 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [typingMessage, setTypingMessage] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showQuestionDrawer, setShowQuestionDrawer] = useState(true);
   const [customInput, setCustomInput] = useState('');
 
+  // Gemini API key state & modal management
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => {
+    return localStorage.getItem('gyansetu-gemini-key') || '';
+  });
+  const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
+  const [inputKey, setInputKey] = useState('');
+  const [keySaveToast, setKeySaveToast] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize initial welcome message
+  // Sync with localStorage if updated from other components (like AdaptionAiModal)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedKey = localStorage.getItem('gyansetu-gemini-key') || '';
+      setGeminiApiKey(storedKey);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Initialize welcome message
   useEffect(() => {
     if (messages.length === 0) {
       const rawName = profile?.fullName ? profile.fullName.split(' ')[0] : '';
       const studentName = rawName ? ` ${formatStudentName(rawName, lang)}` : '';
       const initialGreeting =
         lang === 'hi'
-          ? `नमस्ते${studentName}! 🙏 मैं आपका **ज्ञानसेतु स्टडी टाइमटेबल व शेड्यूल असिस्टेंट** हूँ।\n\nकॉलेज शेड्यूल, सरकारी परीक्षाओं, बैकलाग रिकवरी या सीमित समय के लिए टाइमटेबल की योजना बनानी हो—आप नीचे दिए गए **30 विशिष्ट अध्ययन प्रश्नों** में से कोई भी प्रश्न चुन सकते हैं:`
-          : `Hello${studentName}! 👋 I am your **GyanSetu Study Timetable & Scheduling Assistant**.\n\nWhether you need a daily routine around college hours, multiple exam balance, backlog recovery, or a 2-hour high-yield study plan—**select any of our 30 pre-fed study planning questions below** to get started:`;
+          ? `नमस्ते${studentName}! 🙏 मैं आपका **ज्ञानसेतु AI अध्ययन व समय-सारणी सलाहकार** हूँ।\n\nआप नीचे दिए गए **30 पूर्व-निर्धारित प्रमाणित टाइमटेबल** चुन सकते हैं, अथवा **Google Gemini API** से अपने कॉलेज समय, बैकलाग या मनपसंद परीक्षा अनुसार लाइव अध्ययन योजना बनवा सकते हैं:`
+          : `Hello${studentName}! 👋 I am your **GyanSetu AI Study Mentor & Timetable Architect**.\n\nYou can select from our **30 verified study timetable guides** below, or ask any custom question to generate real-time, personalized schedules using **Google Gemini AI**:`;
 
       setMessages([
         {
@@ -107,9 +134,10 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
 
     setMessages((prev) => [...prev, userMsg]);
     setIsTyping(true);
-    setShowQuestionDrawer(false); // Collapse drawer for clean chat view
+    setTypingMessage(lang === 'hi' ? 'टाइमटेबल तैयार हो रहा है...' : 'Crafting timetable plan...');
+    setShowQuestionDrawer(false);
 
-    // Simulate smart AI typing delay
+    // Simulate snappy AI response delay
     setTimeout(() => {
       const botMsg: Message = {
         id: 'b-' + Date.now(),
@@ -121,61 +149,172 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
       };
       setMessages((prev) => [...prev, botMsg]);
       setIsTyping(false);
-    }, 450);
+      setTypingMessage('');
+    }, 400);
+  };
+
+  // Execute Gemini AI query
+  const executeGeminiQuery = async (queryText: string) => {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const userMsg: Message = {
+      id: 'u-' + Date.now(),
+      sender: 'user',
+      text: queryText,
+      timestamp: time
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setIsTyping(true);
+    setTypingMessage(
+      lang === 'hi'
+        ? '⚡ Gemini AI आपकी प्रोफ़ाइल अनुसार योजना बना रहा है...'
+        : '⚡ Gemini AI is analyzing your profile & drafting study plan...'
+    );
+    setShowQuestionDrawer(false);
+
+    try {
+      const history = messages.slice(-4).map((m) => ({
+        sender: m.sender,
+        text: m.text
+      }));
+
+      const res = await GyanSetuApi.askStudyChatbot({
+        apiKey: geminiApiKey,
+        message: queryText,
+        lang,
+        profile,
+        history
+      });
+
+      if (res.success && res.reply) {
+        const botMsg: Message = {
+          id: 'b-' + Date.now(),
+          sender: 'bot',
+          text: res.reply,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isGeminiGenerated: true,
+          geminiModel: res.model || 'gemini-2.5-flash',
+          suggestedFollowUps: ['q1', 'q7', 'q26']
+        };
+        setMessages((prev) => [...prev, botMsg]);
+      } else {
+        const errorBotMsg: Message = {
+          id: 'b-' + Date.now(),
+          sender: 'bot',
+          text:
+            lang === 'hi'
+              ? `⚠️ **Gemini AI से उत्तर प्राप्त नहीं हो सका:**\n\n${res.error || 'अज्ञात त्रुटि'}\n\nकृपया सुनिश्चित करें कि आपकी **Gemini API Key** सही है या हेडर में की (Key) बटन पर क्लिक करके पुनः दर्ज करें।`
+              : `⚠️ **Could not generate response with Gemini API:**\n\n${res.error || 'Unknown communication issue'}\n\nPlease verify your **Gemini API Key** in the header or generate a free key from Google AI Studio.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          showKeyPrompt: true
+        };
+        setMessages((prev) => [...prev, errorBotMsg]);
+      }
+    } catch (err: any) {
+      const errorBotMsg: Message = {
+        id: 'b-' + Date.now(),
+        sender: 'bot',
+        text: `⚠️ **Connection Error:** ${err?.message || 'Network failure communicating with Gemini AI.'}`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        showKeyPrompt: true
+      };
+      setMessages((prev) => [...prev, errorBotMsg]);
+    } finally {
+      setIsTyping(false);
+      setTypingMessage('');
+    }
   };
 
   const handleCustomInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customInput.trim()) return;
 
-    const query = customInput.trim().toLowerCase();
-    // Search best match in the 30 pre-fed questions
+    const query = customInput.trim();
+    setCustomInput('');
+
+    // If Gemini API key is connected, use real-time AI generation directly!
+    if (geminiApiKey) {
+      executeGeminiQuery(query);
+      return;
+    }
+
+    // If no key yet, check if there's a match in the 30 pre-fed questions
+    const queryLower = query.toLowerCase();
     const match = CHATBOT_QUESTIONS.find((q) => {
       const full = (q.question + ' ' + q.questionHi + ' ' + q.tags.join(' ')).toLowerCase();
-      return full.includes(query);
+      return full.includes(queryLower);
     });
 
     if (match) {
       handleSelectQuestion(match);
-      setCustomInput('');
-    } else {
-      // Find top 3 partial keyword matches
-      const partials = CHATBOT_QUESTIONS.filter((q) => {
-        const words = query.split(' ').filter((w) => w.length > 2);
-        return words.some(
-          (w) =>
-            q.question.toLowerCase().includes(w) ||
-            q.questionHi.toLowerCase().includes(w) ||
-            q.tags.some((t) => t.includes(w))
-        );
-      });
-
-      const userMsg: Message = {
-        id: 'u-' + Date.now(),
-        sender: 'user',
-        text: customInput,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages((prev) => [...prev, userMsg]);
-      setCustomInput('');
-      setIsTyping(true);
-
-      setTimeout(() => {
-        const botMsg: Message = {
-          id: 'b-' + Date.now(),
-          sender: 'bot',
-          text:
-            lang === 'hi'
-              ? `मैं विशेष रूप से नीचे सूचीबद्ध **30 अध्ययन व टाइमटेबल प्रश्नों** के लिए प्रशिक्षित हूँ। आपके विषय से संबंधित ये प्रश्न उपयोगी हो सकते हैं:`
-              : `I am specialized to answer our **30 pre-fed study timetable & scheduling questions**. Here are the closest questions related to your query:`,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          suggestedFollowUps: partials.length > 0 ? partials.slice(0, 3).map((p) => p.id) : ['q1', 'q7', 'q26']
-        };
-        setMessages((prev) => [...prev, botMsg]);
-        setIsTyping(false);
-        setShowQuestionDrawer(true);
-      }, 400);
+      return;
     }
+
+    // Find partial matches to recommend
+    const partials = CHATBOT_QUESTIONS.filter((q) => {
+      const words = queryLower.split(' ').filter((w) => w.length > 2);
+      return words.some(
+        (w) =>
+          q.question.toLowerCase().includes(w) ||
+          q.questionHi.toLowerCase().includes(w) ||
+          q.tags.some((t) => t.includes(w))
+      );
+    });
+
+    const userMsg: Message = {
+      id: 'u-' + Date.now(),
+      sender: 'user',
+      text: query,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setIsTyping(true);
+    setTypingMessage(lang === 'hi' ? 'विकल्प खोजे जा रहे हैं...' : 'Checking verified guides...');
+
+    setTimeout(() => {
+      const botMsg: Message = {
+        id: 'b-' + Date.now(),
+        sender: 'bot',
+        text:
+          lang === 'hi'
+            ? `🔑 **कस्टम उत्तर व अध्ययन योजना के लिए Gemini API जोड़ें!**\n\nआपने पूछा: *"${query}"*\n\nनीचे हमारे **30 प्रमाणित टाइमटेबल** में से मिलते-जुलते प्रश्न उपलब्ध हैं। यदि आप अपने विशिष्ट कॉलेज समय, बैकलाग या परीक्षाओं अनुसार लाइव AI योजना चाहते हैं, तो कृपया अपनी मुफ्त **Google Gemini API Key** कनेक्ट करें:`
+            : `🔑 **Connect Google Gemini API for Custom AI Answers!**\n\nYou asked: *"${query}"*\n\nWe have **30 pre-fed verified timetable guides** below. To get personalized daily schedules, semester-vs-exam roadmaps, or backlog strategies tailored to your exact profile, connect your free Google Gemini API key:`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        suggestedFollowUps: partials.length > 0 ? partials.slice(0, 3).map((p) => p.id) : ['q1', 'q7', 'q26'],
+        showKeyPrompt: true
+      };
+      setMessages((prev) => [...prev, botMsg]);
+      setIsTyping(false);
+      setTypingMessage('');
+      setShowQuestionDrawer(true);
+    }, 350);
+  };
+
+  const handleSaveApiKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputKey.trim()) return;
+
+    const trimmed = inputKey.trim();
+    localStorage.setItem('gyansetu-gemini-key', trimmed);
+    setGeminiApiKey(trimmed);
+    setKeySaveToast(lang === 'hi' ? 'Gemini API Key सफलतापूर्वक सहेजी गई! ✨' : 'Gemini API Key connected! ✨');
+
+    setTimeout(() => {
+      setKeySaveToast(null);
+      setIsKeyModalOpen(false);
+    }, 1200);
+  };
+
+  const handleRemoveApiKey = () => {
+    localStorage.removeItem('gyansetu-gemini-key');
+    setGeminiApiKey('');
+    setInputKey('');
+    setKeySaveToast(lang === 'hi' ? 'Gemini API Key हटा दी गई।' : 'Gemini API Key removed.');
+    setTimeout(() => {
+      setKeySaveToast(null);
+      setIsKeyModalOpen(false);
+    }, 1200);
   };
 
   const handleResetChat = () => {
@@ -187,8 +326,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
         sender: 'bot',
         text:
           lang === 'hi'
-            ? `बातचीत रीसेट हो गई है। 🙏 नमस्ते${studentName}! कृपया अपना अध्ययन प्रश्न चुनें:`
-            : `Conversation refreshed! 👋 Hello${studentName}, please select any study timetable question below:`,
+            ? `बातचीत रीसेट हो गई है। 🙏 नमस्ते${studentName}! कृपया अपना अध्ययन प्रश्न चुनें या टाइप करें:`
+            : `Conversation refreshed! 👋 Hello${studentName}, please select any timetable guide below or type any question:`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         suggestedFollowUps: ['q1', 'q7', 'q26', 'q20']
       }
@@ -219,13 +358,13 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
     }
   };
 
-  // Simple Markdown-like formatter for bot answers
+  // Clean Markdown formatter for bot answers
   const formatBotResponse = (content: string) => {
     return content.split('\n\n').map((paragraph, idx) => {
       // Heading level 3
       if (paragraph.startsWith('### ')) {
         return (
-          <h4 key={idx} className="font-extrabold text-slate-900 text-sm mt-2 mb-1.5 flex items-center gap-1.5">
+          <h4 key={idx} className="font-extrabold text-slate-900 text-sm mt-2.5 mb-1.5 flex items-center gap-1.5">
             <span className="w-1.5 h-4 bg-[#5034df] rounded-full inline-block"></span>
             {paragraph.replace('### ', '')}
           </h4>
@@ -234,7 +373,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
       // Heading level 4
       if (paragraph.startsWith('#### ')) {
         return (
-          <h5 key={idx} className="font-bold text-[#1c1257] text-xs mt-2.5 mb-1 bg-indigo-50/80 px-2.5 py-1 rounded-lg border border-indigo-100/80">
+          <h5 key={idx} className="font-bold text-[#1c1257] text-xs mt-2 mb-1 bg-indigo-50/90 px-2.5 py-1 rounded-lg border border-indigo-100">
             {paragraph.replace('#### ', '')}
           </h5>
         );
@@ -284,8 +423,10 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
           {/* Subtle Attention Badge */}
           <div className="hidden sm:flex items-center gap-1.5 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-indigo-100 text-[#1c1257] text-xs font-bold animate-in fade-in slide-in-from-right-4 duration-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>{lang === 'hi' ? 'स्टडी टाइमटेबल बॉट' : 'Study Timetable AI'}</span>
+            <span className={`w-2 h-2 rounded-full ${geminiApiKey ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse`}></span>
+            <span>
+              {geminiApiKey ? (lang === 'hi' ? 'Gemini AI एक्टिव' : 'Gemini AI Active') : (lang === 'hi' ? 'स्टडी टाइमटेबल बॉट' : 'Study Timetable AI')}
+            </span>
           </div>
 
           <button
@@ -306,25 +447,52 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
 
       {/* Chatbot Window (Bottom Right) */}
       {isOpen && (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[94vw] sm:w-[450px] md:w-[480px] h-[640px] max-h-[88vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[94vw] sm:w-[460px] md:w-[490px] h-[640px] max-h-[88vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
           
           {/* Top Header Ribbon */}
-          <div className="bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white p-4 pb-3.5 flex items-center justify-between shrink-0 shadow-md">
+          <div className="bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white p-3.5 pb-3 flex items-center justify-between shrink-0 shadow-md">
             <div className="flex items-center gap-2.5">
               <div className="relative">
                 <div className="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center text-white shadow-inner border border-white/20">
                   <Bot className="w-5 h-5 text-indigo-100" />
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-[#1c1257]"></span>
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 ${geminiApiKey ? 'bg-emerald-400' : 'bg-amber-400'} rounded-full ring-2 ring-[#1c1257]`}></span>
               </div>
               <div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <h3 className="text-sm font-extrabold tracking-tight">
-                    {lang === 'hi' ? 'ज्ञानसेतु टाइमटेबल बॉट' : 'GyanSetu Study Timetable Bot'}
+                    {lang === 'hi' ? 'ज्ञानसेतु टाइमटेबल AI' : 'GyanSetu Study AI'}
                   </h3>
-                  <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-md font-semibold text-indigo-100">
-                    30 Guides
-                  </span>
+                  
+                  {/* Gemini API Status Badge */}
+                  {geminiApiKey ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputKey(geminiApiKey);
+                        setIsKeyModalOpen(true);
+                      }}
+                      className="cursor-pointer text-[10px] bg-emerald-500/25 hover:bg-emerald-500/35 text-emerald-200 border border-emerald-400/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition"
+                      title={lang === 'hi' ? 'Gemini API कनेक्टेड है (बदलने के लिए क्लिक करें)' : 'Gemini AI Connected (Click to view or change key)'}
+                    >
+                      <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                      <span>Gemini Live AI</span>
+                      <Check className="w-2.5 h-2.5 text-emerald-300" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputKey('');
+                        setIsKeyModalOpen(true);
+                      }}
+                      className="cursor-pointer text-[10px] bg-amber-400/25 hover:bg-amber-400/35 text-amber-200 border border-amber-300/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition animate-pulse"
+                      title={lang === 'hi' ? 'कस्टम प्रश्नों के लिए Gemini API जोड़ें' : 'Connect Gemini API for custom AI timetable'}
+                    >
+                      <Key className="w-2.5 h-2.5 text-amber-300" />
+                      <span>{lang === 'hi' ? 'Gemini जोड़ें' : 'Connect Gemini'}</span>
+                    </button>
+                  )}
                 </div>
                 <p className="text-[11px] text-indigo-200 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-amber-300" />
@@ -335,6 +503,17 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
 
             {/* Header Actions */}
             <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setInputKey(geminiApiKey);
+                  setIsKeyModalOpen(!isKeyModalOpen);
+                }}
+                className={`cursor-pointer p-1.5 rounded-xl hover:bg-white/15 transition ${geminiApiKey ? 'text-emerald-300' : 'text-amber-200'}`}
+                title={lang === 'hi' ? 'Gemini API Key सेटिंग्स' : 'Gemini API Key Settings'}
+              >
+                <Key className="w-4 h-4" />
+              </button>
               <button
                 type="button"
                 onClick={handleResetChat}
@@ -354,6 +533,85 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
             </div>
           </div>
 
+          {/* Inline Gemini Key Config Modal / Popover */}
+          {isKeyModalOpen && (
+            <div className="bg-slate-900 text-white p-4 border-b border-indigo-900/60 shadow-inner animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <Key className="w-4 h-4 text-amber-400" />
+                  <h4 className="text-xs font-bold text-white">
+                    {lang === 'hi' ? 'Google Gemini API कनेक्शन' : 'Google Gemini API Connection'}
+                  </h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsKeyModalOpen(false)}
+                  className="cursor-pointer text-slate-400 hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <p className="text-[11px] text-slate-300 leading-relaxed mb-2.5">
+                {lang === 'hi'
+                  ? 'अपनी मुफ्त Gemini API Key जोड़ें ताकि आप अपने कॉलेज समय, बैकलाग या मनपसंद परीक्षाओं अनुसार व्यक्तिगत अध्ययन टाइमटेबल प्राप्त कर सकें।'
+                  : 'Connect your free Google Gemini API key to unlock personalized study timetables, backlog clearance routines, and custom exam planning.'}
+              </p>
+
+              {keySaveToast && (
+                <div className="mb-2 p-2 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-emerald-300 text-xs flex items-center gap-1.5 font-medium animate-in fade-in">
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <span>{keySaveToast}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveApiKey} className="space-y-2">
+                <div className="relative">
+                  <input
+                    type="password"
+                    value={inputKey}
+                    onChange={(e) => setInputKey(e.target.value)}
+                    placeholder="AIzaSy..."
+                    className="w-full px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <a
+                    href="https://aistudio.google.com/app/apikey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-indigo-300 hover:text-indigo-200 underline flex items-center gap-1"
+                  >
+                    <span>Get Free Key at Google AI Studio</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+
+                  <div className="flex items-center gap-1.5">
+                    {geminiApiKey && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveApiKey}
+                        className="cursor-pointer text-[11px] text-rose-300 hover:text-rose-200 px-2 py-1 rounded-lg border border-rose-500/30 hover:bg-rose-950/40 transition flex items-center gap-1"
+                        title="Remove stored key"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={!inputKey.trim()}
+                      className="cursor-pointer text-xs font-bold bg-[#5034df] hover:bg-[#3f25c7] text-white px-3 py-1 rounded-lg transition disabled:opacity-40"
+                    >
+                      {lang === 'hi' ? 'सहेजें (Save)' : 'Save Key'}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
+
           {/* Chat Messages Body */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-slate-50/60 text-left">
             {messages.map((msg) => (
@@ -367,7 +625,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                   </div>
                 )}
 
-                <div className={`max-w-[85%] ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`max-w-[88%] ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
                   <div
                     className={`p-3.5 rounded-2xl text-xs leading-relaxed shadow-xs ${
                       msg.sender === 'user'
@@ -381,12 +639,63 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                       <p className="font-medium">{msg.text}</p>
                     )}
 
-                    {/* Copy Button for Bot Answers */}
+                    {/* Pre-fed Question Bot Answer Actions */}
                     {msg.sender === 'bot' && msg.questionData && (
+                      <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-[11px] text-slate-400">
+                          <span className="font-semibold text-indigo-600 flex items-center gap-1">
+                            <Check className="w-3 h-3" />
+                            <span>Q#{msg.questionData.number} Verified Guide</span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyText(msg.id, msg.text)}
+                            className="cursor-pointer inline-flex items-center gap-1 hover:text-[#5034df] font-medium transition"
+                            title="Copy timetable to clipboard"
+                          >
+                            {copiedId === msg.id ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-600" />
+                                <span className="text-emerald-600">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>Copy Routine</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        {/* Personalize with Gemini AI Button */}
+                        {geminiApiKey && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const qPrompt =
+                                lang === 'hi'
+                                  ? `कृपया इस टाइमटेबल गाइड (#${msg.questionData?.number}: ${msg.questionData?.question}) को विशेष रूप से मेरी शाखा (${profile?.stream || 'इंजीनियरिंग'}), वर्ष (${profile?.currentYear || 3}), और दैनिक कॉलेज समय अनुसार कस्टमाइज़ करें।`
+                                  : `Please customize this timetable guide (#${msg.questionData?.number}: ${msg.questionData?.question}) specifically for my profile: ${profile?.currentDegree || 'B.Tech'} ${profile?.stream || ''}, Year ${profile?.currentYear || 3}, targeting ${profile?.careerGoals?.join(', ') || 'GATE & Exams'}.`;
+                              executeGeminiQuery(qPrompt);
+                            }}
+                            className="cursor-pointer w-full text-left p-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border border-indigo-200/80 rounded-xl transition flex items-center justify-between text-[11px] text-[#5034df] font-bold"
+                          >
+                            <span className="flex items-center gap-1">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              <span>{lang === 'hi' ? 'Gemini AI से मेरी शाखा अनुसार कस्टमाइज़ करें' : 'Personalize for My Branch with Gemini AI'}</span>
+                            </span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Gemini AI Generated Bot Answer Actions */}
+                    {msg.sender === 'bot' && msg.isGeminiGenerated && (
                       <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                        <span className="font-semibold text-indigo-600 flex items-center gap-1">
-                          <Check className="w-3 h-3" />
-                          <span>Q#{msg.questionData.number} Verified Plan</span>
+                        <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-amber-500" />
+                          <span>Generated by Gemini AI ({msg.geminiModel || 'Flash'})</span>
                         </span>
                         <button
                           type="button"
@@ -402,9 +711,30 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                           ) : (
                             <>
                               <Copy className="w-3 h-3" />
-                              <span>Copy Routine</span>
+                              <span>Copy Plan</span>
                             </>
                           )}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Prompt to Enter Gemini API Key Inline */}
+                    {msg.showKeyPrompt && (
+                      <div className="mt-3 p-2.5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-left">
+                        <span className="text-[11px] text-indigo-950 font-semibold flex items-center gap-1">
+                          <Key className="w-3.5 h-3.5 text-[#5034df] shrink-0" />
+                          <span>{lang === 'hi' ? 'मुफ्त Gemini API Key आवश्यक है' : 'Free Google AI Studio Key Needed'}</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setInputKey(geminiApiKey);
+                            setIsKeyModalOpen(true);
+                          }}
+                          className="cursor-pointer text-xs font-bold bg-[#5034df] hover:bg-[#3f25c7] text-white px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1 shrink-0"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                          <span>{lang === 'hi' ? 'API Key दर्ज करें' : 'Enter Gemini API Key'}</span>
                         </button>
                       </div>
                     )}
@@ -415,7 +745,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                     <div className="mt-2 pl-1 space-y-1">
                       <div className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
                         <Flame className="w-3 h-3 text-amber-500" />
-                        <span>{lang === 'hi' ? 'संबंधित प्रश्न चुनें:' : 'Next Suggested Questions:'}</span>
+                        <span>{lang === 'hi' ? 'संबंधित प्रश्न चुनें:' : 'Next Suggested Guides:'}</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {msg.suggestedFollowUps.map((fid) => {
@@ -453,8 +783,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce"></span>
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:0.2s]"></span>
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-bounce [animation-delay:0.4s]"></span>
-                  <span className="text-[11px] font-medium text-slate-500 ml-1">
-                    {lang === 'hi' ? 'टाइमटेबल तैयार हो रहा है...' : 'Crafting timetable plan...'}
+                  <span className="text-[11px] font-medium text-slate-600 ml-1">
+                    {typingMessage || (lang === 'hi' ? 'टाइमटेबल तैयार हो रहा है...' : 'Crafting timetable plan...')}
                   </span>
                 </div>
               </div>
@@ -470,7 +800,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
               <div className="flex items-center gap-1.5">
                 <HelpCircle className="w-3.5 h-3.5 text-[#5034df]" />
                 <span className="text-[11px] font-bold text-slate-700">
-                  {lang === 'hi' ? '30 पूर्व-निर्धारित प्रश्न सूची' : 'Select a Pre-Fed Question (30 Available)'}
+                  {lang === 'hi' ? '30 पूर्व-निर्धारित प्रश्न सूची' : 'Select a Pre-Fed Guide (30 Available)'}
                 </span>
                 <span className="text-[10px] bg-indigo-100 text-[#5034df] px-1.5 py-0.2 rounded-full font-bold">
                   {filteredQuestions.length}
@@ -482,7 +812,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                 onClick={() => setShowQuestionDrawer(!showQuestionDrawer)}
                 className="cursor-pointer text-[11px] font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-0.5 transition"
               >
-                <span>{showQuestionDrawer ? (lang === 'hi' ? 'छिपाएं' : 'Hide List') : (lang === 'hi' ? 'प्रश्न दिखाएं' : 'Show Questions')}</span>
+                <span>{showQuestionDrawer ? (lang === 'hi' ? 'छिपाएं' : 'Hide List') : (lang === 'hi' ? 'प्रश्न दिखाएं' : 'Show Guides')}</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showQuestionDrawer ? 'rotate-180' : ''}`} />
               </button>
             </div>
@@ -500,7 +830,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                     placeholder={
                       lang === 'hi'
                         ? 'प्रश्नों में खोजें (उदा: 2 घंटे, कॉलेज, GATE, कमजोर विषय)...'
-                        : 'Search 30 questions (e.g. college, 2 hours, GATE, zero)...'
+                        : 'Search 30 guides (e.g. college, 2 hours, GATE, zero)...'
                     }
                     className="w-full pl-8 pr-3 py-1.5 bg-white rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-[#5034df]"
                   />
@@ -549,7 +879,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                 <div className="space-y-1.5 text-left">
                   {filteredQuestions.length === 0 ? (
                     <div className="p-4 text-center text-xs text-slate-400">
-                      No pre-fed question matches "{searchQuery}". Try "college", "hours", or "exam".
+                      No pre-fed guide matches "{searchQuery}". Try asking Gemini AI below!
                     </div>
                   ) : (
                     filteredQuestions.map((q) => (
@@ -578,24 +908,35 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
               </div>
             )}
 
-            {/* Custom Input / Smart Selector Form */}
+            {/* Custom Input Form (Powered by Gemini AI) */}
             <form onSubmit={handleCustomInputSubmit} className="p-2.5 bg-white flex items-center gap-2">
-              <input
-                type="text"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                placeholder={
-                  lang === 'hi'
-                    ? '30 प्रश्नों में से कोई भी प्रश्न टाइप करें या चुनें...'
-                    : 'Type keyword or question number (1-30)...'
-                }
-                className="flex-1 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-[#5034df]"
-              />
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  placeholder={
+                    geminiApiKey
+                      ? (lang === 'hi'
+                          ? 'Gemini AI से पूछें (उदा: 3 घंटे का शाम का टाइमटेबल, GATE ईई)...'
+                          : 'Ask Gemini AI (e.g. 3-hr evening timetable, GATE EE backlog)...')
+                      : (lang === 'hi'
+                          ? '30 गाइड में खोजें या Gemini API जोड़कर कस्टम पूछें...'
+                          : 'Search 30 guides or connect Gemini for custom AI...')
+                  }
+                  className="w-full pl-3 pr-8 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-[#5034df]"
+                />
+                {geminiApiKey && (
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-amber-500" title="Gemini AI active">
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </span>
+                )}
+              </div>
               <button
                 type="submit"
                 disabled={!customInput.trim()}
-                className="cursor-pointer p-2 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white transition disabled:opacity-40 shrink-0"
-                title="Send / Match question"
+                className="cursor-pointer p-2 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white transition disabled:opacity-40 shrink-0 shadow-sm"
+                title={geminiApiKey ? 'Ask Gemini AI' : 'Send / Search Guide'}
               >
                 <Send className="w-3.5 h-3.5" />
               </button>
