@@ -1,20 +1,40 @@
 package org.gyansetu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "opportunities")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Opportunity {
+
+    @Id
     private String id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OpportunityType type;
+
     private String organization;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String applicationDeadline;
     private String examOrDisbursementDate;
+
+    @Column(columnDefinition = "TEXT")
     private String officialUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String officialPdfNotificationUrl;
+
     private String lastVerifiedDate;
     private boolean isGovVerified = true;
     private String benefitsOrSalary;
@@ -22,7 +42,10 @@ public class Opportunity {
     private double applicationFeeReserved;
     private double applicationFeeFemale;
     private boolean hasFeeWaiver = false;
+
+    @Column(columnDefinition = "TEXT")
     private String feeWaiverNotes;
+
     private int minAge = 18;
     private int maxAge = 30;
     private int ageRelaxationOBC = 3;
@@ -32,11 +55,32 @@ public class Opportunity {
     private Double maxAnnualFamilyIncome = null;
     private String minEducationLevel = "Graduate";
     private String genderEligibility = "ALL";
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "opportunity_category_quotas", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "quota")
     private List<String> categoryQuotas = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "opportunity_eligible_streams", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "stream")
     private List<String> eligibleStreams = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "opportunity_eligible_states", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "state")
     private List<String> eligibleStates = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "opportunity_required_documents", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "document")
     private List<String> requiredDocuments = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "opportunity_syllabus_topics", joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "topic")
     private List<String> syllabusTopics = new ArrayList<>();
+
     private int preparationTimeMonths = 6;
     private int vacanciesOrSeats = 0;
     private String competitionLevel = "Moderate";
@@ -103,7 +147,7 @@ public class Opportunity {
     public void setLastVerifiedDate(String lastVerifiedDate) { this.lastVerifiedDate = lastVerifiedDate; }
 
     public boolean isGovVerified() { return isGovVerified; }
-    public void setGovVerified(boolean isGovVerified) { this.isGovVerified = isGovVerified; }
+    public void setGovVerified(boolean govVerified) { isGovVerified = govVerified; }
 
     public String getBenefitsOrSalary() { return benefitsOrSalary; }
     public void setBenefitsOrSalary(String benefitsOrSalary) { this.benefitsOrSalary = benefitsOrSalary; }
@@ -144,6 +188,15 @@ public class Opportunity {
     public Double getMaxAnnualFamilyIncome() { return maxAnnualFamilyIncome; }
     public void setMaxAnnualFamilyIncome(Double maxAnnualFamilyIncome) { this.maxAnnualFamilyIncome = maxAnnualFamilyIncome; }
 
+    public String getMinEducationLevel() { return minEducationLevel; }
+    public void setMinEducationLevel(String minEducationLevel) { this.minEducationLevel = minEducationLevel; }
+
+    public String getGenderEligibility() { return genderEligibility; }
+    public void setGenderEligibility(String genderEligibility) { this.genderEligibility = genderEligibility; }
+
+    public List<String> getCategoryQuotas() { return categoryQuotas; }
+    public void setCategoryQuotas(List<String> categoryQuotas) { this.categoryQuotas = categoryQuotas; }
+
     public List<String> getEligibleStreams() { return eligibleStreams; }
     public void setEligibleStreams(List<String> eligibleStreams) { this.eligibleStreams = eligibleStreams; }
 
@@ -164,13 +217,4 @@ public class Opportunity {
 
     public String getCompetitionLevel() { return competitionLevel; }
     public void setCompetitionLevel(String competitionLevel) { this.competitionLevel = competitionLevel; }
-
-    public String getMinEducationLevel() { return minEducationLevel; }
-    public void setMinEducationLevel(String minEducationLevel) { this.minEducationLevel = minEducationLevel; }
-
-    public String getGenderEligibility() { return genderEligibility; }
-    public void setGenderEligibility(String genderEligibility) { this.genderEligibility = genderEligibility; }
-
-    public List<String> getCategoryQuotas() { return categoryQuotas; }
-    public void setCategoryQuotas(List<String> categoryQuotas) { this.categoryQuotas = categoryQuotas; }
 }

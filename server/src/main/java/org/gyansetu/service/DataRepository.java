@@ -3,6 +3,7 @@ package org.gyansetu.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gyansetu.model.*;
+import org.gyansetu.repository.OpportunityRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.util.*;
 @Repository
 public class DataRepository {
 
+    private final OpportunityRepository opportunityRepository;
     private final StudentProfile defaultProfile = new StudentProfile();
     private final Map<String, Opportunity> opportunities = new LinkedHashMap<>();
     private final List<DocumentItem> defaultDocuments = new ArrayList<>();
@@ -18,13 +20,29 @@ public class DataRepository {
     private final List<ScamAlert> scamAlerts = new ArrayList<>();
     private final List<PeerSuccessStory> peerStories = new ArrayList<>();
 
-    public DataRepository() {
-        seedOpportunities();
-        loadFiftyDataset();
+    public DataRepository(OpportunityRepository opportunityRepository) {
+        this.opportunityRepository = opportunityRepository;
+        initCatalog();
         seedDocuments();
         seedNotifications();
         seedScamAlerts();
         seedPeerStories();
+    }
+
+    private void initCatalog() {
+        if (opportunityRepository != null && opportunityRepository.count() > 0) {
+            opportunityRepository.findAll().forEach(opp -> opportunities.put(opp.getId(), opp));
+        } else {
+            seedOpportunities();
+            loadFiftyDataset();
+            if (opportunityRepository != null) {
+                try {
+                    opportunityRepository.saveAll(opportunities.values());
+                } catch (Exception e) {
+                    System.err.println("Warning: Could not seed opportunities to DB: " + e.getMessage());
+                }
+            }
+        }
     }
 
     private void seedOpportunities() {
@@ -327,6 +345,13 @@ public class DataRepository {
     public void addOpportunity(Opportunity opp) {
         if (opp != null && opp.getId() != null) {
             opportunities.put(opp.getId(), opp);
+            if (opportunityRepository != null) {
+                try {
+                    opportunityRepository.save(opp);
+                } catch (Exception e) {
+                    System.err.println("Warning: Could not save opportunity to DB: " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -500,9 +525,23 @@ public class DataRepository {
     }
 
     public synchronized void resetCatalog() {
+        if (opportunityRepository != null) {
+            try {
+                opportunityRepository.deleteAll();
+            } catch (Exception e) {
+                System.err.println("Warning: Could not clear opportunity DB: " + e.getMessage());
+            }
+        }
         opportunities.clear();
         seedOpportunities();
         loadFiftyDataset();
+        if (opportunityRepository != null) {
+            try {
+                opportunityRepository.saveAll(opportunities.values());
+            } catch (Exception e) {
+                System.err.println("Warning: Could not save opportunities to DB: " + e.getMessage());
+            }
+        }
     }
 
     public StudentProfile getDefaultProfile() { return defaultProfile; }
