@@ -75,11 +75,15 @@ export function App() {
   });
 
   useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
+      if (body) body.classList.add('dark');
       localStorage.setItem('gyansetu-theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
+      if (body) body.classList.remove('dark');
       localStorage.setItem('gyansetu-theme', 'light');
     }
   }, [isDarkMode]);

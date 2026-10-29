@@ -133,27 +133,44 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
 
-        {/* Light & Dark Mode Toggle Button (Switches on / off dark mode) */}
+        {/* Light & Dark Mode Toggle Switch Button (Switches ON / OFF dark mode) */}
         <button
           type="button"
+          role="switch"
+          aria-checked={isDarkMode}
           onClick={toggleDarkMode}
-          className={`cursor-pointer p-2 rounded-full border transition-all duration-200 flex items-center justify-center relative group ${
+          className={`cursor-pointer relative inline-flex h-7 w-[54px] shrink-0 items-center rounded-full border transition-colors duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5034df] focus-visible:ring-offset-2 ${
             isDarkMode
-              ? 'bg-slate-800 border-slate-700 text-amber-300 hover:bg-slate-700 shadow-xs ring-1 ring-amber-400/30'
-              : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900 shadow-xs'
+              ? 'bg-[#181f38] border-indigo-500/60 shadow-inner'
+              : 'bg-amber-100/90 border-amber-300/80 shadow-xs'
           }`}
           title={
             isDarkMode
-              ? (lang === 'hi' ? 'लाइट मोड चालू करें' : 'Switch to Light Mode')
-              : (lang === 'hi' ? 'डार्क मोड चालू करें' : 'Switch to Dark Mode')
+              ? (lang === 'hi' ? 'डार्क मोड बंद करें (लाइट मोड चालू करें)' : 'Switch Dark Mode OFF')
+              : (lang === 'hi' ? 'डार्क मोड चालू करें' : 'Switch Dark Mode ON')
           }
-          aria-label="Toggle Light and Dark Mode"
+          aria-label={isDarkMode ? 'Switch Dark Mode OFF' : 'Switch Dark Mode ON'}
         >
-          {isDarkMode ? (
-            <Sun className="w-4 h-4 text-amber-400 transition-transform duration-300 group-hover:rotate-45" />
-          ) : (
-            <Moon className="w-4 h-4 text-slate-600 transition-transform duration-300 group-hover:-rotate-12" />
-          )}
+          {/* Ambient Background Icons inside the track */}
+          <span className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none select-none">
+            <Sun className={`w-3 h-3 transition-opacity duration-200 ${isDarkMode ? 'opacity-35 text-amber-300' : 'opacity-0'}`} />
+            <Moon className={`w-3 h-3 transition-opacity duration-200 ${isDarkMode ? 'opacity-0' : 'opacity-35 text-slate-500'}`} />
+          </span>
+
+          {/* Sliding Knob with Active Mode Icon */}
+          <span
+            className={`pointer-events-none flex h-[22px] w-[22px] items-center justify-center rounded-full shadow-md transition-transform duration-300 ease-in-out ${
+              isDarkMode
+                ? 'translate-x-[26px] bg-slate-900 border border-indigo-400/50'
+                : 'translate-x-[3px] bg-white border border-amber-200'
+            }`}
+          >
+            {isDarkMode ? (
+              <Moon className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400/30 transition-transform duration-300 rotate-0" />
+            ) : (
+              <Sun className="w-3.5 h-3.5 text-amber-500 fill-amber-400/30 transition-transform duration-300 rotate-0" />
+            )}
+          </span>
         </button>
 
         {/* Notification Bell & Dropdown Popover */}
