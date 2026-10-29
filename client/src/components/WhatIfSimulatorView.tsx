@@ -13,17 +13,17 @@ import type { WhatIfSimulationResponse, WhatIfSimulationRequest, StudentProfile 
 import { GyanSetuApi } from '../api/client';
 
 interface WhatIfSimulatorViewProps {
-  profile: StudentProfile;
+  profile: StudentProfile | null;
   lang: 'en' | 'hi';
 }
 
 export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profile, lang }) => {
-  const [ugMarks, setUgMarks] = useState<number>(profile.ugMarksPercent);
-  const [twelfthMarks, setTwelfthMarks] = useState<number>(profile.twelfthMarksPercent);
-  const [category, setCategory] = useState<string>(profile.category);
-  const [income, setIncome] = useState<number>(profile.annualFamilyIncome);
-  const [age, setAge] = useState<number>(profile.age);
-  const [isDegreeCompleted, setIsDegreeCompleted] = useState<boolean>(profile.educationLevel === 'UG Completed');
+  const [ugMarks, setUgMarks] = useState<number>(profile?.ugMarksPercent ?? 75);
+  const [twelfthMarks, setTwelfthMarks] = useState<number>(profile?.twelfthMarksPercent ?? 75);
+  const [category, setCategory] = useState<string>(profile?.category ?? 'General');
+  const [income, setIncome] = useState<number>(profile?.annualFamilyIncome ?? 500000);
+  const [age, setAge] = useState<number>(profile?.age ?? 21);
+  const [isDegreeCompleted, setIsDegreeCompleted] = useState<boolean>(profile?.educationLevel === 'UG Completed');
 
   const [simulationResult, setSimulationResult] = useState<WhatIfSimulationResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -50,12 +50,12 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
   }, [ugMarks, twelfthMarks, category, income, age, isDegreeCompleted]);
 
   const resetToProfile = () => {
-    setUgMarks(profile.ugMarksPercent);
-    setTwelfthMarks(profile.twelfthMarksPercent);
-    setCategory(profile.category);
-    setIncome(profile.annualFamilyIncome);
-    setAge(profile.age);
-    setIsDegreeCompleted(profile.educationLevel === 'UG Completed');
+    setUgMarks(profile?.ugMarksPercent ?? 75);
+    setTwelfthMarks(profile?.twelfthMarksPercent ?? 75);
+    setCategory(profile?.category ?? 'General');
+    setIncome(profile?.annualFamilyIncome ?? 500000);
+    setAge(profile?.age ?? 21);
+    setIsDegreeCompleted(profile?.educationLevel === 'UG Completed');
   };
 
   return (
