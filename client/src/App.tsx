@@ -442,7 +442,7 @@ export function App() {
                   className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
                   <CalendarCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                  <span>Planner</span>
+                  <span>{lang === 'hi' ? 'स्मार्ट प्लानर' : 'Smart Planner'}</span>
                 </button>
                 <button
                   type="button"
@@ -450,7 +450,7 @@ export function App() {
                   className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
                   <GitCompare className="w-3 h-3 text-[#5034df] dark:text-[#a594fd]" />
-                  <span>Prep Overlap</span>
+                  <span>{lang === 'hi' ? 'सिलेबस ओवरलैप' : 'Prep Overlap'}</span>
                 </button>
                 <button
                   type="button"
@@ -458,7 +458,15 @@ export function App() {
                   className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
                 >
                   <SlidersHorizontal className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                  <span>What-If Lab</span>
+                  <span>{lang === 'hi' ? 'अनुकरण (What-If)' : 'What-If Lab'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('costs')}
+                  className="cursor-pointer px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#5034df] text-[11px] font-semibold text-slate-600 dark:text-slate-300 transition flex items-center gap-1 shadow-xs"
+                >
+                  <IndianRupee className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <span>{lang === 'hi' ? 'फीस व टकराव' : 'Costs & Clashes'}</span>
                 </button>
               </div>
             </div>
