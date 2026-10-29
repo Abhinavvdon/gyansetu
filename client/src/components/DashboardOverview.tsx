@@ -31,6 +31,7 @@ interface DashboardOverviewProps {
   onNavigate: (tab: MainNavTab) => void;
   onToggleSave: (id: string) => void;
   onInspectOpportunity: (id: string) => void;
+  onOpenAiModal?: () => void;
   lang: 'en' | 'hi';
 }
 
@@ -42,6 +43,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onNavigate,
   onToggleSave,
   onInspectOpportunity,
+  onOpenAiModal,
   lang
 }) => {
   // Time of day greeting
@@ -439,6 +441,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             {/* Additional Feature Shortcuts */}
             <div className="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-2.5">
+              {onOpenAiModal && (
+                <button
+                  type="button"
+                  onClick={onOpenAiModal}
+                  className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#ece8ff]/60 to-[#f5f3ff]/80 dark:from-[#5034df]/20 dark:to-slate-700/50 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 transition text-xs font-bold text-[#5034df] dark:text-[#c4b5fd] border border-[#5034df]/20 group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-amber-500 group-hover:rotate-12 transition-transform" />
+                    <span>{lang === 'hi' ? 'Gemini AI से नए अवसर जोड़ें' : 'Generate More with Gemini AI'}</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#5034df] dark:text-[#c4b5fd] group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}

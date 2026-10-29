@@ -21,6 +21,7 @@ import { FamilyModeView } from './components/FamilyModeView';
 import { WeeklyDigestModal } from './components/WeeklyDigestModal';
 import { AuthModal } from './components/AuthModal';
 import { StudyChatbot } from './components/StudyChatbot';
+import { GeminiAiModal } from './components/GeminiAiModal';
 
 import type {
   StudentProfile,
@@ -66,6 +67,7 @@ export function App() {
   const [isParentMode, setIsParentMode] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isDigestOpen, setIsDigestOpen] = useState<boolean>(false);
+  const [isGeminiModalOpen, setIsGeminiModalOpen] = useState<boolean>(false);
 
   // Theme state (Light / Dark mode persistence)
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -253,6 +255,19 @@ export function App() {
     setLang((prev) => (prev === 'en' ? 'hi' : 'en'));
   };
 
+  const handleOpportunitiesAdded = (newOpps: Opportunity[]) => {
+    setOpportunities((prev) => {
+      const existingIds = new Set(prev.map((o) => o.id));
+      const fresh = newOpps.filter((o) => !existingIds.has(o.id));
+      return [...fresh, ...prev];
+    });
+    GyanSetuApi.getEligibilityReports().then((reports) => {
+      if (reports && reports.length > 0) {
+        setEligibilityReports(reports);
+      }
+    });
+  };
+
   if (loading || !profile || !digest || !costPlan) {
     return (
       <div className="min-h-screen bg-[#f8f9fc] flex items-center justify-center">
@@ -344,6 +359,7 @@ export function App() {
           }}
           onOpenProfile={() => setActiveTab('Profile')}
           onOpenDigest={() => setIsDigestOpen(true)}
+          onOpenAiModal={() => setIsGeminiModalOpen(true)}
           isParentMode={isParentMode}
           toggleParentMode={toggleParentMode}
           lang={lang}
@@ -424,6 +440,7 @@ export function App() {
                   setHigherEdSubTab('matching');
                 }
               }}
+              onOpenAiModal={() => setIsGeminiModalOpen(true)}
               lang={lang}
             />
           )}
@@ -804,6 +821,14 @@ export function App() {
         onClose={() => setIsAuthModalOpen(false)}
         onAuthSuccess={handleAuthSuccess}
         initialMode={authModalMode}
+        lang={lang}
+      />
+
+      {/* Gemini AI Opportunity Generator Modal */}
+      <GeminiAiModal
+        isOpen={isGeminiModalOpen}
+        onClose={() => setIsGeminiModalOpen(false)}
+        onOpportunitiesAdded={handleOpportunitiesAdded}
         lang={lang}
       />
     </div>

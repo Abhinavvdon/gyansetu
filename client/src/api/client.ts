@@ -687,6 +687,33 @@ export const GyanSetuApi = {
     }
   },
 
+  // Gemini AI Opportunity Generator
+  generateWithGemini: async (payload: {
+    apiKey?: string;
+    category?: 'ALL' | 'SCHOLARSHIP' | 'GOVT_EXAM' | 'HIGHER_STUDIES';
+    count?: number;
+    customFocus?: string;
+  }): Promise<{ success: boolean; count?: number; totalInCatalog?: number; opportunities?: Opportunity[]; message?: string; error?: string }> => {
+    try {
+      const res = await api.post('/opportunities/ai-generate', payload);
+      return res.data;
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || 'Failed to generate opportunities with Gemini API.'
+      };
+    }
+  },
+
+  getOpportunityStats: async (): Promise<{ total: number; scholarships: number; govtExams: number; higherStudies: number }> => {
+    try {
+      const res = await api.get('/opportunities/stats');
+      return res.data;
+    } catch {
+      return { total: 50, scholarships: 20, govtExams: 15, higherStudies: 15 };
+    }
+  },
+
   // Eligibility
   getEligibilityReports: async (): Promise<EligibilityReport[]> => {
     try {

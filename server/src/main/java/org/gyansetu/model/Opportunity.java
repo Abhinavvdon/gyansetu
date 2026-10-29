@@ -1,8 +1,10 @@
 package org.gyansetu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Opportunity {
     private String id;
     private String title;
@@ -28,6 +30,9 @@ public class Opportunity {
     private double minGraduationMarksPercent = 0.0;
     private double minTwelfthMarksPercent = 0.0;
     private Double maxAnnualFamilyIncome = null;
+    private String minEducationLevel = "Graduate";
+    private String genderEligibility = "ALL";
+    private List<String> categoryQuotas = new ArrayList<>();
     private List<String> eligibleStreams = new ArrayList<>();
     private List<String> eligibleStates = new ArrayList<>();
     private List<String> requiredDocuments = new ArrayList<>();
@@ -159,4 +164,13 @@ public class Opportunity {
 
     public String getCompetitionLevel() { return competitionLevel; }
     public void setCompetitionLevel(String competitionLevel) { this.competitionLevel = competitionLevel; }
+
+    public String getMinEducationLevel() { return minEducationLevel; }
+    public void setMinEducationLevel(String minEducationLevel) { this.minEducationLevel = minEducationLevel; }
+
+    public String getGenderEligibility() { return genderEligibility; }
+    public void setGenderEligibility(String genderEligibility) { this.genderEligibility = genderEligibility; }
+
+    public List<String> getCategoryQuotas() { return categoryQuotas; }
+    public void setCategoryQuotas(List<String> categoryQuotas) { this.categoryQuotas = categoryQuotas; }
 }

@@ -1,8 +1,11 @@
 package org.gyansetu.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gyansetu.model.*;
 import org.springframework.stereotype.Repository;
 
+import java.io.InputStream;
 import java.util.*;
 
 @Repository
@@ -17,6 +20,7 @@ public class DataRepository {
 
     public DataRepository() {
         seedOpportunities();
+        loadFiftyDataset();
         seedDocuments();
         seedNotifications();
         seedScamAlerts();
@@ -292,6 +296,46 @@ public class DataRepository {
         cuetPg.setSyllabusTopics(Arrays.asList("Subject Domain Specific Knowledge", "General Analytical Ability"));
         cuetPg.setRequiredDocuments(Arrays.asList("Graduation Marksheet/Admit Card", "Category Certificate"));
         opportunities.put(cuetPg.getId(), cuetPg);
+    }
+
+    private void loadFiftyDataset() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = getClass().getResourceAsStream("/data/opportunities_50.json");
+            if (is != null) {
+                List<Opportunity> loaded = mapper.readValue(is, new TypeReference<List<Opportunity>>() {});
+                for (Opportunity opp : loaded) {
+                    if (opp.getId() != null && !opportunities.containsKey(opp.getId())) {
+                        if (opp.getDescription() == null || opp.getDescription().isEmpty()) {
+                            opp.setDescription(opp.getTitle() + " offered by " + opp.getOrganization() + ". Key Benefits: " + opp.getBenefitsOrSalary());
+                        }
+                        if (opp.getEligibleStates() == null || opp.getEligibleStates().isEmpty()) {
+                            opp.setEligibleStates(Collections.singletonList("All India"));
+                        }
+                        if (opp.getEligibleStreams() == null || opp.getEligibleStreams().isEmpty()) {
+                            opp.setEligibleStreams(Collections.singletonList("Any Recognized Stream"));
+                        }
+                        opportunities.put(opp.getId(), opp);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Note: Could not load /data/opportunities_50.json: " + e.getMessage());
+        }
+    }
+
+    public void addOpportunity(Opportunity opp) {
+        if (opp != null && opp.getId() != null) {
+            opportunities.put(opp.getId(), opp);
+        }
+    }
+
+    public void addOpportunities(List<Opportunity> newOpps) {
+        if (newOpps != null) {
+            for (Opportunity opp : newOpps) {
+                addOpportunity(opp);
+            }
+        }
     }
 
     private void seedDocuments() {
