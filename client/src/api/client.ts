@@ -23,6 +23,7 @@ import type {
   RegisterCredentials,
   DeadlineNotification
 } from '../types';
+import { generateOfflineStudyMentorResponse } from '../utils/offlineMentorEngine';
 
 const envApiUrl = import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim().replace(/\/+$/, '') : '';
 const apiBaseUrl = envApiUrl ? `${envApiUrl}/api` : '/api';
@@ -547,8 +548,19 @@ export const callDirectGeminiChatbotApi = async (
     profile?: StudentProfile | null;
     history?: { sender: 'user' | 'bot'; text: string }[];
   }
-): Promise<{ success: boolean; reply?: string; model?: string; error?: string }> => {
-  const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+): Promise<{ success: boolean; reply?: string; model?: string; error?: string; notice?: string }> => {
+  const cleanKey = (apiKey || '').trim();
+
+  // If user selected offline mentor or passed empty/OFFLINE_MODE
+  if (!cleanKey || cleanKey === 'OFFLINE_MODE') {
+    const offlineReply = generateOfflineStudyMentorResponse(payload.message, payload.profile, payload.lang);
+    return {
+      success: true,
+      reply: offlineReply,
+      model: 'GyanSetu Smart Offline Mentor'
+    };
+  }
+
   const profile = payload.profile;
   const lang = payload.lang || 'en';
 
@@ -577,32 +589,147 @@ STUDENT QUERY: "${payload.message}"
 Provide your comprehensive, structured, and empathetic study response:`;
 
   let lastError = '';
-  for (const model of models) {
+
+  // 1. Check if user provided a Groq API Key (starts with gsk_)
+  if (cleanKey.startsWith('gsk_')) {
     try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cleanKey}`
+        },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 2048 }
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: 'You are GyanSetu AI Study Mentor & Timetable Architect for Indian students.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 2048
         })
       });
       if (res.ok) {
         const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const text = data?.choices?.[0]?.message?.content;
         if (text) {
-          return { success: true, reply: text.trim(), model };
+          return { success: true, reply: text.trim(), model: 'Groq Llama 3.3 70B' };
         }
       } else {
         const errJson = await res.json().catch(() => ({}));
         lastError = errJson?.error?.message || `HTTP ${res.status}`;
       }
     } catch (e: any) {
-      lastError = e?.message || 'Network error';
+      lastError = e?.message || 'Network error reaching Groq';
     }
   }
 
-  return { success: false, error: lastError || 'Failed to generate response from Gemini API.' };
+  // 2. Check if user provided an OpenRouter key (starts with sk-or-)
+  else if (cleanKey.startsWith('sk-or-')) {
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cleanKey}`
+        },
+        body: JSON.stringify({
+          model: 'meta-llama/llama-3.3-70b-instruct:free',
+          messages: [
+            { role: 'system', content: 'You are GyanSetu AI Study Mentor & Timetable Architect for Indian students.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 2048
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.choices?.[0]?.message?.content;
+        if (text) {
+          return { success: true, reply: text.trim(), model: 'OpenRouter Llama 3.3 Free' };
+        }
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        lastError = errJson?.error?.message || `HTTP ${res.status}`;
+      }
+    } catch (e: any) {
+      lastError = e?.message || 'Network error reaching OpenRouter';
+    }
+  }
+
+  // 3. Check if user provided standard OpenAI Key (starts with sk-)
+  else if (cleanKey.startsWith('sk-')) {
+    try {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cleanKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: 'You are GyanSetu AI Study Mentor & Timetable Architect for Indian students.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 2048
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.choices?.[0]?.message?.content;
+        if (text) {
+          return { success: true, reply: text.trim(), model: 'OpenAI GPT-4o Mini' };
+        }
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        lastError = errJson?.error?.message || `HTTP ${res.status}`;
+      }
+    } catch (e: any) {
+      lastError = e?.message || 'Network error reaching OpenAI';
+    }
+  }
+
+  // 4. Default / Google Gemini API (Standard format or AIzaSy...)
+  else {
+    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    for (const model of models) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 2048 }
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            return { success: true, reply: text.trim(), model };
+          }
+        } else {
+          const errJson = await res.json().catch(() => ({}));
+          lastError = errJson?.error?.message || `HTTP ${res.status}`;
+        }
+      } catch (e: any) {
+        lastError = e?.message || 'Network error reaching Gemini';
+      }
+    }
+  }
+
+  // 5. Intelligent Graceful Fallback: If external API key was invalid or quota exceeded,
+  // synthesize response instantly using GyanSetu's built-in offline mentor engine!
+  const fallbackReply = generateOfflineStudyMentorResponse(payload.message, payload.profile, payload.lang);
+  return {
+    success: true,
+    reply: fallbackReply,
+    model: 'GyanSetu Smart Offline Mentor',
+    notice: lastError ? `Notice: Connected API key returned: "${lastError}". Generated response using GyanSetu built-in mentor engine.` : undefined
+  };
 };
 
 export const GyanSetuApi = {
@@ -868,39 +995,50 @@ export const GyanSetuApi = {
     }
   },
 
-  // Study Chatbot Gemini AI Assistant
+  // Study Chatbot AI Assistant (Supports Gemini, Groq, OpenRouter, OpenAI & Smart Offline Mentor)
   askStudyChatbot: async (payload: {
     apiKey?: string;
     message: string;
     lang?: 'en' | 'hi';
     profile?: StudentProfile | null;
     history?: { sender: 'user' | 'bot'; text: string }[];
-  }): Promise<{ success: boolean; reply?: string; model?: string; error?: string }> => {
-    try {
-      const res = await api.post('/chatbot/ask', payload);
-      if (res.data?.success) {
-        return res.data;
-      }
-      throw new Error(res.data?.error || 'Backend AI generation failed');
-    } catch (err: any) {
-      // Direct client fallback to Gemini API if backend endpoint is unavailable or returns error
-      const apiKey = payload.apiKey?.trim() || localStorage.getItem('gyansetu-gemini-key')?.trim();
-      if (apiKey) {
-        try {
-          const directRes = await callDirectGeminiChatbotApi(apiKey, payload);
-          return directRes;
-        } catch (directErr: any) {
-          return {
-            success: false,
-            error: err.response?.data?.error || directErr.message || 'Failed to connect to Gemini AI.'
-          };
-        }
-      }
+  }): Promise<{ success: boolean; reply?: string; model?: string; error?: string; notice?: string }> => {
+    const rawKey = payload.apiKey?.trim() || localStorage.getItem('gyansetu-gemini-key')?.trim();
+
+    // If no key or explicitly set to offline mode, generate personalized response immediately
+    if (!rawKey || rawKey === 'OFFLINE_MODE') {
+      const offlineReply = generateOfflineStudyMentorResponse(payload.message, payload.profile, payload.lang);
       return {
-        success: false,
-        error: err.response?.data?.error || err.message || 'Failed to connect to AI study mentor.'
+        success: true,
+        reply: offlineReply,
+        model: 'GyanSetu Smart Offline Mentor'
       };
     }
+
+    // Attempt direct multi-provider API call (Gemini, Groq, OpenRouter, etc.)
+    try {
+      const directRes = await callDirectGeminiChatbotApi(rawKey, payload);
+      if (directRes.success && directRes.reply) {
+        return directRes;
+      }
+    } catch {}
+
+    // Fallback attempt via backend proxy
+    try {
+      const res = await api.post('/chatbot/ask', { ...payload, apiKey: rawKey });
+      if (res.data?.success && res.data?.reply) {
+        return res.data;
+      }
+    } catch {}
+
+    // Intelligent resilience: Never leave the student with an error!
+    const fallbackReply = generateOfflineStudyMentorResponse(payload.message, payload.profile, payload.lang);
+    return {
+      success: true,
+      reply: fallbackReply,
+      model: 'GyanSetu Smart Offline Mentor',
+      notice: 'Connected key was invalid or unreachable. Generated response using GyanSetu built-in mentor engine.'
+    };
   },
 
   // Eligibility

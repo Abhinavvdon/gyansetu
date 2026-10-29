@@ -188,13 +188,17 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
       });
 
       if (res.success && res.reply) {
+        const fullText = res.notice
+          ? `${res.reply}\n\n> ℹ️ *${res.notice}*`
+          : res.reply;
+
         const botMsg: Message = {
           id: 'b-' + Date.now(),
           sender: 'bot',
-          text: res.reply,
+          text: fullText,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           isGeminiGenerated: true,
-          geminiModel: res.model || 'gemini-2.5-flash',
+          geminiModel: res.model || 'GyanSetu Study Mentor',
           suggestedFollowUps: ['q1', 'q7', 'q26']
         };
         setMessages((prev) => [...prev, botMsg]);
@@ -204,8 +208,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
           sender: 'bot',
           text:
             lang === 'hi'
-              ? `⚠️ **Gemini AI से उत्तर प्राप्त नहीं हो सका:**\n\n${res.error || 'अज्ञात त्रुटि'}\n\nकृपया सुनिश्चित करें कि आपकी **Gemini API Key** सही है या हेडर में की (Key) बटन पर क्लिक करके पुनः दर्ज करें।`
-              : `⚠️ **Could not generate response with Gemini API:**\n\n${res.error || 'Unknown communication issue'}\n\nPlease verify your **Gemini API Key** in the header or generate a free key from Google AI Studio.`,
+              ? `⚠️ **AI से उत्तर प्राप्त नहीं हो सका:**\n\n${res.error || 'अज्ञात त्रुटि'}\n\n💡 आप बिना किसी API Key के **ज्ञानसेतु ऑफलाइन AI मार्गदर्शक** का उपयोग कर सकते हैं। हेडर में Key आइकन पर क्लिक करके **"Use Built-in Mentor"** चुनें।`
+              : `⚠️ **Could not generate response:**\n\n${res.error || 'Unknown communication issue'}\n\n💡 You can use **GyanSetu Built-in AI Mentor** without any API key. Click the Key icon in the header and select **"Use Built-in Mentor"**.`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           showKeyPrompt: true
         };
@@ -233,62 +237,20 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
     const query = customInput.trim();
     setCustomInput('');
 
-    // If Gemini API key is connected, use real-time AI generation directly!
-    if (geminiApiKey) {
-      executeGeminiQuery(query);
-      return;
-    }
+    // Execute query with live AI (Gemini, Groq, OpenRouter) or automatic GyanSetu Smart Offline Mentor
+    executeGeminiQuery(query);
+  };
 
-    // If no key yet, check if there's a match in the 30 pre-fed questions
-    const queryLower = query.toLowerCase();
-    const match = CHATBOT_QUESTIONS.find((q) => {
-      const full = (q.question + ' ' + q.questionHi + ' ' + q.tags.join(' ')).toLowerCase();
-      return full.includes(queryLower);
-    });
-
-    if (match) {
-      handleSelectQuestion(match);
-      return;
-    }
-
-    // Find partial matches to recommend
-    const partials = CHATBOT_QUESTIONS.filter((q) => {
-      const words = queryLower.split(' ').filter((w) => w.length > 2);
-      return words.some(
-        (w) =>
-          q.question.toLowerCase().includes(w) ||
-          q.questionHi.toLowerCase().includes(w) ||
-          q.tags.some((t) => t.includes(w))
-      );
-    });
-
-    const userMsg: Message = {
-      id: 'u-' + Date.now(),
-      sender: 'user',
-      text: query,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setIsTyping(true);
-    setTypingMessage(lang === 'hi' ? 'विकल्प खोजे जा रहे हैं...' : 'Checking verified guides...');
+  const handleActivateOfflineMentor = () => {
+    localStorage.removeItem('gyansetu-gemini-key');
+    setGeminiApiKey('OFFLINE_MODE');
+    setInputKey('');
+    setKeySaveToast(lang === 'hi' ? 'ज्ञानसेतु ऑफलाइन AI मार्गदर्शक सक्रिय! 💡' : 'GyanSetu Built-in AI Mentor Activated! 💡');
 
     setTimeout(() => {
-      const botMsg: Message = {
-        id: 'b-' + Date.now(),
-        sender: 'bot',
-        text:
-          lang === 'hi'
-            ? `🔑 **कस्टम उत्तर व अध्ययन योजना के लिए Gemini API जोड़ें!**\n\nआपने पूछा: *"${query}"*\n\nनीचे हमारे **30 प्रमाणित टाइमटेबल** में से मिलते-जुलते प्रश्न उपलब्ध हैं। यदि आप अपने विशिष्ट कॉलेज समय, बैकलाग या परीक्षाओं अनुसार लाइव AI योजना चाहते हैं, तो कृपया अपनी मुफ्त **Google Gemini API Key** कनेक्ट करें:`
-            : `🔑 **Connect Google Gemini API for Custom AI Answers!**\n\nYou asked: *"${query}"*\n\nWe have **30 pre-fed verified timetable guides** below. To get personalized daily schedules, semester-vs-exam roadmaps, or backlog strategies tailored to your exact profile, connect your free Google Gemini API key:`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        suggestedFollowUps: partials.length > 0 ? partials.slice(0, 3).map((p) => p.id) : ['q1', 'q7', 'q26'],
-        showKeyPrompt: true
-      };
-      setMessages((prev) => [...prev, botMsg]);
-      setIsTyping(false);
-      setTypingMessage('');
-      setShowQuestionDrawer(true);
-    }, 350);
+      setKeySaveToast(null);
+      setIsKeyModalOpen(false);
+    }, 1200);
   };
 
   const handleSaveApiKey = (e: React.FormEvent) => {
@@ -298,7 +260,13 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
     const trimmed = inputKey.trim();
     localStorage.setItem('gyansetu-gemini-key', trimmed);
     setGeminiApiKey(trimmed);
-    setKeySaveToast(lang === 'hi' ? 'Gemini API Key सफलतापूर्वक सहेजी गई! ✨' : 'Gemini API Key connected! ✨');
+
+    let providerName = 'API Key';
+    if (trimmed.startsWith('gsk_')) providerName = 'Groq (Llama 3.3)';
+    else if (trimmed.startsWith('sk-or-')) providerName = 'OpenRouter';
+    else if (trimmed.startsWith('AIza')) providerName = 'Google Gemini';
+
+    setKeySaveToast(lang === 'hi' ? `${providerName} सफलतापूर्वक कनेक्ट हो गई! ✨` : `${providerName} connected successfully! ✨`);
 
     setTimeout(() => {
       setKeySaveToast(null);
@@ -310,7 +278,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
     localStorage.removeItem('gyansetu-gemini-key');
     setGeminiApiKey('');
     setInputKey('');
-    setKeySaveToast(lang === 'hi' ? 'Gemini API Key हटा दी गई।' : 'Gemini API Key removed.');
+    setKeySaveToast(lang === 'hi' ? 'API Key हटा दी गई (ऑफलाइन मोड सक्रिय)।' : 'API Key removed (Default mentor active).');
     setTimeout(() => {
       setKeySaveToast(null);
       setIsKeyModalOpen(false);
@@ -464,8 +432,50 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                     {lang === 'hi' ? 'ज्ञानसेतु टाइमटेबल AI' : 'GyanSetu Study AI'}
                   </h3>
                   
-                  {/* Gemini API Status Badge */}
-                  {geminiApiKey ? (
+                  {/* Active AI / Mentor Status Badge */}
+                  {geminiApiKey === 'OFFLINE_MODE' ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputKey('');
+                        setIsKeyModalOpen(true);
+                      }}
+                      className="cursor-pointer text-[10px] bg-indigo-500/25 hover:bg-indigo-500/35 text-indigo-200 border border-indigo-400/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition"
+                      title={lang === 'hi' ? 'ज्ञानसेतु ऑफलाइन AI सक्रिय है (API Key बदलने के लिए क्लिक करें)' : 'GyanSetu Built-in Mentor Active (Click to connect external API)'}
+                    >
+                      <Bot className="w-2.5 h-2.5 text-amber-300" />
+                      <span>Built-in Mentor</span>
+                      <Check className="w-2.5 h-2.5 text-indigo-300" />
+                    </button>
+                  ) : geminiApiKey.startsWith('gsk_') ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputKey(geminiApiKey);
+                        setIsKeyModalOpen(true);
+                      }}
+                      className="cursor-pointer text-[10px] bg-amber-500/25 hover:bg-amber-500/35 text-amber-200 border border-amber-400/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition"
+                      title="Groq Llama 3.3 Active"
+                    >
+                      <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                      <span>Groq Llama 3.3</span>
+                      <Check className="w-2.5 h-2.5 text-emerald-300" />
+                    </button>
+                  ) : geminiApiKey.startsWith('sk-or-') ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputKey(geminiApiKey);
+                        setIsKeyModalOpen(true);
+                      }}
+                      className="cursor-pointer text-[10px] bg-purple-500/25 hover:bg-purple-500/35 text-purple-200 border border-purple-400/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition"
+                      title="OpenRouter Active"
+                    >
+                      <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                      <span>OpenRouter</span>
+                      <Check className="w-2.5 h-2.5 text-emerald-300" />
+                    </button>
+                  ) : geminiApiKey ? (
                     <button
                       type="button"
                       onClick={() => {
@@ -486,11 +496,11 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                         setInputKey('');
                         setIsKeyModalOpen(true);
                       }}
-                      className="cursor-pointer text-[10px] bg-amber-400/25 hover:bg-amber-400/35 text-amber-200 border border-amber-300/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition animate-pulse"
-                      title={lang === 'hi' ? 'कस्टम प्रश्नों के लिए Gemini API जोड़ें' : 'Connect Gemini API for custom AI timetable'}
+                      className="cursor-pointer text-[10px] bg-indigo-500/25 hover:bg-indigo-500/35 text-indigo-200 border border-indigo-400/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition"
+                      title={lang === 'hi' ? 'ऑफलाइन मेंटर सक्रिय (कस्टम API जोड़ने के लिए क्लिक करें)' : 'Built-in Mentor Active (Click to connect Gemini or Groq)'}
                     >
-                      <Key className="w-2.5 h-2.5 text-amber-300" />
-                      <span>{lang === 'hi' ? 'Gemini जोड़ें' : 'Connect Gemini'}</span>
+                      <Bot className="w-2.5 h-2.5 text-emerald-300" />
+                      <span>Built-in Mentor</span>
                     </button>
                   )}
                 </div>
@@ -506,11 +516,11 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  setInputKey(geminiApiKey);
+                  setInputKey(geminiApiKey === 'OFFLINE_MODE' ? '' : geminiApiKey);
                   setIsKeyModalOpen(!isKeyModalOpen);
                 }}
-                className={`cursor-pointer p-1.5 rounded-xl hover:bg-white/15 transition ${geminiApiKey ? 'text-emerald-300' : 'text-amber-200'}`}
-                title={lang === 'hi' ? 'Gemini API Key सेटिंग्स' : 'Gemini API Key Settings'}
+                className={`cursor-pointer p-1.5 rounded-xl hover:bg-white/15 transition ${geminiApiKey && geminiApiKey !== 'OFFLINE_MODE' ? 'text-emerald-300' : 'text-indigo-200'}`}
+                title={lang === 'hi' ? 'AI Key सेटिंग्स' : 'AI Key Settings'}
               >
                 <Key className="w-4 h-4" />
               </button>
@@ -533,14 +543,14 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
             </div>
           </div>
 
-          {/* Inline Gemini Key Config Modal / Popover */}
+          {/* Inline Key Config Modal / Popover */}
           {isKeyModalOpen && (
             <div className="bg-slate-900 text-white p-4 border-b border-indigo-900/60 shadow-inner animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <Key className="w-4 h-4 text-amber-400" />
                   <h4 className="text-xs font-bold text-white">
-                    {lang === 'hi' ? 'Google Gemini API कनेक्शन' : 'Google Gemini API Connection'}
+                    {lang === 'hi' ? 'AI मेंटर इंजन सेटिंग्स' : 'AI Mentor Engine Settings'}
                   </h4>
                 </div>
                 <button
@@ -554,8 +564,8 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
 
               <p className="text-[11px] text-slate-300 leading-relaxed mb-2.5">
                 {lang === 'hi'
-                  ? 'अपनी मुफ्त Gemini API Key जोड़ें ताकि आप अपने कॉलेज समय, बैकलाग या मनपसंद परीक्षाओं अनुसार व्यक्तिगत अध्ययन टाइमटेबल प्राप्त कर सकें।'
-                  : 'Connect your free Google Gemini API key to unlock personalized study timetables, backlog clearance routines, and custom exam planning.'}
+                  ? 'आप बिना किसी Key के हमारे इन-बिल्ट मेंटर का उपयोग कर सकते हैं, अथवा Google Gemini (AIzaSy...) या Groq (gsk_...) की मुफ्त Key जोड़ सकते हैं:'
+                  : 'You can use our built-in study mentor with zero keys, or connect a free Google Gemini (AIzaSy...) or Groq (gsk_...) API key:'}
               </p>
 
               {keySaveToast && (
@@ -565,30 +575,65 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
                 </div>
               )}
 
+              {/* Instant 1-Click Built-in Offline Mentor Button */}
+              <div className="mb-3 p-2 bg-indigo-950/60 border border-indigo-700/50 rounded-xl flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <div>
+                    <div className="text-[11px] font-bold text-indigo-200">
+                      {lang === 'hi' ? 'इन-बिल्ट ज्ञानसेतु मेंटर' : 'Built-in GyanSetu Mentor'}
+                    </div>
+                    <div className="text-[9px] text-slate-400">
+                      {lang === 'hi' ? '100% मुफ्त, कोई API Key नहीं चाहिए' : '100% Free • No API Key Needed'}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleActivateOfflineMentor}
+                  className="cursor-pointer text-[10px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg transition shrink-0"
+                >
+                  {geminiApiKey === 'OFFLINE_MODE' ? (lang === 'hi' ? 'सक्रिय है ✓' : 'Active ✓') : (lang === 'hi' ? 'सक्रिय करें' : 'Use Built-in')}
+                </button>
+              </div>
+
               <form onSubmit={handleSaveApiKey} className="space-y-2">
                 <div className="relative">
                   <input
                     type="password"
                     value={inputKey}
                     onChange={(e) => setInputKey(e.target.value)}
-                    placeholder="AIzaSy..."
+                    placeholder="AIzaSy... (Gemini) or gsk_... (Groq)"
                     className="w-full px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono"
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-2 pt-1">
-                  <a
-                    href="https://aistudio.google.com/app/apikey"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] text-indigo-300 hover:text-indigo-200 underline flex items-center gap-1"
-                  >
-                    <span>Get Free Key at Google AI Studio</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
+                <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <a
+                      href="https://aistudio.google.com/app/apikey"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-indigo-300 hover:text-indigo-200 underline flex items-center gap-1"
+                      title="Generate free Gemini Key (starts with AIzaSy...)"
+                    >
+                      <span>Gemini Key</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                    <a
+                      href="https://console.groq.com/keys"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-amber-300 hover:text-amber-200 underline flex items-center gap-1"
+                      title="Generate free Groq Key for Llama 3.3 (starts with gsk_...)"
+                    >
+                      <span>Groq (Free Llama)</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
 
                   <div className="flex items-center gap-1.5">
-                    {geminiApiKey && (
+                    {geminiApiKey && geminiApiKey !== 'OFFLINE_MODE' && (
                       <button
                         type="button"
                         onClick={handleRemoveApiKey}
