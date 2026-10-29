@@ -14,14 +14,15 @@ import java.util.*;
 public class ChatbotService {
 
     private final DataRepository repository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${gemini.api.key:}")
     private String defaultApiKey;
 
-    public ChatbotService(DataRepository repository) {
+    public ChatbotService(DataRepository repository, RestTemplate restTemplate) {
         this.repository = repository;
+        this.restTemplate = restTemplate;
     }
 
     public Map<String, Object> askGemini(

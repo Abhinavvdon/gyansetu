@@ -17,14 +17,15 @@ import java.util.*;
 public class GeminiOpportunityService {
 
     private final DataRepository repository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${gemini.api.key:}")
     private String defaultApiKey;
 
-    public GeminiOpportunityService(DataRepository repository) {
+    public GeminiOpportunityService(DataRepository repository, RestTemplate restTemplate) {
         this.repository = repository;
+        this.restTemplate = restTemplate;
     }
 
     public List<Opportunity> generateAndSyncOpportunities(String userApiKey, String category, int count, String customFocus) throws Exception {
