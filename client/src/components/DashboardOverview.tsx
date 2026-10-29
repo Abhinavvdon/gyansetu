@@ -57,7 +57,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   const rawStudentName = currentUser?.name
     ? currentUser.name.split(' ')[0]
-    : profile.fullName
+    : profile?.fullName
     ? profile.fullName.split(' ')[0]
     : 'Student';
 

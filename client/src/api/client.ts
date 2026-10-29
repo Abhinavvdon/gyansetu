@@ -1096,6 +1096,9 @@ export const GyanSetuApi = {
 
   // Eligibility
   getEligibilityReports: async (userId?: number): Promise<EligibilityReport[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return evaluateEligibilityMock(mockProfile);
+    }
     try {
       const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
       const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
@@ -1108,6 +1111,36 @@ export const GyanSetuApi = {
 
   // Planner
   getPlanner: async (userId?: number): Promise<PlannedOpportunity[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      const reports = evaluateEligibilityMock(mockProfile);
+      return mockOpportunities.map(opp => {
+        const rep = reports.find(r => r.opportunityId === opp.id);
+        const score = rep?.confidenceScore ?? 75;
+        const days = rep?.daysRemainingToDeadline ?? 30;
+        let pScore = Math.floor(score * 0.45);
+        if (days <= 15) pScore += 35;
+        else if (days <= 30) pScore += 25;
+        else pScore += 15;
+        pScore = Math.min(100, pScore + (opp.vacanciesOrSeats > 10000 ? 20 : 10));
+
+        let pBand = 'BACKUP_OPTION (Keep Track)';
+        if (pScore >= 80) pBand = 'TOP_PRIORITY (Apply / Prep Immediately)';
+        else if (pScore >= 60) pBand = 'SECONDARY_TARGET (High Potential)';
+
+        return {
+          id: opp.id,
+          title: opp.title,
+          type: opp.type,
+          organization: opp.organization,
+          deadline: opp.applicationDeadline,
+          priorityScore: pScore,
+          priorityBand: pBand,
+          feasibilityReason: `Calculated match based on your educational profile.`,
+          actionStepThisWeek: `Check notification PDF: ${opp.officialPdfNotificationUrl}`,
+          isSaved: mockProfile.savedOpportunityIds.includes(opp.id)
+        };
+      });
+    }
     try {
       const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
       const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
@@ -1130,21 +1163,18 @@ export const GyanSetuApi = {
         else if (pScore >= 60) pBand = 'SECONDARY_TARGET (High Potential)';
 
         return {
-          opportunityId: opp.id,
+          id: opp.id,
           title: opp.title,
           type: opp.type,
-          applicationDeadline: opp.applicationDeadline,
-          daysRemaining: days,
-          confidenceLevel: rep?.confidenceLevel ?? 'ELIGIBLE',
-          confidenceScore: score,
-          preparationTimeMonths: opp.preparationTimeMonths,
-          benefits: opp.benefitsOrSalary,
-          officialUrl: opp.officialUrl,
-          isSaved: mockProfile.savedOpportunityIds.includes(opp.id),
+          organization: opp.organization,
+          deadline: opp.applicationDeadline,
           priorityScore: pScore,
-          priorityBand: pBand
+          priorityBand: pBand,
+          feasibilityReason: `Calculated match based on your educational profile.`,
+          actionStepThisWeek: `Check notification PDF: ${opp.officialPdfNotificationUrl}`,
+          isSaved: mockProfile.savedOpportunityIds.includes(opp.id)
         };
-      }).sort((a, b) => b.priorityScore - a.priorityScore);
+      });
     }
   },
 
@@ -1247,6 +1277,9 @@ export const GyanSetuApi = {
 
   // Documents
   getDocuments: async (userId?: number): Promise<DocumentItem[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return mockDocuments;
+    }
     try {
       const params = userId ? { userId } : undefined;
       const res = await api.get('/documents', { params });
@@ -1321,6 +1354,52 @@ export const GyanSetuApi = {
 
   // Gap Analysis
   getGapAnalysis: async (): Promise<GapAnalysis[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return [
+        {
+          opportunityId: 'aicte_pragati',
+          opportunityTitle: 'AICTE Pragati Scholarship Scheme for Girls',
+          opportunityType: 'SCHOLARSHIP',
+          exactGapStatement: 'This scheme is strictly reserved for girl students.',
+          gapParameter: 'GENDER_CRITERIA',
+          studentCurrentValue: mockProfile.gender,
+          requiredThreshold: 'Female Candidate',
+          actionableRemedy: 'Apply for gender-neutral central sector scholarships on the National Scholarship Portal.',
+          closestAlternatives: [
+            {
+              id: 'pm_usp_scholarship',
+              title: 'PM-USP Central Sector Scholarship',
+              type: 'SCHOLARSHIP',
+              whyRecommended: 'Gender-neutral central scholarship offering ₹12,000 to ₹20,000/yr directly via DBT.'
+            },
+            {
+              id: 'post_matric_scholarship',
+              title: 'Post-Matric Scholarship for Backward Classes & SC/ST',
+              type: 'SCHOLARSHIP',
+              whyRecommended: '100% Tuition Fee Reimbursement for all eligible candidates.'
+            }
+          ]
+        },
+        {
+          opportunityId: 'cat_2027',
+          opportunityTitle: 'CAT (Common Admission Test) for IIMs & FMS',
+          opportunityType: 'HIGHER_STUDIES',
+          exactGapStatement: 'CAT requires minimum 50% graduation marks for General/OBC and completed Bachelor degree.',
+          gapParameter: 'DEGREE_COMPLETION',
+          studentCurrentValue: 'UG Pursuing (3rd Year)',
+          requiredThreshold: 'Final Year / Completed',
+          actionableRemedy: 'Focus on GATE 2027 (which allows 3rd year students to appear) or prepare CAT foundation for your final year attempt.',
+          closestAlternatives: [
+            {
+              id: 'gate_2027',
+              title: 'GATE 2027 (Pre-Final Year Eligibility)',
+              type: 'HIGHER_STUDIES',
+              whyRecommended: 'Official GATE guidelines allow 3rd year engineering students to appear with 3-year scorecard validity.'
+            }
+          ]
+        }
+      ];
+    }
     try {
       const res = await api.get('/gap-analysis');
       return res.data;
@@ -1374,6 +1453,40 @@ export const GyanSetuApi = {
 
   // Timeline
   getTimeline: async (): Promise<CareerTimelineNode[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return [
+        {
+          timeframe: 'Open Today (Current Academic Window)',
+          milestoneTitle: 'Pre-Final Year & College Scholarship Window',
+          triggerEvent: `Eligible right now based on Class 12th score (${mockProfile.twelfthMarksPercent}%) and ongoing enrolled degree.`,
+          prepActionToday: 'Complete document readiness (Income certificate renewal, Aadhaar-NPCI seeding) and start Quant/Reasoning fundamentals.',
+          unlockingOpportunities: [
+            { id: 'pm_usp_scholarship', title: 'PM-USP Central Sector Scholarship', type: 'SCHOLARSHIP', expectedBenefit: '₹12,000/yr college financial grant' },
+            { id: 'gate_2027', title: 'GATE 2027 (Pre-Final Year Eligibility)', type: 'HIGHER_STUDIES', expectedBenefit: 'Appear in 3rd year for 3-year valid scorecard' }
+          ]
+        },
+        {
+          timeframe: 'In 6 to 12 Months (Upon Degree Final Year)',
+          milestoneTitle: 'Full Graduate Officer & Executive Window Opens',
+          triggerEvent: "Triggers once final semester exams conclude and provisional degree/marksheet is issued.",
+          prepActionToday: 'Intensive preparation on Quant, Reasoning, and General Studies to target Group B/C Central Recruitment.',
+          unlockingOpportunities: [
+            { id: 'ssc_cgl_2027', title: 'SSC Combined Graduate Level (CGL) 2027', type: 'GOVT_EXAM', expectedBenefit: 'Income Tax Inspector, ASO in MEA (Level 7 Pay: ₹44,900 - ₹1,42,400)' },
+            { id: 'ibps_po_2027', title: 'IBPS Probationary Officer (CRP-XV)', type: 'GOVT_EXAM', expectedBenefit: 'Assistant Manager in Nationalized Banks (₹52,000 - ₹68,000/mo)' },
+            { id: 'cat_2027', title: 'CAT (Common Admission Test for IIMs)', type: 'HIGHER_STUDIES', expectedBenefit: 'Premier MBA admissions (Average Package ₹28+ LPA)' }
+          ]
+        },
+        {
+          timeframe: 'In 1.5 to 2.5 Years (Age 23+ / Apex Service Window)',
+          milestoneTitle: 'Civil Services & Specialized State Gazetted Cadres',
+          triggerEvent: 'Full eligibility with mature preparation trajectory for administrative services and PSU appointments.',
+          prepActionToday: 'Consolidate comprehensive GS answer writing, essay practice, and optional subject mastery.',
+          unlockingOpportunities: [
+            { id: 'upsc_cse_2027', title: 'UPSC Civil Services Examination (IAS / IPS / IFS)', type: 'GOVT_EXAM', expectedBenefit: 'Apex Administrative & District Magistrate positions' }
+          ]
+        }
+      ];
+    }
     try {
       const res = await api.get('/timeline');
       return res.data;
@@ -1415,6 +1528,24 @@ export const GyanSetuApi = {
 
   // Costs & Clashes
   getCosts: async (): Promise<ApplicationCostPlan> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return {
+        standardTotalFee: 5650.0,
+        studentDiscountedTotalFee: 2850.0,
+        totalSavedViaWaivers: 2800.0,
+        estimatedTravelAndCenterCost: 2400.0,
+        estimatedBooksAndPrepCost: 1500.0,
+        grandTotalEstimatedExpense: 6750.0,
+        itemizedCosts: [
+          { opportunityId: 'ssc_cgl_2027', opportunityTitle: 'SSC CGL 2026-27', originalFee: 100.0, finalPayableFee: 100.0, isCompletelyWaived: false, waiverCategoryApplied: 'Standard Rate' },
+          { opportunityId: 'ibps_po_2027', opportunityTitle: 'IBPS PO CRP-XIV', originalFee: 850.0, finalPayableFee: 850.0, isCompletelyWaived: false, waiverCategoryApplied: 'Standard Rate' },
+          { opportunityId: 'rrb_ntpc_2027', opportunityTitle: 'Railway RRB NTPC Graduate Level', originalFee: 500.0, finalPayableFee: 500.0, isCompletelyWaived: false, waiverCategoryApplied: 'Refundable on CBT-1' },
+          { opportunityId: 'pm_usp_scholarship', opportunityTitle: 'PM-USP Central Sector Scholarship', originalFee: 0.0, finalPayableFee: 0.0, isCompletelyWaived: true, waiverCategoryApplied: 'Govt Scholarship (No Application Fee)' },
+          { opportunityId: 'gate_2027', opportunityTitle: 'GATE 2027 (IIT Roorkee / IISc)', originalFee: 1800.0, finalPayableFee: 1800.0, isCompletelyWaived: false, waiverCategoryApplied: 'Standard Rate' },
+          { opportunityId: 'cat_2027', opportunityTitle: 'CAT (Common Admission Test)', originalFee: 2400.0, finalPayableFee: 2400.0, isCompletelyWaived: false, waiverCategoryApplied: 'Standard Rate' }
+        ]
+      };
+    }
     try {
       const res = await api.get('/costs');
       return res.data;
@@ -1439,6 +1570,22 @@ export const GyanSetuApi = {
   },
 
   getClashes: async (): Promise<ExamClashWarning[]> => {
+    if (!GyanSetuApi.isAuthenticated()) {
+      return [
+        {
+          id: 'clash_1',
+          exam1Id: 'gate_2027',
+          exam1Title: 'GATE 2027 Examination',
+          exam1Date: '2027-02-06',
+          exam2Id: 'rrb_ntpc_2027',
+          exam2Title: 'Railway RRB NTPC CBT-1',
+          exam2Date: '2027-02-22',
+          daysApart: 16,
+          severity: 'MODERATE_SCHEDULE_PROXIMITY',
+          recommendationAdvice: 'Exams are 16 days apart in February 2027. Schedule your revision cycle so GATE technical topics finish first in January.'
+        }
+      ];
+    }
     try {
       const res = await api.get('/clashes');
       return res.data;
