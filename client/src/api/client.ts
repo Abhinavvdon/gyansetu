@@ -714,6 +714,25 @@ export const GyanSetuApi = {
     }
   },
 
+  importAdaptionDataset: async (content: string): Promise<{
+    success: boolean;
+    count?: number;
+    totalInCatalog?: number;
+    opportunities?: Opportunity[];
+    message?: string;
+    error?: string;
+  }> => {
+    try {
+      const res = await api.post('/opportunities/import-adaption-dataset', { content });
+      return res.data;
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || 'Failed to import Adaption AI dataset.'
+      };
+    }
+  },
+
   // Eligibility
   getEligibilityReports: async (): Promise<EligibilityReport[]> => {
     try {

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Sparkles,
+  Zap,
   ArrowRight,
   Award,
   Landmark,
@@ -448,8 +449,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#ece8ff]/60 to-[#f5f3ff]/80 dark:from-[#5034df]/20 dark:to-slate-700/50 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 transition text-xs font-bold text-[#5034df] dark:text-[#c4b5fd] border border-[#5034df]/20 group"
                 >
                   <div className="flex items-center gap-2.5">
-                    <Sparkles className="w-4 h-4 text-amber-500 group-hover:rotate-12 transition-transform" />
-                    <span>{lang === 'hi' ? 'Gemini AI से नए अवसर जोड़ें' : 'Generate More with Gemini AI'}</span>
+                    <Zap className="w-4 h-4 text-amber-500 fill-amber-500 group-hover:scale-110 transition-transform" />
+                    <span>{lang === 'hi' ? 'Adaption AI डेटासेट आयात करें' : 'Import Adaption AI Datasets'}</span>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-[#5034df] dark:text-[#c4b5fd] group-hover:translate-x-0.5 transition-transform" />
                 </button>

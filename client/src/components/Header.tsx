@@ -8,7 +8,8 @@ import {
   LogIn,
   Sun,
   Moon,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import type { StudentProfile, User, DeadlineNotification } from '../types';
 import { NotificationPopover } from './NotificationPopover';
@@ -136,16 +137,16 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
 
-        {/* Gemini AI Opportunity Generator Trigger */}
+        {/* Adaption AI Dataset Importer Trigger */}
         <button
           type="button"
           onClick={onOpenAiModal}
           className="cursor-pointer px-3 py-1 rounded-full bg-gradient-to-r from-[#ece8ff] to-[#f5f3ff] dark:from-[#5034df]/20 dark:to-[#5034df]/35 hover:from-[#e2dcff] dark:hover:from-[#5034df]/35 text-[#5034df] dark:text-[#c4b5fd] border border-[#5034df]/30 text-xs font-bold flex items-center gap-1.5 transition shadow-xs group"
-          title="Generate and synchronize verified opportunities using Google Gemini API"
+          title="Import verified opportunities directly from Adaption AI datasets (No API keys required)"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-500 group-hover:rotate-12 transition-transform" />
+          <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500 group-hover:scale-110 transition-transform" />
           <span className="hidden sm:inline">
-            {lang === 'hi' ? 'Gemini AI' : 'Gemini AI'}
+            {lang === 'hi' ? 'Adaption AI' : 'Adaption AI'}
           </span>
         </button>
 

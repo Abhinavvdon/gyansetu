@@ -21,7 +21,7 @@ import { FamilyModeView } from './components/FamilyModeView';
 import { WeeklyDigestModal } from './components/WeeklyDigestModal';
 import { AuthModal } from './components/AuthModal';
 import { StudyChatbot } from './components/StudyChatbot';
-import { GeminiAiModal } from './components/GeminiAiModal';
+import { AdaptionAiModal } from './components/AdaptionAiModal';
 
 import type {
   StudentProfile,
@@ -824,8 +824,8 @@ export function App() {
         lang={lang}
       />
 
-      {/* Gemini AI Opportunity Generator Modal */}
-      <GeminiAiModal
+      {/* Adaption AI Dataset Importer Modal */}
+      <AdaptionAiModal
         isOpen={isGeminiModalOpen}
         onClose={() => setIsGeminiModalOpen(false)}
         onOpportunitiesAdded={handleOpportunitiesAdded}

@@ -4,6 +4,7 @@ import org.gyansetu.model.Opportunity;
 import org.gyansetu.model.OpportunityType;
 import org.gyansetu.service.DataRepository;
 import org.gyansetu.service.GeminiOpportunityService;
+import org.gyansetu.service.AdaptionDatasetImportService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,15 @@ import java.util.*;
 public class GeminiOpportunityController {
 
     private final GeminiOpportunityService geminiService;
+    private final AdaptionDatasetImportService adaptionService;
     private final DataRepository repository;
 
-    public GeminiOpportunityController(GeminiOpportunityService geminiService, DataRepository repository) {
+    public GeminiOpportunityController(
+            GeminiOpportunityService geminiService,
+            AdaptionDatasetImportService adaptionService,
+            DataRepository repository) {
         this.geminiService = geminiService;
+        this.adaptionService = adaptionService;
         this.repository = repository;
     }
 
@@ -67,6 +73,25 @@ public class GeminiOpportunityController {
             resp.put("success", false);
             resp.put("error", "Gemini API error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resp);
+        }
+    }
+
+    @PostMapping("/import-adaption-dataset")
+    public ResponseEntity<Map<String, Object>> importAdaptionDataset(@RequestBody Map<String, String> payload) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            String content = payload.get("content");
+            List<Opportunity> imported = adaptionService.importFromRawText(content);
+            resp.put("success", true);
+            resp.put("count", imported.size());
+            resp.put("totalInCatalog", repository.getOpportunities().size());
+            resp.put("opportunities", imported);
+            resp.put("message", "Successfully imported " + imported.size() + " opportunities from Adaption AI dataset.");
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("success", false);
+            resp.put("error", "Failed to import Adaption AI dataset: " + e.getMessage());
+            return ResponseEntity.badRequest().body(resp);
         }
     }
 
