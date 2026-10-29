@@ -112,6 +112,48 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError(null);
+    setIsProcessing(true);
+    setStatusMessage(lang === 'hi' ? `फ़ाइल पढ़ी जा रही है: ${file.name}...` : `Reading file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)...`);
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const text = event.target?.result as string;
+      if (!text || !text.trim()) {
+        setError(lang === 'hi' ? 'अपलोड की गई फ़ाइल खाली है।' : 'Uploaded file is empty.');
+        setIsProcessing(false);
+        return;
+      }
+
+      setStatusMessage(lang === 'hi' ? 'डेटा पार्स व सत्यापित किया जा रहा है...' : 'Validating & ingesting Adaption AI records into database...');
+      try {
+        const res = await GyanSetuApi.importAdaptionDataset(text.trim());
+        if (res.success && res.opportunities && res.opportunities.length > 0) {
+          setImportedOpps(res.opportunities);
+          onOpportunitiesAdded(res.opportunities);
+        } else {
+          setError(res.error || 'Could not parse Adaption AI data. Ensure it is valid JSON or CSV.');
+        }
+      } catch (err: any) {
+        setError(err?.message || 'Error processing Adaption AI dataset.');
+      } finally {
+        setIsProcessing(false);
+        setStatusMessage('');
+      }
+    };
+
+    reader.onerror = () => {
+      setError(lang === 'hi' ? 'फ़ाइल पढ़ने में त्रुटि।' : 'Failed to read file from disk.');
+      setIsProcessing(false);
+    };
+
+    reader.readAsText(file);
+  };
+
   const handleGeminiGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!geminiApiKey.trim()) {
@@ -392,11 +434,35 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
                 </div>
               </div>
 
-              {/* Paste or Custom Ingestion Box */}
-              <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800">
+              {/* Paste or Upload Custom Ingestion Box */}
+              <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/80">
+                  <div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                      <Upload className="w-4 h-4 text-[#5034df] dark:text-[#a594fd]" />
+                      <span>{lang === 'hi' ? 'फ़ाइल अपलोड करें (1MB+ समर्थित)' : 'Upload Dataset File (1MB+ supported)'}</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {lang === 'hi' ? 'डाउनलोड की गई .json, .jsonl या .csv फ़ाइल सीधे चुनें' : 'Directly select your downloaded .json, .jsonl or .csv file'}
+                    </p>
+                  </div>
+
+                  <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white text-xs font-bold shadow-xs transition shrink-0">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{lang === 'hi' ? 'फ़ाइल चुनें...' : 'Choose File...'}</span>
+                    <input
+                      type="file"
+                      accept=".json,.csv,.jsonl,text/plain,application/json"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      disabled={isProcessing}
+                    />
+                  </label>
+                </div>
+
                 <details className="group">
                   <summary className="cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-between py-1">
-                    <span>{lang === 'hi' ? 'वैकल्पिक: Adaption Labs से डाउनलोड किया हुआ कच्चा JSON/CSV पेस्ट करें' : 'Or paste exported JSON / CSV text directly from Adaption Labs'}</span>
+                    <span>{lang === 'hi' ? 'या कच्चा JSON/CSV टेक्स्ट पेस्ट करें' : 'Or paste exported JSON / CSV text'}</span>
                     <span className="text-[10px] text-[#5034df] group-open:rotate-90 transition-transform">▼</span>
                   </summary>
 
