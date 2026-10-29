@@ -24,9 +24,12 @@ import type {
   DeadlineNotification
 } from '../types';
 
+const envApiUrl = import.meta.env.VITE_API_URL ? String(import.meta.env.VITE_API_URL).trim().replace(/\/+$/, '') : '';
+const apiBaseUrl = envApiUrl ? `${envApiUrl}/api` : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 3000,
+  baseURL: apiBaseUrl,
+  timeout: 15000,
 });
 
 api.interceptors.request.use((config) => {

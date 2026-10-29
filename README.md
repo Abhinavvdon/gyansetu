@@ -209,3 +209,14 @@ cd client
 npm run dev
 ```
 *Web App available at: `http://localhost:5173/`*
+
+---
+
+## ☁️ Deploying on Render (Cloud Production)
+
+GyanSetu includes native support for **[Render.com](https://render.com)** deployment:
+- **Render Blueprint (`render.yaml`)**: Automated 1-click deployment provisioning a managed PostgreSQL database and unified fullstack Web Service.
+- **Multi-Stage `Dockerfile`**: Packages React 19 + Spring Boot 3.3.4 into a lightweight, container-aware Alpine image tuned for Render's Free Tier (512MB RAM cap).
+- **Auto-Configuring Database**: Automatically converts Render's `DATABASE_URL` (`postgres://...`) to standard JDBC.
+
+👉 **See the complete step-by-step instructions in [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md).**

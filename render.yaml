@@ -1,0 +1,41 @@
+version: "1"
+
+# ==============================================================================
+# GyanSetu Render Blueprint (Infrastructure-as-Code)
+# Deploys:
+#   1. Managed PostgreSQL Database (Free Tier)
+#   2. Fullstack Unified Web Service (Spring Boot + React 19 Frontend)
+# ==============================================================================
+
+databases:
+  - name: gyansetu-db
+    databaseName: gyansetu
+    user: gyansetu
+    plan: free
+    ipAllowList: [] # Allows access from internal Render services
+
+services:
+  - type: web
+    name: gyansetu-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/auth/status
+    envVars:
+      # Automatically wire Render PostgreSQL connection string
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gyansetu-db
+          property: connectionString
+
+      # Dynamic port binding
+      - key: PORT
+        value: 10000
+
+      # Auto-migrate database tables on first launch
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+      # Optional Gemini API Key for AI features (Prompted during setup if desired)
+      - key: GEMINI_API_KEY
+        sync: false

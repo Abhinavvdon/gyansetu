@@ -1,0 +1,24 @@
+.git
+.github
+.idea
+.vscode
+**/.DS_Store
+Thumbs.db
+
+# Client exclusions
+client/node_modules
+client/dist
+client/.vite
+client/npm-debug.log*
+
+# Server exclusions
+server/target
+server/.mvn
+server/mvnw*
+*.class
+
+# Logs & temp files
+*.log
+scratch
+brain
+tmp
