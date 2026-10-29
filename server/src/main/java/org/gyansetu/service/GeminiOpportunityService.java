@@ -127,7 +127,7 @@ public class GeminiOpportunityService {
     }
 
     private String callGeminiApi(String apiKey, String prompt) throws Exception {
-        String[] models = {"gemini-2.5-flash", "gemini-1.5-flash"};
+        String[] models = {"gemini-2.5-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-pro"};
         Exception lastException = null;
 
         for (String model : models) {

@@ -694,8 +694,26 @@ Provide your comprehensive, structured, and empathetic study response:`;
 
   // 4. Default / Google Gemini API (Standard format or AIzaSy...)
   else {
-    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-    for (const model of models) {
+    let targetModels = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-pro'];
+
+    // Dynamically query user's key's available models from ModelService.ListModels
+    try {
+      const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
+      if (listRes.ok) {
+        const listData = await listRes.json();
+        if (Array.isArray(listData.models)) {
+          const available = listData.models
+            .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
+            .map((m: any) => m.name.replace(/^models\//, ''))
+            .filter((name: string) => name.includes('flash') || name.includes('pro'));
+          if (available.length > 0) {
+            targetModels = available;
+          }
+        }
+      }
+    } catch {}
+
+    for (const model of targetModels) {
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`, {
           method: 'POST',

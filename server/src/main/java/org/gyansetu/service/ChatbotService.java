@@ -43,7 +43,40 @@ public class ChatbotService {
         StudentProfile profile = (clientProfile != null) ? clientProfile : repository.getDefaultProfile();
         String prompt = buildSystemPrompt(userMessage, lang, profile, chatHistory);
 
-        String[] models = {"gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"};
+        List<String> models = new ArrayList<>(Arrays.asList("gemini-2.5-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-pro"));
+        try {
+            String listUrl = "https://generativelanguage.googleapis.com/v1beta/models?key=" + effectiveKey;
+            ResponseEntity<String> listResp = restTemplate.getForEntity(listUrl, String.class);
+            if (listResp.getStatusCode().is2xxSuccessful() && listResp.getBody() != null) {
+                JsonNode listRoot = objectMapper.readTree(listResp.getBody());
+                JsonNode modelsNode = listRoot.path("models");
+                if (modelsNode.isArray() && modelsNode.size() > 0) {
+                    List<String> discovered = new ArrayList<>();
+                    for (JsonNode m : modelsNode) {
+                        JsonNode methods = m.path("supportedGenerationMethods");
+                        boolean supportsGenerate = false;
+                        if (methods.isArray()) {
+                            for (JsonNode meth : methods) {
+                                if ("generateContent".equalsIgnoreCase(meth.asText())) {
+                                    supportsGenerate = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (supportsGenerate) {
+                            String mName = m.path("name").asText().replace("models/", "");
+                            if (mName.contains("flash") || mName.contains("pro")) {
+                                discovered.add(mName);
+                            }
+                        }
+                    }
+                    if (!discovered.isEmpty()) {
+                        models = discovered;
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+
         Exception lastException = null;
 
         for (String model : models) {
