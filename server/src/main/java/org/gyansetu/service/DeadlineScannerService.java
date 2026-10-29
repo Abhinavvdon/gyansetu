@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 public class DeadlineScannerService {
 
     private static final Logger log = LoggerFactory.getLogger(DeadlineScannerService.class);
+    private static final ZoneId IST_ZONE = ZoneId.of("Asia/Kolkata");
 
     private final DataRepository dataRepository;
     private final NotificationRepository notificationRepository;
@@ -43,7 +45,7 @@ public class DeadlineScannerService {
     public List<Notification> scanAndGenerateAlerts(Long userId) {
         List<Opportunity> allOpps = new ArrayList<>(dataRepository.getOpportunities().values());
         List<Notification> createdNotifications = new ArrayList<>();
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(IST_ZONE);
 
         // Seed initial notifications if repository is empty
         if (notificationRepository.count() == 0) {
