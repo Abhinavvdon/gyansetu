@@ -228,17 +228,48 @@ export function App() {
     setUnreadAlertCount(0);
   };
 
-  const handleAuthSuccess = (user: User) => {
+  const handleAuthSuccess = async (user: User) => {
     setCurrentUser(user);
-    if (profile && user.name) {
-      setProfile({ ...profile, fullName: user.name });
+    try {
+      const userProfile = await GyanSetuApi.getProfile(user.id);
+      setProfile(userProfile);
+      const [updatedEligs, updatedPlan, updatedAlerts, updatedUnread] = await Promise.all([
+        GyanSetuApi.getEligibilityReports(user.id),
+        GyanSetuApi.getPlanner(user.id),
+        GyanSetuApi.getDeadlineAlerts(user.id),
+        GyanSetuApi.getUnreadAlertCount(user.id)
+      ]);
+      setEligibilityReports(updatedEligs);
+      setPlanner(updatedPlan);
+      setDeadlineAlerts(updatedAlerts);
+      setUnreadAlertCount(updatedUnread);
+    } catch {
+      if (profile && user.name) {
+        setProfile({ ...profile, fullName: user.name });
+      }
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     GyanSetuApi.clearAuthSession();
     setCurrentUser(null);
     setActiveTab('home');
+    try {
+      const guestProfile = await GyanSetuApi.getProfile();
+      setProfile(guestProfile);
+      const [updatedEligs, updatedPlan, updatedAlerts, updatedUnread] = await Promise.all([
+        GyanSetuApi.getEligibilityReports(),
+        GyanSetuApi.getPlanner(),
+        GyanSetuApi.getDeadlineAlerts(),
+        GyanSetuApi.getUnreadAlertCount()
+      ]);
+      setEligibilityReports(updatedEligs);
+      setPlanner(updatedPlan);
+      setDeadlineAlerts(updatedAlerts);
+      setUnreadAlertCount(updatedUnread);
+    } catch {
+      // fallback
+    }
   };
 
   const toggleParentMode = () => {

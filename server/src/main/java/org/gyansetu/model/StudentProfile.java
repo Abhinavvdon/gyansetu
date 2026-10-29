@@ -1,14 +1,25 @@
 package org.gyansetu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Entity
+@Table(name = "student_profiles")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long profileId;
+
+    @Column(name = "user_id")
+    private Long userId;
+
     private String id = "student_default";
     private String fullName = "Abhinav Dongre";
     private String educationLevel = "UG Pursuing"; // 10th, 12th, UG Pursuing, UG Completed, PG
@@ -43,9 +54,25 @@ public class StudentProfile {
     private String dateOfBirth = "2006-03-12";
     private int age = 20;
     private String gender = "Male";
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "student_career_goals", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "goal")
     private List<String> careerGoals = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "student_preferred_languages", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "lang")
     private List<String> preferredLanguages = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "student_saved_opportunities", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "opportunity_id")
     private Set<String> savedOpportunityIds = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "student_applied_opportunities", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "opportunity_id")
     private Set<String> appliedOpportunityIds = new HashSet<>();
 
     public StudentProfile() {
@@ -60,6 +87,12 @@ public class StudentProfile {
     }
 
     // Getters and Setters
+    public Long getProfileId() { return profileId; }
+    public void setProfileId(Long profileId) { this.profileId = profileId; }
+
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -123,11 +156,10 @@ public class StudentProfile {
     public String getCurrentDegree() { return currentDegree; }
     public void setCurrentDegree(String currentDegree) {
         this.currentDegree = currentDegree;
-        if (this.currentlyPursuingCourse == null || this.currentlyPursuingCourse.isEmpty()) {
-            this.currentlyPursuingCourse = currentDegree;
-        }
+        this.currentlyPursuingCourse = currentDegree;
     }
 
+    public int currentYear() { return currentYear; }
     public int getCurrentYear() { return currentYear; }
     public void setCurrentYear(int currentYear) {
         this.currentYear = currentYear;
@@ -137,9 +169,7 @@ public class StudentProfile {
     public String getStream() { return stream; }
     public void setStream(String stream) {
         this.stream = stream;
-        if (this.currentlyPursuingStream == null || this.currentlyPursuingStream.isEmpty()) {
-            this.currentlyPursuingStream = stream;
-        }
+        this.currentlyPursuingStream = stream;
     }
 
     public String getCategory() { return category; }

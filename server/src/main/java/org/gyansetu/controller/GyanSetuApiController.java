@@ -13,6 +13,7 @@ import java.util.*;
 public class GyanSetuApiController {
 
     private final DataRepository repository;
+    private final StudentProfileService profileService;
     private final EligibilityEngineService eligibilityService;
     private final PlannerService plannerService;
     private final OverlapDetectorService overlapService;
@@ -26,6 +27,7 @@ public class GyanSetuApiController {
 
     public GyanSetuApiController(
             DataRepository repository,
+            StudentProfileService profileService,
             EligibilityEngineService eligibilityService,
             PlannerService plannerService,
             OverlapDetectorService overlapService,
@@ -37,6 +39,7 @@ public class GyanSetuApiController {
             CostAndClashService costAndClashService,
             TrustAndEngagementService trustService) {
         this.repository = repository;
+        this.profileService = profileService;
         this.eligibilityService = eligibilityService;
         this.plannerService = plannerService;
         this.overlapService = overlapService;
@@ -49,48 +52,32 @@ public class GyanSetuApiController {
         this.trustService = trustService;
     }
 
-    // --- 1. PROFILE API ---
+    // --- 1. PROFILE API (PostgreSQL Persisted) ---
     @GetMapping("/profile")
-    public ResponseEntity<StudentProfile> getProfile() {
-        return ResponseEntity.ok(repository.getDefaultProfile());
+    public ResponseEntity<StudentProfile> getProfile(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(profileService.getOrCreateProfile(effUserId));
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<StudentProfile> updateProfile(@RequestBody StudentProfile updated) {
-        StudentProfile p = repository.getDefaultProfile();
-        p.setFullName(updated.getFullName());
-        p.setEducationLevel(updated.getEducationLevel());
-        p.setCurrentDegree(updated.getCurrentDegree());
-        p.setStream(updated.getStream());
-        p.setTenthMarksPercent(updated.getTenthMarksPercent());
-        p.setTwelfthMarksPercent(updated.getTwelfthMarksPercent());
-        p.setUgMarksPercent(updated.getUgMarksPercent());
-        p.setCategory(updated.getCategory());
-        p.setAnnualFamilyIncome(updated.getAnnualFamilyIncome());
-        p.setStateDomicile(updated.getStateDomicile());
-        p.setAge(updated.getAge());
-        p.setGender(updated.getGender());
-        if (updated.getCareerGoals() != null) p.setCareerGoals(updated.getCareerGoals());
-        if (updated.getPreferredLanguages() != null) p.setPreferredLanguages(updated.getPreferredLanguages());
-        return ResponseEntity.ok(p);
+    public ResponseEntity<StudentProfile> updateProfile(
+            @RequestBody StudentProfile updated,
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = updated.getUserId() != null ? updated.getUserId() : (userId != null ? userId : headerUserId);
+        StudentProfile saved = profileService.saveOrUpdateProfile(effUserId, updated);
+        return ResponseEntity.ok(saved);
     }
 
     @PostMapping("/profile/toggle-save/{id}")
-    public ResponseEntity<Map<String, Object>> toggleSave(@PathVariable String id) {
-        StudentProfile p = repository.getDefaultProfile();
-        boolean isSaved;
-        if (p.getSavedOpportunityIds().contains(id)) {
-            p.getSavedOpportunityIds().remove(id);
-            isSaved = false;
-        } else {
-            p.getSavedOpportunityIds().add(id);
-            isSaved = true;
-        }
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("opportunityId", id);
-        resp.put("isSaved", isSaved);
-        resp.put("savedCount", p.getSavedOpportunityIds().size());
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<Map<String, Object>> toggleSave(
+            @PathVariable String id,
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(profileService.toggleSaveOpportunity(effUserId, id));
     }
 
     // --- 2. OPPORTUNITY DISCOVERY API ---
@@ -125,21 +112,31 @@ public class GyanSetuApiController {
 
     // --- 3. AI-BASED ELIGIBILITY MATCHING API ---
     @GetMapping("/eligibility")
-    public ResponseEntity<List<EligibilityReport>> getEligibilityReports() {
-        return ResponseEntity.ok(eligibilityService.evaluateAll(repository.getDefaultProfile()));
+    public ResponseEntity<List<EligibilityReport>> getEligibilityReports(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(eligibilityService.evaluateAll(profileService.getOrCreateProfile(effUserId)));
     }
 
     @GetMapping("/eligibility/{id}")
-    public ResponseEntity<EligibilityReport> getSingleEligibility(@PathVariable String id) {
+    public ResponseEntity<EligibilityReport> getSingleEligibility(
+            @PathVariable String id,
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
         Opportunity opp = repository.getOpportunities().get(id);
         if (opp == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(eligibilityService.evaluateOpportunity(opp, repository.getDefaultProfile()));
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(eligibilityService.evaluateOpportunity(opp, profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 4. SMART OPPORTUNITY PLANNER API ---
     @GetMapping("/planner")
-    public ResponseEntity<List<PlannerService.PlannedOpportunity>> getPlanner() {
-        return ResponseEntity.ok(plannerService.getPrioritizedPlan(repository.getDefaultProfile()));
+    public ResponseEntity<List<PlannerService.PlannedOpportunity>> getPlanner(
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(plannerService.getPrioritizedPlan(profileService.getOrCreateProfile(effUserId)));
     }
 
     // --- 5. PREPARATION OVERLAP DETECTOR API ---
@@ -151,8 +148,12 @@ public class GyanSetuApiController {
 
     // --- 6. WHAT-IF ELIGIBILITY SIMULATOR API ---
     @PostMapping("/what-if/simulate")
-    public ResponseEntity<WhatIfSimulationResponse> simulateWhatIf(@RequestBody WhatIfSimulationRequest request) {
-        return ResponseEntity.ok(whatIfService.simulate(repository.getDefaultProfile(), request));
+    public ResponseEntity<WhatIfSimulationResponse> simulateWhatIf(
+            @RequestBody WhatIfSimulationRequest request,
+            @RequestParam(required = false) Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId) {
+        Long effUserId = userId != null ? userId : headerUserId;
+        return ResponseEntity.ok(whatIfService.simulate(profileService.getOrCreateProfile(effUserId), request));
     }
 
     // --- 7. DOCUMENT READINESS CHECKER API ---

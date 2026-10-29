@@ -707,18 +707,23 @@ export const GyanSetuApi = {
   },
 
   // Profile
-  getProfile: async (): Promise<StudentProfile> => {
+  getProfile: async (userId?: number): Promise<StudentProfile> => {
     try {
-      const res = await api.get('/profile');
+      const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
+      const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
+      const res = await api.get('/profile', { headers, params: user?.id ? { userId: user.id } : {} });
       return res.data;
     } catch {
       return mockProfile;
     }
   },
 
-  updateProfile: async (updated: StudentProfile): Promise<StudentProfile> => {
+  updateProfile: async (updated: StudentProfile, userId?: number): Promise<StudentProfile> => {
     try {
-      const res = await api.put('/profile', updated);
+      const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
+      const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
+      const payload = user?.id ? { ...updated, userId: user.id } : updated;
+      const res = await api.put('/profile', payload, { headers, params: user?.id ? { userId: user.id } : {} });
       return res.data;
     } catch {
       mockProfile = { ...updated };
@@ -726,9 +731,11 @@ export const GyanSetuApi = {
     }
   },
 
-  toggleSaveOpportunity: async (id: string): Promise<{ isSaved: boolean; savedCount: number }> => {
+  toggleSaveOpportunity: async (id: string, userId?: number): Promise<{ isSaved: boolean; savedCount: number }> => {
     try {
-      const res = await api.post(`/profile/toggle-save/${id}`);
+      const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
+      const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
+      const res = await api.post(`/profile/toggle-save/${id}`, null, { headers, params: user?.id ? { userId: user.id } : {} });
       return res.data;
     } catch {
       const set = new Set(mockProfile.savedOpportunityIds);
@@ -862,9 +869,11 @@ export const GyanSetuApi = {
   },
 
   // Eligibility
-  getEligibilityReports: async (): Promise<EligibilityReport[]> => {
+  getEligibilityReports: async (userId?: number): Promise<EligibilityReport[]> => {
     try {
-      const res = await api.get('/eligibility');
+      const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
+      const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
+      const res = await api.get('/eligibility', { headers, params: user?.id ? { userId: user.id } : {} });
       return res.data;
     } catch {
       return evaluateEligibilityMock(mockProfile);
@@ -872,9 +881,11 @@ export const GyanSetuApi = {
   },
 
   // Planner
-  getPlanner: async (): Promise<PlannedOpportunity[]> => {
+  getPlanner: async (userId?: number): Promise<PlannedOpportunity[]> => {
     try {
-      const res = await api.get('/planner');
+      const user = userId ? { id: userId } : GyanSetuApi.getCurrentUser();
+      const headers = user?.id ? { 'X-User-Id': String(user.id) } : undefined;
+      const res = await api.get('/planner', { headers, params: user?.id ? { userId: user.id } : {} });
       return res.data;
     } catch {
       const reports = evaluateEligibilityMock(mockProfile);
