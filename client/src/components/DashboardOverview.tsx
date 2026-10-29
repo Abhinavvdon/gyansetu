@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import type { Opportunity, StudentProfile, EligibilityReport, User } from '../types';
 import type { MainNavTab } from './Sidebar';
+import { PriorityBarGraph } from './PriorityBarGraph';
 
 interface DashboardOverviewProps {
   opportunities: Opportunity[];
@@ -233,7 +234,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      {/* 3. Bottom Split Section: Recommended For You + Quick Actions (matching screenshot) */}
+      {/* 3. Priority Bar Graph for All Features (Scholarships, Govt Schemes, Higher Ed, Docs, Deadlines) */}
+      <PriorityBarGraph
+        opportunities={opportunities}
+        eligibilityReports={eligibilityReports}
+        profile={profile}
+        onNavigate={onNavigate}
+        lang={lang}
+      />
+
+      {/* 4. Bottom Split Section: Recommended For You + Quick Actions (matching screenshot) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Recommended for you (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
