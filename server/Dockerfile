@@ -12,12 +12,13 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 RUN apk add --no-cache curl
-RUN addgroup -S gyansetu && adduser -S gyansetu -G gyansetu
+RUN addgroup -S gyansetu && adduser -S gyansetu -G gyansetu && \
+    mkdir -p /app && chown -R gyansetu:gyansetu /app
 USER gyansetu:gyansetu
 
-COPY --from=builder /app/target/gyansetu-backend-*.jar app.jar
+COPY --chown=gyansetu:gyansetu --from=builder /app/target/gyansetu-backend-*.jar /app/app.jar
 
 ENV PORT=10000
 EXPOSE ${PORT}
 
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-10000} -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar"]
