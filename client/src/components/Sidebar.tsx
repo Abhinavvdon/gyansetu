@@ -63,43 +63,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'Profile' as MainNavTab,
       label: 'Profile',
       labelHi: 'प्रोफ़ाइल',
-      icon: UserIcon,
-      badge: currentUser ? 'PostgreSQL' : undefined
+      icon: UserIcon
     },
     {
       id: 'Scholarship' as MainNavTab,
       label: 'Scholarship',
       labelHi: 'छात्रवृत्ति',
-      icon: Award,
-      badge: lang === 'hi' ? 'मैच' : 'Matches'
+      icon: Award
     },
     {
       id: 'Government Schemes' as MainNavTab,
       label: 'Government Schemes',
       labelHi: 'सरकारी योजनाएं',
-      icon: Landmark,
-      badge: lang === 'hi' ? 'परीक्षाएं' : 'Exams'
+      icon: Landmark
     },
     {
       id: 'Higher Studies' as MainNavTab,
       label: 'Higher Studies',
       labelHi: 'उच्च शिक्षा',
-      icon: GraduationCap,
-      badge: lang === 'hi' ? 'प्रवेश' : 'Entrances'
+      icon: GraduationCap
     },
     {
       id: 'Documents' as MainNavTab,
       label: 'Documents',
       labelHi: 'दस्तावेज़',
-      icon: FileText,
-      badge: lang === 'hi' ? 'तैयारी' : 'Readiness'
+      icon: FileText
     },
     {
       id: 'trust and scams' as MainNavTab,
       label: 'trust and scams',
       labelHi: 'सत्यापन व फ्रॉड अलर्ट',
-      icon: ShieldAlert,
-      badge: lang === 'hi' ? 'सत्यापित' : 'Verified'
+      icon: ShieldAlert
     },
     {
       id: 'logout' as MainNavTab,
@@ -265,18 +259,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {lang === 'hi' ? item.labelHi : item.label}
                 </span>
               </div>
-
-              {item.badge && !isLogout && (
-                <span
-                  className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tight shrink-0 ${
-                    isActive
-                      ? 'bg-[#5034df] text-white'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
-                  }`}
-                >
-                  {item.badge}
-                </span>
-              )}
             </button>
           );
         })}
