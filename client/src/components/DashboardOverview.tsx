@@ -83,7 +83,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   return (
     <div className="space-y-7 pb-10">
       {/* 1. Hero Purple Banner (matching screenshot) */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1b1154] via-[#33209c] to-[#5940e2] text-white p-7 sm:p-9 shadow-lg shadow-[#33209c]/15">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1b1154] via-[#33209c] to-[#5940e2] text-white p-5 sm:p-7 md:p-9 shadow-lg shadow-[#33209c]/15">
         {/* Decorative background circles */}
         <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none opacity-20">
           <div className="absolute right-12 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-white/30"></div>
@@ -416,7 +416,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-5 sm:p-5.5 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-4 sm:p-5.5 shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                 {lang === 'hi' ? 'प्लेटफॉर्म टूल्स' : 'Platform Tools'}
@@ -427,17 +427,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
 
             {/* Quick Action Buttons Grid */}
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
               {/* Action 1: Find matches */}
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-[#f0edff] dark:bg-[#5034df]/20 flex items-center justify-center text-[#5034df] dark:text-[#c4b5fd] group-hover:scale-105 transition-transform">
-                  <Search className="w-4.5 h-4.5" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#f0edff] dark:bg-[#5034df]/20 flex items-center justify-center text-[#5034df] dark:text-[#c4b5fd] group-hover:scale-105 transition-transform">
+                  <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'मैच खोजें' : 'Find matches'}
                 </span>
               </button>
@@ -446,12 +446,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Documents')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
-                  <Calendar className="w-4.5 h-4.5" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
+                  <Calendar className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'समय-सारिणी' : 'Plan deadlines'}
                 </span>
               </button>
@@ -460,12 +460,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('Scholarship')}
-                className="cursor-pointer flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
+                className="cursor-pointer flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 hover:bg-[#f6f4ff] dark:hover:bg-slate-700/40 transition group text-center space-y-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
-                  <SlidersHorizontal className="w-4.5 h-4.5" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                  <SlidersHorizontal className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight">
                   {lang === 'hi' ? 'सिम्युलेटर' : 'What-if simulator'}
                 </span>
               </button>

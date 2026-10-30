@@ -60,7 +60,8 @@ import {
   SlidersHorizontal,
   CalendarCheck,
   LayoutDashboard,
-  IndianRupee
+  IndianRupee,
+  Menu
 } from 'lucide-react';
 
 export function App() {
@@ -78,6 +79,7 @@ export function App() {
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isDigestOpen, setIsDigestOpen] = useState<boolean>(false);
   const [isGeminiModalOpen, setIsGeminiModalOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Theme state (Light / Dark mode persistence)
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -358,7 +360,7 @@ export function App() {
   const higherEdReports = eligibilityReports.filter((r) => r.opportunityType === 'HIGHER_STUDIES');
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b0f19] flex text-slate-800 dark:text-slate-100 font-sans selection:bg-[#ede9fe] selection:text-[#5034df] transition-colors duration-200">
+    <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#0b0f19] flex text-slate-800 dark:text-slate-100 font-sans selection:bg-[#ede9fe] selection:text-[#5034df] transition-colors duration-200 overflow-x-hidden w-full max-w-full">
       {/* 1. Left Sidebar Navigation:
           Options displayed strictly in this order:
           "Profile", "Scholarship", "Government Schemes", "Higher Studies", "Documents", "trust and scams", "logout"
@@ -373,10 +375,12 @@ export function App() {
           setIsAuthModalOpen(true);
         }}
         lang={lang}
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* 2. Main Right Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 max-w-full overflow-x-hidden">
         {/* Top Header Bar matching screenshot */}
         <Header
           searchQuery={searchQuery}
@@ -413,13 +417,15 @@ export function App() {
           toggleLanguage={toggleLanguage}
           isDarkMode={isDarkMode}
           toggleDarkMode={toggleDarkMode}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          onNavigateHome={() => setActiveTab('home')}
         />
 
         {/* Workspace Body */}
-        <main id="main-content" role="main" className="flex-1 p-6 max-w-7xl w-full mx-auto">
+        <main id="main-content" role="main" className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 lg:pb-8 max-w-7xl w-full mx-auto">
           {/* Quick Tab Header / Back to Overview Button */}
           {activeTab !== 'home' && (
-            <div className="mb-5 flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
+            <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -436,7 +442,7 @@ export function App() {
               </div>
 
               {/* Sub-tools Quick Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full pb-0.5">
                 <button
                   type="button"
                   onClick={() => setActiveTab('planner')}
@@ -517,13 +523,13 @@ export function App() {
           {activeTab === 'Scholarship' && (
             <div className="space-y-6">
               {/* Category Sub-tabs */}
-              <div className="flex items-center justify-between border-b border-slate-200/90 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/90 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600">
+                  <div className="w-9 h-9 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 shrink-0">
                     <Award className="w-5 h-5" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                       {lang === 'hi' ? 'छात्रवृत्तियां व वित्तीय सहायता' : 'Scholarships & Financial Aid'}
                     </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
@@ -532,7 +538,7 @@ export function App() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-full">
                   <button
                     type="button"
                     onClick={() => setScholarshipSubTab('discovery')}
@@ -602,13 +608,13 @@ export function App() {
           {/* VIEW 3: GOVERNMENT SCHEMES */}
           {activeTab === 'Government Schemes' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-200/90 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/90 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
                     <Landmark className="w-5 h-5" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                       {lang === 'hi' ? 'सरकारी योजनाएं व भर्ती परीक्षाएं' : 'Government Schemes & Exams'}
                     </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
@@ -617,7 +623,7 @@ export function App() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-full">
                   <button
                     type="button"
                     onClick={() => setGovtSubTab('discovery')}
@@ -689,13 +695,13 @@ export function App() {
           {/* VIEW 4: HIGHER STUDIES */}
           {activeTab === 'Higher Studies' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-200/90 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/90 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-[#5034df]">
+                  <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-[#5034df] shrink-0">
                     <GraduationCap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                       {lang === 'hi' ? 'उच्च शिक्षा एवं राष्ट्रीय प्रवेश परीक्षाएं' : 'Higher Studies & National Entrances'}
                     </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
@@ -704,7 +710,7 @@ export function App() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-full">
                   <button
                     type="button"
                     onClick={() => setHigherEdSubTab('discovery')}
@@ -899,6 +905,71 @@ export function App() {
           lang={lang}
         />
       </Suspense>
+
+      {/* 3. Mobile Bottom Navigation Bar (< lg screens) */}
+      <nav aria-label="Mobile Navigation Bar" className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around shadow-lg transition-colors">
+        <button
+          type="button"
+          onClick={() => setActiveTab('home')}
+          className={`cursor-pointer flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${
+            activeTab === 'home'
+              ? 'text-[#5034df] dark:text-[#a594fd] font-bold'
+              : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <LayoutDashboard className="w-5 h-5" />
+          <span className="text-[10px] mt-0.5">{lang === 'hi' ? 'होम' : 'Home'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('Scholarship')}
+          className={`cursor-pointer flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${
+            activeTab === 'Scholarship'
+              ? 'text-[#5034df] dark:text-[#a594fd] font-bold'
+              : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <Award className="w-5 h-5" />
+          <span className="text-[10px] mt-0.5">{lang === 'hi' ? 'छात्रवृत्ति' : 'Scholarships'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('Government Schemes')}
+          className={`cursor-pointer flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${
+            activeTab === 'Government Schemes'
+              ? 'text-[#5034df] dark:text-[#a594fd] font-bold'
+              : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <Landmark className="w-5 h-5" />
+          <span className="text-[10px] mt-0.5">{lang === 'hi' ? 'सरकारी' : 'Govt Exams'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('Higher Studies')}
+          className={`cursor-pointer flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${
+            activeTab === 'Higher Studies'
+              ? 'text-[#5034df] dark:text-[#a594fd] font-bold'
+              : 'text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <GraduationCap className="w-5 h-5" />
+          <span className="text-[10px] mt-0.5">{lang === 'hi' ? 'उच्च शिक्षा' : 'Higher Ed'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="cursor-pointer flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition"
+          aria-label="More navigation options"
+        >
+          <Menu className="w-5 h-5" />
+          <span className="text-[10px] mt-0.5">{lang === 'hi' ? 'मेनू' : 'More'}</span>
+        </button>
+      </nav>
     </div>
   );
 }

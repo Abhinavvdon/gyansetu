@@ -388,7 +388,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
     <>
       {/* Floating Chat Trigger Button (Bottom Right) */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        <div className="fixed bottom-20 lg:bottom-6 right-3 sm:right-6 z-40 flex items-center gap-3">
           {/* Subtle Attention Badge */}
           <div className="hidden sm:flex items-center gap-1.5 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-indigo-100 text-[#1c1257] text-xs font-bold animate-in fade-in slide-in-from-right-4 duration-300">
             <span className={`w-2 h-2 rounded-full ${geminiApiKey ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse`}></span>
@@ -400,10 +400,10 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="group relative cursor-pointer w-14 h-14 rounded-full bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white flex items-center justify-center shadow-xl hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white/20"
+            className="group relative cursor-pointer w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white flex items-center justify-center shadow-xl hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white/20"
             title={lang === 'hi' ? 'अध्ययन टाइमटेबल चैटबॉट खोलें' : 'Open Study Timetable Chatbot'}
           >
-            <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
             
             {/* Sparkling Badge */}
             <span aria-hidden="true" className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-amber-500 to-amber-700 rounded-full flex items-center justify-center text-[10px] text-white font-extrabold shadow-sm border border-white">
@@ -415,7 +415,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
 
       {/* Chatbot Window (Bottom Right) */}
       {isOpen && (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[94vw] sm:w-[460px] md:w-[490px] h-[640px] max-h-[88vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-2 sm:bottom-6 right-2 sm:right-6 w-[calc(100vw-16px)] sm:w-[460px] md:w-[490px] h-[calc(100vh-20px)] sm:h-[640px] max-h-[92vh] bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
           
           {/* Top Header Ribbon */}
           <div className="bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white p-3.5 pb-3 flex items-center justify-between shrink-0 shadow-md">

@@ -53,7 +53,7 @@ export const NotificationTrackerView: React.FC<NotificationTrackerViewProps> = (
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-400/20 text-blue-200 text-xs font-semibold mb-3 border border-blue-400/30">
           <Bell className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'अधिसूचना परिवर्तन संसूचक (Change Tracker)' : 'Live Notification Change Tracker'}</span>

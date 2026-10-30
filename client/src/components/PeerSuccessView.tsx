@@ -19,7 +19,7 @@ export const PeerSuccessView: React.FC<PeerSuccessViewProps> = ({ peerStories, l
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-400/20 text-purple-200 text-xs font-semibold mb-3 border border-purple-400/30">
           <Users className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'साथियों के सफल रास्ते (Peer Success Paths)' : 'Peer Success Paths & Combination Blueprints'}</span>

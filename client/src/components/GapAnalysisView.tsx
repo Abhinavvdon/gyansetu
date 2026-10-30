@@ -24,7 +24,7 @@ export const GapAnalysisView: React.FC<GapAnalysisViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-rose-950 via-slate-900 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-rose-950 via-slate-900 to-indigo-950 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold mb-3 border border-rose-500/30">
           <Target className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'गैप विश्लेषण संसूचक (Missed-It-By-How-Much)' : 'Backward Gap Analysis & Closest Alternatives'}</span>

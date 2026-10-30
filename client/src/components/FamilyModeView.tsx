@@ -233,7 +233,7 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12 print:p-0 print:m-0 print:space-y-4">
       {/* 1. Top Welcome Card with Voice Button and In-Page Language Switcher */}
-      <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg shadow-orange-900/15 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-lg shadow-orange-900/15 relative overflow-hidden">
         {/* Subtle decorative circles */}
         <div className="absolute right-0 top-0 bottom-0 w-1/3 pointer-events-none opacity-15">
           <div className="absolute right-4 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-white/30"></div>
@@ -639,7 +639,7 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
 
       {/* 3. Comprehensive Parent Advisory & Fraud Prevention Shield */}
       <div
-        className={`bg-white rounded-3xl border p-6 sm:p-8 shadow-xs space-y-5 transition-all ${
+        className={`bg-white rounded-3xl border p-4 sm:p-6 md:p-8 shadow-xs space-y-5 transition-all ${
           activeAudioSection === 'advisory'
             ? 'ring-2 ring-[#5034df] border-[#5034df]/40'
             : 'border-slate-200'

@@ -27,7 +27,7 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-3 border border-emerald-500/30">
           <IndianRupee className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'फीस बजट व परीक्षा टकराव संसूचक' : 'Application Cost Planner & Exam Clash Radar'}</span>
@@ -130,7 +130,7 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
       </div>
 
       {/* Itemized Fee Breakdown Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
           <IndianRupee className="w-5 h-5 text-emerald-600" />
           <span>{lang === 'hi' ? 'आवेदन शुल्क विवरण (Itemized Fee Breakdown)' : 'Itemized Form Fee & Concession Breakdown'}</span>

@@ -61,7 +61,7 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-teal-900 via-emerald-900 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-teal-900 via-emerald-900 to-indigo-950 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-xs font-semibold mb-3 border border-emerald-400/30">
           <Sparkles className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'व्हाट-इफ़ पात्रता प्रयोगशाला' : 'What-If Eligibility Simulation Lab'}</span>

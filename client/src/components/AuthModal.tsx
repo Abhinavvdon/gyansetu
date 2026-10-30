@@ -175,7 +175,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="relative w-full max-w-md bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header Ribbon */}
-        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-indigo-600 px-6 py-4 text-white relative">
+        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-indigo-600 px-4 sm:px-6 py-4 text-white relative">
           <button
             onClick={onClose}
             className="cursor-pointer absolute top-4 right-4 p-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
@@ -200,7 +200,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Database Telemetry Badge */}
-        <div className="bg-slate-50 border-b border-slate-100 px-6 py-2 flex items-center justify-between text-[11px] text-slate-600">
+        <div className="bg-slate-50 border-b border-slate-100 px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-1.5 text-[11px] text-slate-600">
           <div className="flex items-center gap-1.5 font-mono">
             <Database className="w-3.5 h-3.5 text-indigo-600" />
             <span className="font-semibold text-slate-700">PostgreSQL (gyansetu)</span>

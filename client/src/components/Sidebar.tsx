@@ -8,7 +8,13 @@ import {
   ShieldAlert,
   LogOut,
   Database,
-  Sparkles,
+  LayoutDashboard,
+  CalendarCheck,
+  GitCompare,
+  SlidersHorizontal,
+  IndianRupee,
+  Users,
+  X,
   LogIn
 } from 'lucide-react';
 import type { User } from '../types';
@@ -36,6 +42,8 @@ interface SidebarProps {
   currentUser: User | null;
   onOpenAuth: () => void;
   lang: 'en' | 'hi';
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -44,7 +52,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   currentUser,
   onOpenAuth,
-  lang
+  lang,
+  isMobileOpen = false,
+  onCloseMobile
 }) => {
   // Exact 7 options in the exact order requested by user:
   // "Profile", "Scholarship", "Government Schemes", "Higher Studies", "Documents", "trust and scams", "logout"
@@ -100,6 +110,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   ];
 
+  // Secondary tools available in mobile drawer
+  const toolItems = [
+    {
+      id: 'planner' as MainNavTab,
+      label: 'Smart Planner',
+      labelHi: 'स्मार्ट प्लानर',
+      icon: CalendarCheck
+    },
+    {
+      id: 'overlap' as MainNavTab,
+      label: 'Prep Overlap',
+      labelHi: 'सिलेबस ओवरलैप',
+      icon: GitCompare
+    },
+    {
+      id: 'whatif' as MainNavTab,
+      label: 'What-If Lab',
+      labelHi: 'अनुकरण (What-If)',
+      icon: SlidersHorizontal
+    },
+    {
+      id: 'costs' as MainNavTab,
+      label: 'Costs & Clashes',
+      labelHi: 'फीस व टकराव',
+      icon: IndianRupee
+    },
+    {
+      id: 'family' as MainNavTab,
+      label: 'Family Mode',
+      labelHi: 'परिवार मोड',
+      icon: Users
+    }
+  ];
+
   const handleItemClick = (item: typeof navItems[0]) => {
     if (item.id === 'logout') {
       if (currentUser) {
@@ -107,17 +151,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
       } else {
         onOpenAuth();
       }
+      if (onCloseMobile) onCloseMobile();
       return;
     }
     setActiveTab(item.id);
+    if (onCloseMobile) onCloseMobile();
   };
 
-  return (
-    <aside aria-label="Sidebar Navigation" className="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200/90 dark:border-slate-800 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none transition-colors duration-200">
+  const handleToolClick = (id: MainNavTab) => {
+    setActiveTab(id);
+    if (onCloseMobile) onCloseMobile();
+  };
+
+  const renderContent = (isMobile: boolean = false) => (
+    <>
       {/* Brand Header */}
-      <div className="p-5 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="p-4 sm:p-5 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
         <div
-          onClick={() => setActiveTab('home')}
+          onClick={() => {
+            setActiveTab('home');
+            if (isMobile && onCloseMobile) onCloseMobile();
+          }}
           className="cursor-pointer flex items-center gap-3 group"
           title="GyanSetu Overview Dashboard"
         >
@@ -133,11 +187,49 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           </div>
         </div>
+
+        {isMobile && onCloseMobile && (
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className="cursor-pointer p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Navigation Options List */}
-      <nav aria-label="Main Menu" className="p-3.5 space-y-1.5 flex-1">
-        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+      <nav aria-label="Main Menu" className="p-3.5 space-y-1 flex-1 overflow-y-auto no-scrollbar">
+        {/* Home link */}
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab('home');
+            if (isMobile && onCloseMobile) onCloseMobile();
+          }}
+          className={`cursor-pointer w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
+            activeTab === 'home'
+              ? 'bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd] font-bold shadow-xs'
+              : 'text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
+          }`}
+        >
+          <div className="flex items-center gap-3 truncate">
+            <LayoutDashboard
+              className={`w-4 h-4 shrink-0 transition-colors ${
+                activeTab === 'home'
+                  ? 'text-[#5034df] dark:text-[#c4b5fd]'
+                  : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200'
+              }`}
+            />
+            <span className="truncate">
+              {lang === 'hi' ? 'अवलोकन (Overview)' : 'Overview Dashboard'}
+            </span>
+          </div>
+        </button>
+
+        <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
           {lang === 'hi' ? 'मुख्य मेनू' : 'Main Menu'}
         </div>
 
@@ -155,7 +247,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 isActive
                   ? 'bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd] font-bold shadow-xs'
                   : isLogout
-                  ? 'text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/70 dark:hover:bg-rose-950/30 mt-4'
+                  ? 'text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/70 dark:hover:bg-rose-950/30 mt-3'
                   : 'text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
               }`}
             >
@@ -188,10 +280,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           );
         })}
+
+        {/* Specialized Tools for Mobile Drawer */}
+        {isMobile && (
+          <>
+            <div className="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+              {lang === 'hi' ? 'विशेषज्ञ टूल्स' : 'Specialized AI Tools'}
+            </div>
+            {toolItems.map((tool) => {
+              const ToolIcon = tool.icon;
+              const isToolActive = activeTab === tool.id;
+              return (
+                <button
+                  key={tool.id}
+                  type="button"
+                  onClick={() => handleToolClick(tool.id)}
+                  className={`cursor-pointer w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold transition-all group ${
+                    isToolActive
+                      ? 'bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd] font-bold shadow-xs'
+                      : 'text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 truncate">
+                    <ToolIcon className="w-4 h-4 shrink-0 text-[#5034df] dark:text-[#a594fd]" />
+                    <span className="truncate">{lang === 'hi' ? tool.labelHi : tool.label}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* Database / Account Status Card at Bottom */}
-      <div className="p-3.5 pt-0 border-t border-slate-100/80 dark:border-slate-800 bg-slate-50/50 dark:bg-[#0b0f19]/40">
+      <div className="p-3.5 pt-0 border-t border-slate-100/80 dark:border-slate-800 bg-slate-50/50 dark:bg-[#0b0f19]/40 shrink-0">
         <div className="p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-xs space-y-2">
           <div className="flex items-center justify-between text-[11px]">
             <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -200,7 +322,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
             <span className="flex items-center gap-1 text-[10px] text-emerald-800 dark:text-emerald-300 font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Port 5434
+              Connected
             </span>
           </div>
 
@@ -214,7 +336,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <button
               type="button"
-              onClick={onOpenAuth}
+              onClick={() => {
+                onOpenAuth();
+                if (isMobile && onCloseMobile) onCloseMobile();
+              }}
               className="cursor-pointer w-full py-1.5 px-2.5 rounded-xl bg-gradient-to-r from-[#5034df] to-[#6d4cf5] hover:from-[#4429ce] hover:to-[#5e3be0] text-white text-[11px] font-bold shadow-xs flex items-center justify-center gap-1.5 transition"
             >
               <LogIn className="w-3 h-3" />
@@ -223,6 +348,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Persistent Sidebar (Only visible on lg: >= 1024px) */}
+      <aside
+        aria-label="Sidebar Navigation"
+        className="hidden lg:flex w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200/90 dark:border-slate-800 flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none transition-colors duration-200"
+      >
+        {renderContent(false)}
+      </aside>
+
+      {/* 2. Mobile / Tablet Responsive Drawer Modal (Visible on < lg when triggered) */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-50 lg:hidden flex"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile Navigation Menu"
+        >
+          {/* Dark Backdrop with blur */}
+          <div
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+
+          {/* Slide-In Drawer */}
+          <aside className="relative w-72 max-w-[85vw] bg-white dark:bg-[#0f172a] h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 select-none border-r border-slate-200 dark:border-slate-800">
+            {renderContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };

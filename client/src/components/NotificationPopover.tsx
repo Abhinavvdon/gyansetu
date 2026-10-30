@@ -108,7 +108,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
   };
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-[390px] sm:w-[440px] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+    <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 top-14 sm:top-full mt-2 w-auto sm:w-[440px] max-w-[440px] mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
       {/* Top Header Ribbon */}
       <div className="bg-gradient-to-r from-[#1c1257] via-[#33209b] to-[#5940e2] text-white p-4.5 pb-3.5">
         <div className="flex items-center justify-between">
@@ -158,7 +158,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-white/15 text-[11px] font-semibold">
+        <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-white/15 text-[11px] font-semibold overflow-x-auto no-scrollbar pb-0.5">
           <button
             type="button"
             onClick={() => setActiveFilter('ALL')}

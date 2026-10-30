@@ -78,7 +78,7 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Hero Welcome & Filter Bar */}
-      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft relative overflow-hidden">
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-semibold mb-3 border border-amber-400/30">
             <ShieldCheck className="w-4 h-4" />
@@ -113,11 +113,11 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
             />
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="px-3 py-2.5 bg-white text-slate-900 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="w-full sm:w-auto px-3 py-2.5 bg-white text-slate-900 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400"
             >
               <option value="All India">🇮🇳 All India (अखिल भारतीय)</option>
               <option value="Madhya Pradesh">Madhya Pradesh</option>
@@ -132,7 +132,7 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
       </div>
 
       {/* Pill Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {[
             { id: 'ALL', labelEn: 'All Opportunities', labelHi: 'सभी अवसर' },

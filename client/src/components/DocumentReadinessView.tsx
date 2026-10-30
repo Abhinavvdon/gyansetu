@@ -30,7 +30,7 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-amber-700 via-orange-800 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-amber-700 via-orange-800 to-slate-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-200 text-xs font-semibold mb-3 border border-amber-400/30">
           <FileCheck2 className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'दस्तावेज़ तत्परता संसूचक' : 'Document Readiness & Paperwork Lead-Time Tracker'}</span>

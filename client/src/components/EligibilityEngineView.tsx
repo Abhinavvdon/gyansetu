@@ -81,7 +81,7 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-800 via-teal-800 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-emerald-800 via-teal-800 to-indigo-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-xs font-semibold mb-3 border border-emerald-400/30">
             <Sparkles className="w-3.5 h-3.5" />
@@ -102,7 +102,7 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
         </div>
 
         {/* Quick Stats Pill */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shrink-0 text-center min-w-[200px]">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shrink-0 text-center w-full md:w-auto md:min-w-[200px]">
           <div className="text-3xl font-black text-amber-300">{eligibleCount} / {reports.length}</div>
           <div className="text-xs text-emerald-100 font-semibold mt-1">
             {lang === 'hi' ? 'अवसरों के लिए पात्र / संभावित' : 'Eligible or Likely Eligible'}

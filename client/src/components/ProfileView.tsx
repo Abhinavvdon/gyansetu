@@ -166,7 +166,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       {/* Top Banner Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-6 md:p-8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#5034df] to-[#7f5af0] text-white flex items-center justify-center font-black text-2xl shadow-md shadow-[#5034df]/20">
             {formData.fullName.charAt(0).toUpperCase()}
@@ -198,7 +198,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
 
         {/* Profile Strength Indicator */}
-        <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 rounded-2xl p-4 min-w-[220px]">
+        <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 rounded-2xl p-4 w-full md:w-auto md:min-w-[220px]">
           <div className="flex items-center justify-between text-xs font-bold mb-1.5">
             <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
@@ -232,7 +232,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       )}
 
       {/* Main Profile Form */}
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-xs space-y-7 transition-colors">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-6 md:p-8 shadow-xs space-y-7 transition-colors">
         
         {/* 1. PERSONAL INFORMATION */}
         <div>

@@ -153,7 +153,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
 
     return (
       <div
-        className={`bg-white dark:bg-slate-800/80 rounded-3xl border ${accentTheme.cardBorder} dark:border-slate-700/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between text-left transition-all hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 min-h-[410px]`}
+        className={`bg-white dark:bg-slate-800/80 rounded-2xl sm:rounded-3xl border ${accentTheme.cardBorder} dark:border-slate-700/80 p-3.5 sm:p-5 md:p-6 shadow-xs flex flex-col justify-between text-left transition-all hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 min-h-[390px] sm:min-h-[410px]`}
       >
         {/* Top Header */}
         <div>

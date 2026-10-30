@@ -25,7 +25,7 @@ export const EligibilityTimelineView: React.FC<EligibilityTimelineViewProps> = (
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-soft">
+      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-soft">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-400/20 text-indigo-200 text-xs font-semibold mb-3 border border-indigo-400/30">
           <Milestone className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'भविष्य पात्रता समयरेखा (Eligibility Timeline)' : '1 to 3-Year Future Eligibility Horizon'}</span>
