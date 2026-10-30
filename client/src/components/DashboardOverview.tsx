@@ -93,7 +93,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="max-w-xl space-y-3">
-            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-indigo-200/90">
+            <span className="inline-block text-[10px] font-extrabold uppercase tracking-widest text-white">
               {lang === 'hi' ? 'आपका भविष्य, अब आपके हाथ में' : 'YOUR NEXT CHAPTER STARTS HERE'}
             </span>
 
@@ -102,7 +102,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
             </h2>
 
-            <p className="text-xs sm:text-sm text-indigo-100/90 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-white/95 leading-relaxed font-normal">
               {lang === 'hi'
                 ? 'आपके लक्ष्यों को एक स्पष्ट मार्ग चाहिए। सही छात्रवृत्तियां, सरकारी परीक्षाएं और उच्च शिक्षा खोजें, पात्रता जांचें और समय पर आवेदन करें।'
                 : 'Your goals deserve a clear path. Discover opportunities, understand eligibility, and plan your next move.'}
@@ -129,7 +129,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="text-base font-extrabold text-white tracking-tight leading-tight">
                 {lang === 'hi' ? 'बड़ा सोचें।' : 'Dream big.'}
               </div>
-              <div className="text-sm font-semibold text-indigo-200 leading-tight">
+              <div className="text-sm font-semibold text-white leading-tight">
                 {lang === 'hi' ? 'सही योजना बनाएं।' : 'Plan smart.'}
               </div>
             </div>
@@ -341,7 +341,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             className={`cursor-pointer p-1.5 rounded-lg transition ${
                               isSaved
                                 ? 'text-amber-600 bg-amber-50 dark:bg-amber-950/50'
-                                : 'text-slate-300 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
                             }`}
                             title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
                           >
@@ -496,7 +496,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <FileCheck2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>{lang === 'hi' ? 'दस्तावेज़ तत्परता जांचें' : 'Document Readiness Check'}</span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronRight className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               </button>
 
               <button
@@ -508,7 +508,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <ShieldCheck className="w-4 h-4 text-[#5034df] dark:text-[#a594fd]" />
                   <span>{lang === 'hi' ? 'सत्यापित नोटिस व फ्रॉड अलर्ट' : 'Verified Notice & Scam Radar'}</span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronRight className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               </button>
             </div>
           </div>

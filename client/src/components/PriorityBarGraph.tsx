@@ -120,16 +120,16 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
     });
   };
 
-  // 1. Scholarship Decent Non-Shiny Palette (Muted Burgundy / Rosewood)
-  const scholarshipPalette = ['#852d3f', '#9b3b4f', '#b14c62', '#c5657b'];
+  // 1. Scholarship Decent Non-Shiny Palette (Deep Rosewood - high contrast)
+  const scholarshipPalette = ['#6e1a2c', '#852d3f', '#962b41', '#a03248'];
   const rankedScholarships = getStandardizedRankedList('SCHOLARSHIP', scholarshipPalette);
 
-  // 2. Government Schemes Decent Non-Shiny Palette (Muted Spruce / Forest Sage)
-  const govtPalette = ['#17533f', '#246851', '#347f65', '#4b987d'];
+  // 2. Government Schemes Decent Non-Shiny Palette (Deep Forest Sage - high contrast)
+  const govtPalette = ['#114534', '#17533f', '#1f664e', '#237357'];
   const rankedGovt = getStandardizedRankedList('GOVT_EXAM', govtPalette);
 
-  // 3. Higher Studies Decent Non-Shiny Palette (Muted Slate Navy / Dusk Cobalt)
-  const higherEdPalette = ['#23335b', '#324473', '#44588e', '#5b70a7'];
+  // 3. Higher Studies Decent Non-Shiny Palette (Deep Slate Navy - high contrast)
+  const higherEdPalette = ['#1a2748', '#23335b', '#2c3f70', '#344b85'];
   const rankedHigherEd = getStandardizedRankedList('HIGHER_STUDIES', higherEdPalette);
 
   // Reusable Single Category Bar Graph Card
@@ -207,13 +207,13 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
           {/* Symmetrical 4-Column Bar Graph Area */}
           <div className="mt-5 relative">
             {/* Background Horizontal Guide Ticks */}
-            <div className="absolute inset-x-0 top-3 bottom-14 flex flex-col justify-between pointer-events-none opacity-30">
+            <div aria-hidden="true" className="absolute inset-x-0 top-3 bottom-14 flex flex-col justify-between pointer-events-none select-none">
               {[100, 75, 50, 25].map((val) => (
                 <div
                   key={val}
-                  className="border-b border-dashed border-slate-300 dark:border-slate-700/70 flex items-center justify-between text-[9px] text-slate-400 dark:text-slate-500"
+                  className="border-b border-dashed border-slate-200 dark:border-slate-700/70 flex items-center justify-between text-[9px] text-slate-600 dark:text-slate-400 font-semibold"
                 >
-                  <span className="font-medium">{val}%</span>
+                  <span className="font-semibold">{val}%</span>
                 </div>
               ))}
             </div>
@@ -238,12 +238,11 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
                     }}
                     className="group cursor-pointer flex flex-col items-center h-full justify-end relative"
                   >
-                    {/* Exact Percentage on Top of Bar */}
+                    {/* Exact Percentage on Top of Bar - High Contrast */}
                     <div
-                      className={`text-[10px] sm:text-[11px] font-extrabold mb-1 tracking-tight transition-transform duration-150 ${
+                      className={`text-[10px] sm:text-[11px] font-black mb-1 tracking-tight transition-transform duration-150 text-slate-800 dark:text-slate-100 ${
                         isHovered ? 'scale-110 -translate-y-0.5' : ''
                       }`}
-                      style={{ color: item.barColor }}
                     >
                       {item.priorityScore}%
                     </div>
@@ -259,7 +258,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
                         }}
                       >
                         {/* Clean Rank Badge inside top of bar */}
-                        <div className="text-center text-[8px] font-black text-white/90 pt-0.5">
+                        <div aria-hidden="true" className="text-center text-[8px] font-black text-white pt-0.5">
                           #{item.rank}
                         </div>
                       </div>

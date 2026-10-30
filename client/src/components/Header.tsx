@@ -198,7 +198,7 @@ export const Header: React.FC<HeaderProps> = ({
             className={`cursor-pointer p-2 rounded-full transition relative ${
               isNotificationsOpen
                 ? 'bg-[#ece8ff] dark:bg-[#5034df]/30 text-[#5034df] dark:text-[#c4b5fd]'
-                : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
             title="Official Notice & Deadline Alerts"
           >
@@ -238,7 +238,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>{formatStudentName(currentUser.name.split(' ')[0], lang)}</span>
                 <CheckCircle2 className="w-3 h-3 text-emerald-500" />
               </div>
-              <div className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
+              <div className="text-[10px] text-slate-600 dark:text-slate-400 font-semibold">
                 {lang === 'hi' ? 'छात्र खाता' : 'Student account'}
               </div>
             </div>
@@ -257,7 +257,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
                   {formatStudentName(profile.fullName.split(' ')[0], lang)}
                 </div>
-                <div className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
+                <div className="text-[10px] text-slate-600 dark:text-slate-400 font-semibold">
                   {lang === 'hi' ? 'छात्र खाता' : 'Student account'}
                 </div>
               </div>

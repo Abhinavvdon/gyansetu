@@ -406,7 +406,7 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
             <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
             
             {/* Sparkling Badge */}
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-[10px] text-white font-extrabold shadow-sm border border-white">
+            <span aria-hidden="true" className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-amber-500 to-amber-700 rounded-full flex items-center justify-center text-[10px] text-white font-extrabold shadow-sm border border-white">
               <Sparkles className="w-3 h-3" />
             </span>
           </button>

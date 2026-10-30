@@ -179,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tight shrink-0 ${
                     isActive
                       ? 'bg-[#5034df] text-white'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
                   }`}
                 >
                   {item.badge}
@@ -209,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="text-slate-800 dark:text-slate-100 font-bold truncate">
                 {formatStudentName(currentUser.name, lang)}
               </div>
-              <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{currentUser.email}</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium truncate">{currentUser.email}</div>
             </div>
           ) : (
             <button
