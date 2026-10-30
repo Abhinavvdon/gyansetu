@@ -88,7 +88,7 @@ export const NotificationTrackerView: React.FC<NotificationTrackerViewProps> = (
                     <Icon className="w-3.5 h-3.5" />
                     <span>{badge.label}</span>
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-600 font-medium">
                     Detected: <strong>{item.dateDetected}</strong>
                   </span>
                 </div>
@@ -115,7 +115,7 @@ export const NotificationTrackerView: React.FC<NotificationTrackerViewProps> = (
               {/* Before vs After Visual Comparison */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                     {lang === 'hi' ? 'पूर्व स्थिति (Previous Value)' : 'Previous Setting'}
                   </div>
                   <div className="font-semibold text-slate-500 line-through mt-0.5">

@@ -106,7 +106,7 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
-                      isCritical ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'
+                      isCritical ? 'bg-rose-700 text-white' : 'bg-amber-700 text-white'
                     }`}>
                       {c.daysApart === 0 ? 'Same Day Clash' : `${c.daysApart} Days Apart`}
                     </span>
@@ -139,7 +139,7 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
             <thead>
-              <tr className="border-b border-slate-200 text-slate-400 uppercase text-[10px] font-bold">
+              <tr className="border-b border-slate-200 text-slate-600 uppercase text-[10px] font-bold">
                 <th className="pb-3">Opportunity</th>
                 <th className="pb-3">General Rate</th>
                 <th className="pb-3">Your Fee</th>
@@ -152,7 +152,7 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
                   <td className="py-3 font-semibold text-slate-900 max-w-xs">
                     {item.opportunityTitle}
                   </td>
-                  <td className="py-3 font-mono text-slate-400">
+                  <td className="py-3 font-mono text-slate-600 font-medium">
                     ₹{item.originalFee}
                   </td>
                   <td className="py-3 font-mono font-bold text-slate-900">

@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           type="button"
           onClick={onOpenAiModal}
-          className="cursor-pointer px-3 py-1 rounded-full bg-gradient-to-r from-[#ece8ff] to-[#f5f3ff] dark:from-[#5034df]/20 dark:to-[#5034df]/35 hover:from-[#e2dcff] dark:hover:from-[#5034df]/35 text-[#5034df] dark:text-[#c4b5fd] border border-[#5034df]/30 text-xs font-bold flex items-center gap-1.5 transition shadow-xs group"
+          className="cursor-pointer px-3 py-1 rounded-full bg-gradient-to-r from-[#ece8ff] to-[#f5f3ff] dark:from-[#5034df]/20 dark:to-[#5034df]/35 hover:from-[#e2dcff] dark:hover:from-[#5034df]/35 text-[#33209c] dark:text-[#c4b5fd] border border-[#5034df]/30 text-xs font-bold flex items-center gap-1.5 transition shadow-xs group"
           title="Import verified opportunities directly from Adaption AI datasets (No API keys required)"
         >
           <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500 group-hover:scale-110 transition-transform" />
@@ -169,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label={isDarkMode ? 'Switch Dark Mode OFF' : 'Switch Dark Mode ON'}
         >
           {/* Ambient Background Icons inside the track */}
-          <span className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none select-none">
+          <span aria-hidden="true" className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none select-none">
             <Sun className={`w-3 h-3 transition-opacity duration-200 ${isDarkMode ? 'opacity-35 text-amber-300' : 'opacity-0'}`} />
             <Moon className={`w-3 h-3 transition-opacity duration-200 ${isDarkMode ? 'opacity-0' : 'opacity-35 text-slate-500'}`} />
           </span>
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Bell className="w-4 h-4" />
             {unreadAlertCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center px-1 shadow-xs ring-2 ring-white dark:ring-slate-900 animate-pulse">
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-rose-700 text-white text-[10px] font-black flex items-center justify-center px-1 shadow-xs ring-2 ring-white dark:ring-slate-900 animate-pulse">
                 {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
               </span>
             )}

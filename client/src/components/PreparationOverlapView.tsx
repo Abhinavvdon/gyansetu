@@ -101,24 +101,24 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
             </div>
           </div>
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-600">
               {lang === 'hi' ? 'कुल सिलेबस ओवरलैप' : 'Syllabus Overlap'}
             </div>
             <h3 className="text-base font-extrabold text-slate-900 mt-0.5">
               {lang === 'hi' ? 'उच्च तालमेल (High Synergy)' : 'High Syllabus Synergy'}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-600 mt-1 font-medium">
               {selectedExamIds.length} {lang === 'hi' ? 'परीक्षाओं के बीच साझा सामग्री' : 'Target examinations combined'}
             </p>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex items-center gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+          <div className="w-20 h-20 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center shrink-0">
             <TrendingDown className="w-9 h-9" />
           </div>
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-600">
               {lang === 'hi' ? 'बचाए गए अध्ययन घंटे' : 'Study Time Saved'}
             </div>
             <h3 className="text-2xl font-black text-emerald-700 mt-0.5">

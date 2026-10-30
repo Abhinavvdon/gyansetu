@@ -113,7 +113,7 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
               onChange={(e) => setUgMarks(parseFloat(e.target.value))}
               className="w-full accent-indigo-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400">
+            <div className="flex justify-between text-[10px] text-slate-600 font-medium">
               <span>40% Pass</span>
               <span className="text-amber-700 font-semibold">50% Cutoff</span>
               <span className="text-emerald-700 font-semibold">60% 1st Class</span>
@@ -138,7 +138,7 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
               onChange={(e) => setTwelfthMarks(parseFloat(e.target.value))}
               className="w-full accent-indigo-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400">
+            <div className="flex justify-between text-[10px] text-slate-600 font-medium">
               <span>50%</span>
               <span className="text-amber-700 font-semibold">80% NSP Cutoff</span>
               <span>98%</span>
@@ -184,7 +184,7 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
               onChange={(e) => setIncome(parseFloat(e.target.value))}
               className="w-full accent-emerald-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400">
+            <div className="flex justify-between text-[10px] text-slate-600 font-medium">
               <span>₹1 Lakh</span>
               <span className="text-emerald-700 font-semibold">₹2.5L (Post-Matric)</span>
               <span className="text-indigo-700 font-semibold">₹4.5L (PM-USP)</span>
@@ -218,7 +218,7 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
           {simulationResult && (
             <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-600">
                   {lang === 'hi' ? 'सिम्युलेशन परिणाम' : 'Simulation Impact'}
                 </div>
                 <div className="text-xl font-black text-slate-900 mt-1 flex items-center gap-2">

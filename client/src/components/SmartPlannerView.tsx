@@ -184,8 +184,8 @@ export const SmartPlannerView: React.FC<SmartPlannerViewProps> = ({
                   onClick={() => onToggleSave(item.opportunityId)}
                   className={`cursor-pointer p-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                     item.isSaved
-                      ? 'bg-amber-500 border-amber-600 text-white'
-                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-amber-600'
+                      ? 'bg-amber-700 border-amber-800 text-white'
+                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-amber-700'
                   }`}
                   title={item.isSaved ? 'Saved in Plan' : 'Save to Plan'}
                 >

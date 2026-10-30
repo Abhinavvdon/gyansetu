@@ -26,9 +26,9 @@ const StudyChatbot = lazy(() => import('./components/StudyChatbot').then(m => ({
 const AdaptionAiModal = lazy(() => import('./components/AdaptionAiModal').then(m => ({ default: m.AdaptionAiModal })));
 
 const ViewLoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[220px] text-slate-400 gap-2">
+  <div className="flex flex-col items-center justify-center min-h-[220px] text-slate-700 dark:text-slate-300 gap-2">
     <div className="w-6 h-6 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></div>
-    <span className="text-xs font-medium">Loading view...</span>
+    <span className="text-xs font-semibold">Loading view...</span>
   </div>
 );
 
@@ -326,7 +326,7 @@ export function App() {
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
               Gyan<span className="text-[#5034df]">Setu</span> (ज्ञानसेतु)
             </h2>
-            <p className="text-xs text-slate-400 mt-1 font-medium">
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 font-semibold">
               Loading AI Opportunity Intelligence Engine...
             </p>
           </div>
@@ -424,12 +424,12 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('home')}
-                  className="cursor-pointer text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-[#5034df] dark:hover:text-[#a594fd] flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                  className="cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-[#5034df] dark:hover:text-[#a594fd] flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5" />
                   <span>{lang === 'hi' ? 'अवलोकन (Overview)' : 'Overview Dashboard'}</span>
                 </button>
-                <span className="text-slate-300 dark:text-slate-600">/</span>
+                <span aria-hidden="true" className="text-slate-400 dark:text-slate-600 select-none">/</span>
                 <span className="text-xs font-bold text-slate-900 dark:text-white capitalize">
                   {activeTab}
                 </span>
@@ -526,7 +526,7 @@ export function App() {
                     <h2 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'छात्रवृत्तियां व वित्तीय सहायता' : 'Scholarships & Financial Aid'}
                     </h2>
-                    <p className="text-xs text-slate-400 font-medium">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       {scholarshipOpps.length} {lang === 'hi' ? 'सत्यापित छात्रवृत्तियां उपलब्ध' : 'Verified Central & State Scholarships'}
                     </p>
                   </div>
@@ -611,7 +611,7 @@ export function App() {
                     <h2 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'सरकारी योजनाएं व भर्ती परीक्षाएं' : 'Government Schemes & Exams'}
                     </h2>
-                    <p className="text-xs text-slate-400 font-medium">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       SSC CGL, IBPS PO, UPSC Civil Services &amp; State PSCs
                     </p>
                   </div>
@@ -698,7 +698,7 @@ export function App() {
                     <h2 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'उच्च शिक्षा एवं राष्ट्रीय प्रवेश परीक्षाएं' : 'Higher Studies & National Entrances'}
                     </h2>
-                    <p className="text-xs text-slate-400 font-medium">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       GATE 2027 (IITs), CAT 2027 (IIMs), NTA CUET-PG (Central Universities)
                     </p>
                   </div>

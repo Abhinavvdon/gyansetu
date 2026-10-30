@@ -71,7 +71,7 @@ export const EligibilityTimelineView: React.FC<EligibilityTimelineViewProps> = (
 
                 {/* Unlocked Opportunities Grid */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-1.5">
                     <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
                     <span>{lang === 'hi' ? 'इस चरण में खुलने वाले मुख्य अवसर:' : 'Opportunities Unlocking in this Window:'}</span>
                   </h4>

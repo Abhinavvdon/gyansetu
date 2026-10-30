@@ -60,7 +60,7 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
       case 'NEEDS_VERIFICATION':
         return {
           bg: 'bg-amber-50 text-amber-900 border-amber-300',
-          badgeBg: 'bg-amber-500 text-white',
+          badgeBg: 'bg-amber-700 text-white',
           icon: AlertTriangle,
           label: lang === 'hi' ? 'सत्यापन आवश्यक (Needs Verification)' : 'Needs Verification',
           desc: lang === 'hi' ? 'आय अथवा निवास प्रमाण जांचें' : 'Income / Domicile Check Needed'
@@ -68,7 +68,7 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
       case 'NOT_ELIGIBLE':
         return {
           bg: 'bg-rose-50 text-rose-800 border-rose-300',
-          badgeBg: 'bg-rose-600 text-white',
+          badgeBg: 'bg-rose-700 text-white',
           icon: XCircle,
           label: lang === 'hi' ? 'अपात्र (Not Eligible)' : 'Not Eligible',
           desc: lang === 'hi' ? 'अंक या उम्र में अंतर' : 'Cutoff / Age Criteria Gap'
@@ -167,7 +167,7 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                       <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${badge.badgeBg}`}>
                         {badge.label}
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">
+                      <span className="text-xs text-slate-600 font-mono">
                         Score: <strong>{report.confidenceScore}%</strong>
                       </span>
                       <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.2 rounded font-semibold border border-emerald-100">
@@ -179,12 +179,12 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                       {report.opportunityTitle}
                     </h3>
 
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3.5 h-3.5 text-amber-600" />
                         <span>Deadline: <strong>{report.daysRemainingToDeadline} days remaining</strong></span>
                       </span>
-                      <span className="flex items-center gap-1 text-slate-400">
+                      <span className="flex items-center gap-1 text-slate-600">
                         <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
                         <span>Verified: {report.lastVerifiedDate}</span>
                       </span>
@@ -200,15 +200,15 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                     }}
                     className={`cursor-pointer p-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                       isSaved
-                        ? 'bg-amber-500 border-amber-600 text-white'
-                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-amber-600'
+                        ? 'bg-amber-700 border-amber-800 text-white'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-amber-700'
                     }`}
                   >
                     <Bookmark className="w-4 h-4 fill-current" />
                     <span>{isSaved ? 'Saved' : 'Save'}</span>
                   </button>
 
-                  <div className="p-2 text-slate-400 hover:text-slate-600">
+                  <div className="p-2 text-slate-500 hover:text-slate-800">
                     {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                   </div>
                 </div>

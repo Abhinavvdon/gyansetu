@@ -204,8 +204,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="flex items-center gap-1.5 font-mono">
             <Database className="w-3.5 h-3.5 text-indigo-600" />
             <span className="font-semibold text-slate-700">PostgreSQL (gyansetu)</span>
-            <span className="text-slate-400">•</span>
-            <span className="text-emerald-600 font-semibold flex items-center gap-1">
+            <span aria-hidden="true" className="text-slate-400 select-none">•</span>
+            <span className="text-emerald-800 font-semibold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               {typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')
                 ? 'Render Cloud DB (Port 5432)'
@@ -409,12 +409,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {password && (
                   <div className="mt-1 flex items-center gap-1 text-[10px]">
                     {isPasswordValid ? (
-                      <span className="text-emerald-600 flex items-center gap-1 font-semibold">
+                      <span className="text-emerald-800 flex items-center gap-1 font-semibold">
                         <CheckCircle2 className="w-3 h-3" />
                         {lang === 'hi' ? 'पासवर्ड की लंबाई उपयुक्त है' : 'Valid length (>= 6 chars)'}
                       </span>
                     ) : (
-                      <span className="text-rose-500 flex items-center gap-1 font-semibold">
+                      <span className="text-rose-700 flex items-center gap-1 font-semibold">
                         <AlertCircle className="w-3 h-3" />
                         {lang === 'hi' ? 'कम से कम 6 अक्षरों की आवश्यकता है' : 'Needs at least 6 characters'}
                       </span>
@@ -448,12 +448,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {confirmPassword && (
                   <div className="mt-1 flex items-center gap-1 text-[10px]">
                     {passwordsMatch ? (
-                      <span className="text-emerald-600 flex items-center gap-1 font-semibold">
+                      <span className="text-emerald-800 flex items-center gap-1 font-semibold">
                         <CheckCircle2 className="w-3 h-3" />
                         {lang === 'hi' ? 'पासवर्ड मेल खाता है' : 'Passwords match perfectly'}
                       </span>
                     ) : (
-                      <span className="text-rose-500 flex items-center gap-1 font-semibold">
+                      <span className="text-rose-700 flex items-center gap-1 font-semibold">
                         <AlertCircle className="w-3 h-3" />
                         {lang === 'hi' ? 'पासवर्ड मेल नहीं खा रहे' : 'Passwords do not match'}
                       </span>

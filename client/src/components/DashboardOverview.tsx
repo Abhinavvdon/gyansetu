@@ -329,7 +329,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </span>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2 py-0.5 rounded-md">
+                          <span className="text-[11px] font-bold text-[#33209c] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2 py-0.5 rounded-md">
                             {confidenceScore}% {lang === 'hi' ? 'मैच' : 'Match'}
                           </span>
                           <button
@@ -361,7 +361,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                       {opp.benefitsOrSalary && (
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">●</span>
+                          <span className="text-emerald-700 dark:text-emerald-400 font-bold">●</span>
                           <span className="line-clamp-1">{opp.benefitsOrSalary}</span>
                         </div>
                       )}
@@ -421,7 +421,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                 {lang === 'hi' ? 'प्लेटफॉर्म टूल्स' : 'Platform Tools'}
               </span>
-              <span className="text-[10px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#33209c] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Get Started
               </span>
             </div>
@@ -477,13 +477,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <button
                   type="button"
                   onClick={onOpenAiModal}
-                  className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#ece8ff]/60 to-[#f5f3ff]/80 dark:from-[#5034df]/20 dark:to-slate-700/50 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 transition text-xs font-bold text-[#5034df] dark:text-[#c4b5fd] border border-[#5034df]/20 group"
+                  className="cursor-pointer w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#ece8ff]/60 to-[#f5f3ff]/80 dark:from-[#5034df]/20 dark:to-slate-700/50 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 transition text-xs font-bold text-[#33209c] dark:text-[#c4b5fd] border border-[#5034df]/20 group"
                 >
                   <div className="flex items-center gap-2.5">
                     <Zap className="w-4 h-4 text-amber-500 fill-amber-500 group-hover:scale-110 transition-transform" />
                     <span>{lang === 'hi' ? 'Adaption AI डेटासेट आयात करें' : 'Import Adaption AI Datasets'}</span>
                   </div>
-                  <ChevronRight className="w-3.5 h-3.5 text-[#5034df] dark:text-[#c4b5fd] group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight className="w-3.5 h-3.5 text-[#33209c] dark:text-[#c4b5fd] group-hover:translate-x-0.5 transition-transform" />
                 </button>
               )}
 

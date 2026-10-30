@@ -127,7 +127,7 @@ export const GeminiAiModal: React.FC<GeminiAiModalProps> = ({
                 <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight">
                   {lang === 'hi' ? 'AI अवसर जनरेटर (Gemini API)' : 'AI Opportunity Generator (Gemini API)'}
                 </h3>
-                <span className="text-[10px] bg-emerald-500 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">
+                <span className="text-[10px] bg-emerald-700 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">
                   Gemini Flash
                 </span>
               </div>

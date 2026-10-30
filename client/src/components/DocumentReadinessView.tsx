@@ -116,7 +116,7 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
                       <Building2 className="w-3.5 h-3.5 text-indigo-500" />
                       <span>Authority: <strong>{doc.issuingAuthority}</strong></span>
                     </span>
-                    <span className="text-slate-400">|</span>
+                    <span aria-hidden="true" className="text-slate-400 select-none">|</span>
                     <span>Validity: <strong>{doc.validityPeriod}</strong></span>
                   </div>
                 </div>
@@ -130,10 +130,10 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
                       className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         doc.status === st
                           ? st === 'READY'
-                            ? 'bg-emerald-600 text-white shadow-xs'
+                            ? 'bg-emerald-700 text-white shadow-xs'
                             : st === 'IN_PROGRESS'
-                            ? 'bg-amber-500 text-white shadow-xs'
-                            : 'bg-rose-600 text-white shadow-xs'
+                            ? 'bg-amber-700 text-white shadow-xs'
+                            : 'bg-rose-700 text-white shadow-xs'
                           : 'text-slate-600 hover:bg-slate-200'
                       }`}
                     >
@@ -166,7 +166,7 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
                       ))}
                     </ul>
                   ) : (
-                    <span className="text-slate-400 italic">Universal document for college & govt verifications</span>
+                    <span className="text-slate-600 font-medium italic">Universal document for college & govt verifications</span>
                   )}
                 </div>
               </div>

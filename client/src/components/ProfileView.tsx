@@ -187,11 +187,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 <>Highest Completed: <strong className="text-slate-700 dark:text-slate-200">{formData.alreadyPursuedLevel}</strong></>
               )}
             </p>
-            <div className="flex items-center gap-2 mt-2 text-[11px] text-slate-400">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
+            <div className="flex items-center gap-2 mt-2 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+              <MapPin className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>{formData.stateDomicile} Domicile</span>
-              <span>•</span>
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span aria-hidden="true">•</span>
+              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Age {formData.age} yrs</span>
             </div>
           </div>
@@ -212,7 +212,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               style={{ width: `${strength}%` }}
             ></div>
           </div>
-          <p className="text-[10px] text-slate-400 mt-2 font-medium">
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-2 font-medium">
             {strength >= 90
               ? 'Excellent! AI matching has maximum accuracy.'
               : 'Add missing marks for comprehensive eligibility evaluation.'}
@@ -293,7 +293,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               <GraduationCap className="w-4.5 h-4.5" />
               <span>{lang === 'hi' ? '2. शैक्षणिक योग्यता व प्राप्तांक' : '2. Academic Qualifications & Marks'}</span>
             </h3>
-            <span className="text-[11px] text-slate-400 font-medium">
+            <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               Hierarchical qualifications & ongoing pursuit
             </span>
           </div>
@@ -629,7 +629,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                       <span>Ongoing CGPA / Aggregate % (Optional)</span>
-                      <span className="text-slate-400 font-mono">{formData.currentCgpaOrAggregate || 0}%</span>
+                      <span className="text-slate-600 dark:text-slate-400 font-mono font-medium">{formData.currentCgpaOrAggregate || 0}%</span>
                     </label>
                     <input
                       type="number"
@@ -641,7 +641,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       placeholder="Leave 0 if awaiting results"
                       className="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-[#5034df]/20 focus:border-[#5034df] outline-none font-mono"
                     />
-                    <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    <span className="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5 block font-medium">
                       No minimum block — leave 0 if awaiting degree completion.
                     </span>
                   </div>
@@ -743,7 +743,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                 <span>{lang === 'hi' ? 'वार्षिक पारिवारिक आय (₹)' : 'Annual Family Income (₹)'}</span>
-                <span className="text-slate-400 font-mono">₹{formData.annualFamilyIncome.toLocaleString('en-IN')}</span>
+                <span className="text-slate-600 dark:text-slate-400 font-mono font-medium">₹{formData.annualFamilyIncome.toLocaleString('en-IN')}</span>
               </label>
               <input
                 type="number"
@@ -775,7 +775,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
         {/* Save Bar */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <p className="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
+          <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
             <span>Profile changes automatically update eligibility across all scholarships and government exams.</span>
           </p>

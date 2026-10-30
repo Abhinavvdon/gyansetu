@@ -252,7 +252,7 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
                 <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight">
                   {lang === 'hi' ? 'Adaption AI डेटासेट प्रबंधक' : 'Adaption AI Dataset Ingestion'}
                 </h3>
-                <span className="text-[10px] bg-emerald-500 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">
+                <span className="text-[10px] bg-emerald-700 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">
                   Abhinav Dongre Run
                 </span>
               </div>

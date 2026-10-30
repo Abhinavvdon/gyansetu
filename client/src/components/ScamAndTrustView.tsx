@@ -147,10 +147,10 @@ export const ScamAndTrustView: React.FC<ScamAndTrustViewProps> = ({ scamAlerts, 
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs ${
                     verificationResult.trustScore >= 80
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-emerald-700 text-white'
                       : verificationResult.trustScore >= 50
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-rose-600 text-white'
+                      ? 'bg-amber-700 text-white'
+                      : 'bg-rose-700 text-white'
                   }`}
                 >
                   {verificationResult.trustScore}%
@@ -290,7 +290,7 @@ export const ScamAndTrustView: React.FC<ScamAndTrustViewProps> = ({ scamAlerts, 
                 </h4>
               </div>
 
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-600 font-medium">
                 Reported: {scam.dateReported}
               </span>
             </div>

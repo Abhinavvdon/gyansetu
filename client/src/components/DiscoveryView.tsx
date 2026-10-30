@@ -215,8 +215,8 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
                       onClick={() => onToggleSave(opp.id)}
                     className={`cursor-pointer p-1.5 rounded-lg border transition-colors ${
                       isSaved
-                        ? 'bg-amber-500 border-amber-600 text-white'
-                        : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-amber-600 hover:border-amber-300'
+                        ? 'bg-amber-700 border-amber-800 text-white'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-amber-700 hover:border-amber-400'
                     }`}
                     title={isSaved ? 'Saved to Planner' : 'Save to Planner'}
                   >

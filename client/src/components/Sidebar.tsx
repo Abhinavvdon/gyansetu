@@ -198,7 +198,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <Database className="w-3.5 h-3.5 text-[#5034df] dark:text-[#a594fd]" />
               PostgreSQL 14
             </span>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="flex items-center gap-1 text-[10px] text-emerald-800 dark:text-emerald-300 font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Port 5434
             </span>

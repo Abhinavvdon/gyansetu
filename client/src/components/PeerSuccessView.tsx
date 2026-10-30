@@ -63,7 +63,7 @@ export const PeerSuccessView: React.FC<PeerSuccessViewProps> = ({ peerStories, l
 
               {/* Initial Academic Baseline */}
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-700">
-                <span className="text-slate-400 font-semibold block text-[10px] uppercase">
+                <span className="text-slate-600 font-semibold block text-[10px] uppercase">
                   Baseline Profile:
                 </span>
                 <strong>{story.collegeBackground}</strong> ({story.graduationMarks}% Marks)
@@ -71,7 +71,7 @@ export const PeerSuccessView: React.FC<PeerSuccessViewProps> = ({ peerStories, l
 
               {/* Winning Combination Tags */}
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 block mb-1.5">
                   Winning Applied Combo:
                 </span>
                 <div className="flex flex-wrap gap-1.5">

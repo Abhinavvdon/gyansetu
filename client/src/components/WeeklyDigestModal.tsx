@@ -89,7 +89,7 @@ export const WeeklyDigestModal: React.FC<WeeklyDigestModalProps> = ({
 
           {/* WhatsApp Preview Box */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               WhatsApp & Email Message Preview:
             </label>
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 font-mono text-xs text-slate-800 whitespace-pre-line leading-relaxed max-h-56 overflow-y-auto">

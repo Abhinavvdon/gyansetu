@@ -167,7 +167,7 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 text-sm">
           {/* Basic Info */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-indigo-500" />
               <span>{lang === 'hi' ? '1. व्यक्तिगत जानकारी' : '1. Personal Details'}</span>
             </h3>
@@ -235,7 +235,7 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
           {/* Academic Qualifications & Marks */}
           <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <GraduationCap className="w-3.5 h-3.5 text-amber-500" />
               <span>{lang === 'hi' ? '2. शैक्षणिक योग्यता व अंक' : '2. Academic Qualifications & Marks'}</span>
             </h3>
@@ -464,8 +464,8 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
           {/* Reservation Category & Family Income */}
           <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <IndianRupee className="w-3.5 h-3.5 text-emerald-700" />
               <span>{lang === 'hi' ? '3. आरक्षण श्रेणी व आय' : '3. Category & Family Income'}</span>
             </h3>
 
@@ -506,7 +506,7 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
           {/* Career Goals */}
           <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5 text-purple-600" />
               <span>{lang === 'hi' ? '4. लक्ष्य एवं रुचियां' : '4. Target Goals'}</span>
             </h3>

@@ -122,7 +122,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                   {lang === 'hi' ? 'समय-सीमा अलर्ट व सूचनाएं' : 'Deadline Alerts & Notices'}
                 </h3>
                 {unreadCount > 0 && (
-                  <span className="text-[10px] bg-rose-500 text-white font-bold px-2 py-0.2 rounded-full shadow-xs">
+                  <span className="text-[10px] bg-rose-700 text-white font-bold px-2 py-0.2 rounded-full shadow-xs">
                     {unreadCount} {lang === 'hi' ? 'नए' : 'New'}
                   </span>
                 )}
@@ -268,7 +268,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                 <div className="mt-2.5 flex items-center justify-between text-[11px] pt-1">
                   <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
                     {notif.emailSent && (
-                      <span className="flex items-center gap-1 text-emerald-600 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">
+                      <span className="flex items-center gap-1 text-emerald-800 dark:text-emerald-300 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">
                         <Mail className="w-3 h-3" />
                         <span>Email Sent</span>
                       </span>
