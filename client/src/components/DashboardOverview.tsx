@@ -17,7 +17,8 @@ import {
   ExternalLink,
   Bookmark,
   Clock,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 import type { Opportunity, StudentProfile, EligibilityReport, User } from '../types';
 import type { MainNavTab } from './Sidebar';
@@ -136,6 +137,148 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 1.5 Active Live Search Results (Prominently rendered when search bar is used) */}
+      {searchQuery.trim().length > 0 && (
+        <div className="bg-white dark:bg-slate-800/90 rounded-2xl sm:rounded-3xl border-2 border-[#5034df]/30 p-4 sm:p-6 shadow-md space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-700">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#f0edff] dark:bg-[#5034df]/20 text-[#5034df] dark:text-[#a594fd] flex items-center justify-center shrink-0">
+                <Search className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                    {lang === 'hi' ? 'खोज परिणाम:' : 'Search results for:'}{' '}
+                    <span className="text-[#5034df] dark:text-[#a594fd]">"{searchQuery}"</span>
+                  </h2>
+                  <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd]">
+                    {opportunities.length} {lang === 'hi' ? 'अवसर मिले' : 'matching opportunities'}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
+                  {lang === 'hi'
+                    ? 'नीचे दिए गए अवसरों की पात्रता जांचें या सीधे आधिकारिक पोर्टल खोलें।'
+                    : 'Explore matching opportunities, evaluate eligibility, or jump to official portals.'}
+                </p>
+              </div>
+            </div>
+
+            {onClearSearch && (
+              <button
+                type="button"
+                onClick={onClearSearch}
+                className="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold transition self-start sm:self-auto shadow-2xs"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>{lang === 'hi' ? 'खोज साफ़ करें' : 'Clear Search'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Results Grid */}
+          {opportunities.length === 0 ? (
+            <div className="py-8 text-center space-y-2">
+              <p className="text-sm font-bold text-slate-800 dark:text-white">
+                {lang === 'hi'
+                  ? `"${searchQuery}" के लिए कोई अवसर नहीं मिला।`
+                  : `No opportunities matched "${searchQuery}".`}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {lang === 'hi'
+                  ? 'कृपया UPSC, Scholarship, GATE, या OBC जैसे शब्दों से पुनः प्रयास करें।'
+                  : 'Try searching for scholarships, government exams, colleges, or reservation categories.'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {opportunities.map((opp) => {
+                const isSaved = profile.savedOpportunityIds.includes(opp.id);
+                const isScholarship = opp.type === 'SCHOLARSHIP';
+                const isGovt = opp.type === 'GOVT_EXAM';
+
+                return (
+                  <div
+                    key={opp.id}
+                    className="p-4 sm:p-5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700 hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-3 group shadow-2xs"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <span
+                          className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                            isScholarship
+                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                              : isGovt
+                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                              : 'bg-purple-50 dark:bg-purple-950/40 text-[#5034df] dark:text-[#c4b5fd] border border-purple-200 dark:border-purple-800'
+                          }`}
+                        >
+                          {isScholarship ? 'Scholarship' : isGovt ? 'Govt Exam' : 'Higher Studies'}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => onToggleSave(opp.id)}
+                          className={`cursor-pointer p-1.5 rounded-lg border transition ${
+                            isSaved
+                              ? 'bg-amber-600 border-amber-700 text-white'
+                              : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-500 hover:text-amber-600'
+                          }`}
+                          title={isSaved ? 'Saved to Planner' : 'Save'}
+                        >
+                          <Bookmark className="w-3.5 h-3.5 fill-current" />
+                        </button>
+                      </div>
+
+                      <h3 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2 leading-snug group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition-colors">
+                        {opp.title}
+                      </h3>
+                      <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate">
+                        {opp.organization}
+                      </p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                        {opp.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-2.5 border-t border-slate-200/70 dark:border-slate-700/60 space-y-2">
+                      <div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400 truncate max-w-[150px]">
+                          {opp.benefitsOrSalary}
+                        </span>
+                        <span>
+                          Deadline: <strong className="text-slate-800 dark:text-slate-200">{opp.applicationDeadline}</strong>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => onInspectOpportunity(opp.id)}
+                          className="cursor-pointer flex-1 py-1.5 px-3 rounded-xl bg-[#5034df] hover:bg-[#4025ca] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-2xs"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>{lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
+                        </button>
+
+                        <a
+                          href={opp.officialUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="cursor-pointer p-1.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:text-[#5034df] hover:border-[#5034df]/40 bg-white dark:bg-slate-700 transition"
+                          title="Open Official Portal"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 2. Your Opportunity Overview (4 Pastel Cards matching screenshot) */}
       <div className="space-y-3.5">

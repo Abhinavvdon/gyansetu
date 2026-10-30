@@ -9,15 +9,23 @@ import {
   Sun,
   Moon,
   Zap,
-  Menu
+  Menu,
+  X,
+  Award,
+  Landmark,
+  GraduationCap,
+  ArrowRight
 } from 'lucide-react';
-import type { StudentProfile, User, DeadlineNotification } from '../types';
+import type { StudentProfile, User, DeadlineNotification, Opportunity } from '../types';
+import type { MainNavTab } from './Sidebar';
 import { NotificationPopover } from './NotificationPopover';
 import { formatStudentName } from '../utils/languageUtils';
 
 interface HeaderProps {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
+  opportunities?: Opportunity[];
+  onNavigate?: (tab: MainNavTab) => void;
   profile: StudentProfile;
   currentUser: User | null;
   notifications: DeadlineNotification[];
@@ -42,6 +50,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   searchQuery,
   setSearchQuery,
+  opportunities = [],
+  onNavigate,
   profile,
   currentUser,
   notifications,
@@ -63,22 +73,81 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateHome
 }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Close popover when clicking outside
+  // Close popover and search dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
         setIsNotificationsOpen(false);
       }
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
     };
-    if (isNotificationsOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isNotificationsOpen]);
+  }, []);
+
+  // Filter opportunities for instant preview dropdown
+  const cleanQuery = searchQuery.trim().toLowerCase();
+  const matchedOpportunities = cleanQuery && opportunities.length > 0
+    ? opportunities.filter((opp) => {
+        return (
+          opp.title.toLowerCase().includes(cleanQuery) ||
+          opp.organization.toLowerCase().includes(cleanQuery) ||
+          opp.description.toLowerCase().includes(cleanQuery) ||
+          opp.type.toLowerCase().includes(cleanQuery)
+        );
+      })
+    : [];
+
+  const scholarshipMatches = matchedOpportunities.filter((o) => o.type === 'SCHOLARSHIP');
+  const govtMatches = matchedOpportunities.filter((o) => o.type === 'GOVT_EXAM');
+  const higherEdMatches = matchedOpportunities.filter((o) => o.type === 'HIGHER_STUDIES');
+
+  const handleSearchSubmit = () => {
+    if (!cleanQuery) return;
+    setIsSearchOpen(false);
+    if (onNavigate) {
+      if (
+        cleanQuery.includes('govt') ||
+        cleanQuery.includes('exam') ||
+        cleanQuery.includes('upsc') ||
+        cleanQuery.includes('ssc')
+      ) {
+        onNavigate('Government Schemes');
+      } else if (
+        cleanQuery.includes('higher') ||
+        cleanQuery.includes('college') ||
+        cleanQuery.includes('university') ||
+        cleanQuery.includes('degree') ||
+        cleanQuery.includes('gate') ||
+        cleanQuery.includes('cat')
+      ) {
+        onNavigate('Higher Studies');
+      } else if (
+        cleanQuery.includes('scholarship') ||
+        cleanQuery.includes('fellowship') ||
+        cleanQuery.includes('grant') ||
+        cleanQuery.includes('aid')
+      ) {
+        onNavigate('Scholarship');
+      } else if (matchedOpportunities.length > 0) {
+        const top = matchedOpportunities[0];
+        if (top.type === 'GOVT_EXAM') onNavigate('Government Schemes');
+        else if (top.type === 'HIGHER_STUDIES') onNavigate('Higher Studies');
+        else onNavigate('Scholarship');
+      } else {
+        onNavigate('Scholarship');
+      }
+    }
+  };
 
   return (
     <header aria-label="Main Site Header" className="sticky top-0 z-20 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 transition-colors duration-200">
@@ -107,20 +176,223 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
-      {/* Search Input Bar (responsive pill) */}
-      <div className="relative flex-1 max-w-xl min-w-0">
-        <Search className="w-4 h-4 text-slate-500 absolute left-3.5 sm:left-4 top-2.5 sm:top-3 pointer-events-none" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={
-            lang === 'hi'
-              ? 'खोजें छात्रवृत्ति, परीक्षा, कॉलेज...'
-              : 'Search scholarships, exams, colleges...'
-          }
-          className="w-full pl-9 sm:pl-11 pr-3 sm:pr-4 py-1.5 sm:py-2 bg-[#f3f4f8] dark:bg-slate-800/80 hover:bg-[#ebedf3] dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 rounded-full border border-transparent focus:border-[#5034df] focus:ring-2 focus:ring-[#5034df]/20 outline-none transition-all shadow-2xs"
-        />
+      {/* Search Input Bar & Live Dropdown (responsive pill) */}
+      <div ref={searchContainerRef} className="relative flex-1 max-w-xl min-w-0">
+        <div className="relative flex items-center">
+          <Search className="w-4 h-4 text-slate-500 absolute left-3.5 sm:left-4 pointer-events-none" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onFocus={() => {
+              if (searchQuery.trim().length > 0) setIsSearchOpen(true);
+            }}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              if (e.target.value.trim().length > 0) {
+                setIsSearchOpen(true);
+              } else {
+                setIsSearchOpen(false);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearchSubmit();
+              } else if (e.key === 'Escape') {
+                setIsSearchOpen(false);
+                searchInputRef.current?.blur();
+              }
+            }}
+            placeholder={
+              lang === 'hi'
+                ? 'खोजें छात्रवृत्ति, परीक्षा, कॉलेज (जैसे: Scholarship, UPSC, GATE)...'
+                : 'Search scholarships, exams, colleges (e.g. Scholarship, UPSC, GATE)...'
+            }
+            className="w-full pl-9 sm:pl-11 pr-8 sm:pr-9 py-1.5 sm:py-2 bg-[#f3f4f8] dark:bg-slate-800/80 hover:bg-[#ebedf3] dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 rounded-full border border-transparent focus:border-[#5034df] focus:ring-2 focus:ring-[#5034df]/20 outline-none transition-all shadow-2xs font-medium"
+            role="combobox"
+            aria-expanded={isSearchOpen}
+            aria-haspopup="listbox"
+            aria-label="Search opportunities"
+          />
+
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setIsSearchOpen(false);
+                searchInputRef.current?.focus();
+              }}
+              className="cursor-pointer absolute right-2.5 sm:right-3 p-1 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition"
+              title="Clear search query"
+              aria-label="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Live Search Results Dropdown */}
+        {isSearchOpen && cleanQuery && (
+          <div
+            className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#0f172a] rounded-2xl shadow-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+            role="listbox"
+          >
+            {/* Quick Category Jump Pills */}
+            <div className="p-2.5 bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 mr-1">
+                {lang === 'hi' ? 'श्रेणियां:' : 'Categories:'}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  onNavigate?.('Scholarship');
+                }}
+                className={`cursor-pointer px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 transition ${
+                  scholarshipMatches.length > 0
+                    ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/50 hover:bg-rose-100'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                }`}
+              >
+                <Award className="w-3 h-3 text-rose-600 dark:text-rose-400" />
+                <span>{lang === 'hi' ? 'छात्रवृत्तियां' : 'Scholarships'} ({scholarshipMatches.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  onNavigate?.('Government Schemes');
+                }}
+                className={`cursor-pointer px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 transition ${
+                  govtMatches.length > 0
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 hover:bg-emerald-100'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                }`}
+              >
+                <Landmark className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                <span>{lang === 'hi' ? 'सरकारी परीक्षाएं' : 'Govt Exams'} ({govtMatches.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  onNavigate?.('Higher Studies');
+                }}
+                className={`cursor-pointer px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 transition ${
+                  higherEdMatches.length > 0
+                    ? 'bg-purple-50 dark:bg-purple-950/40 text-[#5034df] dark:text-[#c4b5fd] border border-purple-200 dark:border-purple-800/50 hover:bg-purple-100'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
+                }`}
+              >
+                <GraduationCap className="w-3 h-3 text-[#5034df] dark:text-[#a594fd]" />
+                <span>{lang === 'hi' ? 'उच्च शिक्षा' : 'Higher Ed'} ({higherEdMatches.length})</span>
+              </button>
+            </div>
+
+            {/* Matched Opportunities List */}
+            <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+              {matchedOpportunities.length === 0 ? (
+                <div className="p-5 text-center space-y-2">
+                  <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {lang === 'hi' ? `"${searchQuery}" के लिए कोई अवसर नहीं मिला` : `No opportunities match "${searchQuery}"`}
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {lang === 'hi' ? 'सुझाव: UPSC, GATE, Scholarship, PMSSS या इंजीनियरिंग खोजें।' : 'Try searching for: UPSC, GATE, Scholarship, Pre-Matric, or Engineering.'}
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-1.5 pt-1">
+                    {['Scholarship', 'UPSC', 'GATE', 'Engineering', 'OBC'].map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(tag);
+                          searchInputRef.current?.focus();
+                        }}
+                        className="cursor-pointer text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/20 hover:text-[#5034df] dark:hover:text-[#c4b5fd] text-slate-600 dark:text-slate-300 transition"
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                matchedOpportunities.slice(0, 6).map((opp) => {
+                  const isScholarship = opp.type === 'SCHOLARSHIP';
+                  const isGovt = opp.type === 'GOVT_EXAM';
+                  const badgeColor = isScholarship
+                    ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900'
+                    : isGovt
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900'
+                    : 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-900';
+
+                  const badgeLabel = isScholarship
+                    ? (lang === 'hi' ? 'छात्रवृत्ति' : 'Scholarship')
+                    : isGovt
+                    ? (lang === 'hi' ? 'सरकारी परीक्षा' : 'Govt Exam')
+                    : (lang === 'hi' ? 'उच्च अध्ययन' : 'Higher Studies');
+
+                  return (
+                    <div
+                      key={opp.id}
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        if (onSelectOpportunity) {
+                          onSelectOpportunity(opp.id);
+                        }
+                      }}
+                      className="p-3 hover:bg-[#f6f4ff] dark:hover:bg-slate-800/80 cursor-pointer transition flex items-center justify-between gap-3 group"
+                    >
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border uppercase tracking-wider ${badgeColor}`}>
+                            {badgeLabel}
+                          </span>
+                          <span className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition-colors">
+                            {opp.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                          <span className="truncate">{opp.organization}</span>
+                          <span>•</span>
+                          <span className="text-slate-700 dark:text-slate-300 font-semibold truncate">{opp.benefitsOrSalary}</span>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 flex items-center gap-1.5 text-[#5034df] dark:text-[#a594fd] opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-[11px] font-bold hidden sm:inline">{lang === 'hi' ? 'देखें' : 'View'}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Dropdown Footer */}
+            <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+              <button
+                type="button"
+                onClick={handleSearchSubmit}
+                className="cursor-pointer font-bold text-[#5034df] dark:text-[#a594fd] hover:underline flex items-center gap-1"
+              >
+                <span>
+                  {lang === 'hi'
+                    ? `"${searchQuery}" के सभी परिणाम देखें (${matchedOpportunities.length}) →`
+                    : `View all ${matchedOpportunities.length} matches in Opportunities →`}
+                </span>
+              </button>
+
+              <span className="text-[10px] text-slate-400 hidden sm:inline">
+                <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-[9px] text-slate-700 dark:text-slate-300">Enter</kbd> to submit • <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-[9px] text-slate-700 dark:text-slate-300">Esc</kbd> to close
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Right Controls */}

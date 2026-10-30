@@ -385,6 +385,8 @@ export function App() {
         <Header
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          opportunities={opportunities}
+          onNavigate={(t) => setActiveTab(t)}
           profile={profile}
           currentUser={currentUser}
           notifications={deadlineAlerts}
@@ -584,6 +586,8 @@ export function App() {
                   onToggleSave={handleToggleSave}
                   onInspectEligibility={() => setScholarshipSubTab('matching')}
                   lang={lang}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
                 />
               )}
 
@@ -669,6 +673,8 @@ export function App() {
                   onToggleSave={handleToggleSave}
                   onInspectEligibility={() => setGovtSubTab('matching')}
                   lang={lang}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
                 />
               )}
 
@@ -756,6 +762,8 @@ export function App() {
                   onToggleSave={handleToggleSave}
                   onInspectEligibility={() => setHigherEdSubTab('matching')}
                   lang={lang}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
                 />
               )}
 

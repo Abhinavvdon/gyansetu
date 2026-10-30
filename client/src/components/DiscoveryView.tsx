@@ -20,6 +20,8 @@ interface DiscoveryViewProps {
   onToggleSave: (id: string) => void;
   onInspectEligibility: (id: string) => void;
   lang: 'en' | 'hi';
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
 }
 
 export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
@@ -27,11 +29,16 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
   profile,
   onToggleSave,
   onInspectEligibility,
-  lang
+  lang,
+  searchQuery: externalSearchQuery,
+  onSearchChange
 }) => {
   const [selectedType, setSelectedType] = useState<string>('ALL');
   const [selectedState, setSelectedState] = useState<string>('All India');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [localSearchQuery, setLocalSearchQuery] = useState<string>('');
+
+  const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : localSearchQuery;
+  const setSearchQuery = onSearchChange || setLocalSearchQuery;
 
   const filtered = opportunities.filter((opp) => {
     if (selectedType !== 'ALL' && opp.type !== selectedType) return false;
