@@ -125,9 +125,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <img src="/logo-icon.png" alt="GyanSetu Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            <div className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
               Gyan<span className="text-[#5034df] dark:text-[#a594fd]">Setu</span>
-            </h1>
+            </div>
             <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium tracking-tight">
               Your Future, Connected.
             </p>

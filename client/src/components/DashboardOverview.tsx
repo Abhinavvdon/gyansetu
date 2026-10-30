@@ -97,10 +97,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               {lang === 'hi' ? 'आपका भविष्य, अब आपके हाथ में' : 'YOUR NEXT CHAPTER STARTS HERE'}
             </span>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-2">
               <span>{getGreeting()}, {studentName}!</span>
               <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
-            </h2>
+            </h1>
 
             <p className="text-xs sm:text-sm text-white/95 leading-relaxed font-normal">
               {lang === 'hi'

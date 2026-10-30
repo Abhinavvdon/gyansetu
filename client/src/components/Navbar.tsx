@@ -123,9 +123,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
+                  <div className="text-xl font-extrabold tracking-tight text-slate-900">
                     Gyan<span className="text-amber-600">Setu</span>
-                  </h1>
+                  </div>
                   <span className="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded font-semibold font-mono">
                     ज्ञानसेतु
                   </span>
