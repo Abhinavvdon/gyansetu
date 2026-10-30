@@ -113,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200/90 dark:border-slate-800 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none transition-colors duration-200">
+    <aside aria-label="Sidebar Navigation" className="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200/90 dark:border-slate-800 flex flex-col shrink-0 min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar z-30 select-none transition-colors duration-200">
       {/* Brand Header */}
       <div className="p-5 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
         <div
@@ -128,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
               Gyan<span className="text-[#5034df] dark:text-[#a594fd]">Setu</span>
             </h1>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium tracking-tight">
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium tracking-tight">
               Your Future, Connected.
             </p>
           </div>
@@ -136,8 +136,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Navigation Options List */}
-      <nav className="p-3.5 space-y-1.5 flex-1">
-        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+      <nav aria-label="Main Menu" className="p-3.5 space-y-1.5 flex-1">
+        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
           {lang === 'hi' ? 'मुख्य मेनू' : 'Main Menu'}
         </div>
 
@@ -155,8 +155,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 isActive
                   ? 'bg-[#ece8ff] dark:bg-[#5034df]/25 text-[#5034df] dark:text-[#c4b5fd] font-bold shadow-xs'
                   : isLogout
-                  ? 'text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/70 dark:hover:bg-rose-950/30 mt-4'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
+                  ? 'text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/70 dark:hover:bg-rose-950/30 mt-4'
+                  : 'text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
               }`}
             >
               <div className="flex items-center gap-3 truncate">
@@ -165,8 +165,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     isActive
                       ? 'text-[#5034df] dark:text-[#c4b5fd]'
                       : isLogout
-                      ? 'text-slate-400 dark:text-slate-500 group-hover:text-rose-600 dark:group-hover:text-rose-400'
-                      : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200'
+                      ? 'text-slate-500 dark:text-slate-400 group-hover:text-rose-600 dark:group-hover:text-rose-400'
+                      : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200'
                   }`}
                 />
                 <span className="truncate">

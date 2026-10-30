@@ -171,17 +171,17 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-extrabold text-slate-400">
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-400">
                     0{stepNumber}.
                   </span>
                   <h4 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                     {lang === 'hi' ? titleHi : title}
                   </h4>
                 </div>
-                <div className="text-[10px] text-slate-400 font-medium mt-0.5 flex items-center gap-1">
+                <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium mt-0.5 flex items-center gap-1">
                   <span>{rankedList.length} Top Opportunities</span>
                   <span>•</span>
-                  <span className="text-slate-600 dark:text-slate-300 font-semibold flex items-center gap-0.5">
+                  <span className="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-0.5">
                     <TrendingDown className="w-2.5 h-2.5" />
                     <span>Decreasing Order</span>
                   </span>
@@ -192,7 +192,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
             <button
               type="button"
               onClick={() => onNavigate(categoryType)}
-              className="cursor-pointer text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-2.5 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/60 transition"
+              className="cursor-pointer text-[11px] font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-2.5 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/60 transition"
               title="Explore all opportunities"
             >
               <span>{lang === 'hi' ? 'सभी देखें' : 'View All'}</span>
@@ -200,7 +200,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
             </button>
           </div>
 
-          <p className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+          <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400 line-clamp-1">
             {subtext}
           </p>
 
@@ -270,7 +270,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
                       <span className="text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 text-center truncate max-w-[56px] sm:max-w-[70px] group-hover:text-slate-900 dark:group-hover:text-white leading-tight">
                         {item.shortLabel}
                       </span>
-                      <span className="text-[9px] text-slate-400 dark:text-slate-400 font-medium flex items-center gap-0.5 mt-0.5">
+                      <span className="text-[9px] text-slate-600 dark:text-slate-400 font-medium flex items-center gap-0.5 mt-0.5">
                         <Clock className="w-2.5 h-2.5" />
                         <span>{lang === 'hi' ? `${item.daysLeft} दिन शेष` : `${item.daysLeft}d left`}</span>
                       </span>
@@ -320,7 +320,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
 
         {/* Card Footer Summary */}
         <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs">
-          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 truncate">
             {lang === 'hi' ? 'शीर्ष अवसर:' : 'Top Pick:'} <strong className="text-slate-800 dark:text-slate-200">{rankedList[0]?.shortLabel}</strong> ({rankedList[0]?.priorityScore}%)
           </div>
 
@@ -348,7 +348,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
               {lang === 'hi' ? 'उच्च ➔ निम्न क्रम' : 'Sorted High ➔ Low'}
             </span>
           </h3>
-          <p className="text-xs text-slate-400 font-medium">
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
             {lang === 'hi'
               ? 'छात्रवृत्ति, सरकारी योजनाएं व उच्च शिक्षा के अवसर प्राथमिकता के अनुसार घटते क्रम में'
               : 'Independent priority distribution bar graphs for Scholarships, Government Schemes, and Higher Studies.'}
@@ -356,7 +356,7 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
         </div>
 
         {/* Clean Palette Legend */}
-        <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+        <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
           <span className="flex items-center gap-1.5 text-[10px]">
             <span className="w-2.5 h-2.5 rounded-xs" style={{ backgroundColor: scholarshipPalette[0] }}></span>
             <span>{lang === 'hi' ? '१. छात्रवृत्ति' : '1. Scholarships'}</span>

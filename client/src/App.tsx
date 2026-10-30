@@ -416,7 +416,7 @@ export function App() {
         />
 
         {/* Workspace Body */}
-        <main className="flex-1 p-6 max-w-7xl w-full mx-auto">
+        <main id="main-content" role="main" className="flex-1 p-6 max-w-7xl w-full mx-auto">
           {/* Quick Tab Header / Back to Overview Button */}
           {activeTab !== 'home' && (
             <div className="mb-5 flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
@@ -477,28 +477,30 @@ export function App() {
           <Suspense fallback={<ViewLoadingFallback />}>
             {activeTab === 'home' && (
               <DashboardOverview
-              opportunities={searchFilteredOpportunities}
-              eligibilityReports={eligibilityReports}
-              profile={profile}
-              currentUser={currentUser}
-              onNavigate={(t) => setActiveTab(t)}
-              onToggleSave={handleToggleSave}
-              onInspectOpportunity={(id) => {
-                const opp = opportunities.find((o) => o.id === id);
-                if (opp?.type === 'SCHOLARSHIP') {
-                  setActiveTab('Scholarship');
-                  setScholarshipSubTab('matching');
-                } else if (opp?.type === 'GOVT_EXAM') {
-                  setActiveTab('Government Schemes');
-                  setGovtSubTab('matching');
-                } else {
-                  setActiveTab('Higher Studies');
-                  setHigherEdSubTab('matching');
-                }
-              }}
-              onOpenAiModal={() => setIsGeminiModalOpen(true)}
-              lang={lang}
-            />
+                opportunities={searchFilteredOpportunities}
+                eligibilityReports={eligibilityReports}
+                profile={profile}
+                currentUser={currentUser}
+                onNavigate={(t) => setActiveTab(t)}
+                onToggleSave={handleToggleSave}
+                onInspectOpportunity={(id) => {
+                  const opp = opportunities.find((o) => o.id === id);
+                  if (opp?.type === 'SCHOLARSHIP') {
+                    setActiveTab('Scholarship');
+                    setScholarshipSubTab('matching');
+                  } else if (opp?.type === 'GOVT_EXAM') {
+                    setActiveTab('Government Schemes');
+                    setGovtSubTab('matching');
+                  } else {
+                    setActiveTab('Higher Studies');
+                    setHigherEdSubTab('matching');
+                  }
+                }}
+                onOpenAiModal={() => setIsGeminiModalOpen(true)}
+                lang={lang}
+                searchQuery={searchQuery}
+                onClearSearch={() => setSearchQuery('')}
+              />
           )}
 
           {/* VIEW 1: PROFILE */}
@@ -850,6 +852,11 @@ export function App() {
           )}
           </Suspense>
         </main>
+
+        {/* Global Footer Landmark */}
+        <footer role="contentinfo" aria-label="Site Footer" className="py-6 px-8 text-center text-xs text-slate-600 dark:text-slate-400 border-t border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40">
+          <p>© {new Date().getFullYear()} GyanSetu (ज्ञानसेतु). All rights reserved. Connecting students with opportunities across India.</p>
+        </footer>
       </div>
 
       {/* Quick Profile Drawer */}
@@ -870,8 +877,10 @@ export function App() {
           lang={lang}
         />
 
-        {/* GyanSetu Study Timetable & Scheduling AI Chatbot (Bottom-Right) */}
-        <StudyChatbot lang={lang} profile={profile} />
+        {/* GyanSetu Study Timetable & Scheduling AI Chatbot (Bottom-Right Complementary Landmark) */}
+        <aside aria-label="GyanSetu Study Assistant" role="complementary">
+          <StudyChatbot lang={lang} profile={profile} />
+        </aside>
 
         {/* Authentication Modal (PostgreSQL & BCrypt) */}
         <AuthModal

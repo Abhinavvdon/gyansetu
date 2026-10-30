@@ -53,7 +53,7 @@ api.interceptors.request.use((config) => {
 // Seed data for standalone client fallback
 let mockProfile: StudentProfile = {
   id: 'student_default',
-  fullName: 'Abhinav Dongre',
+  fullName: 'Student',
   educationLevel: 'UG Pursuing',
   alreadyPursuedLevel: '12th',
   alreadyPursuedStream: 'Science PCM',
@@ -812,6 +812,7 @@ export const GyanSetuApi = {
     try {
       localStorage.removeItem('gyansetu_user');
       localStorage.removeItem('gyansetu_token');
+      mockProfile.fullName = 'Student';
     } catch {
       // fallback
     }

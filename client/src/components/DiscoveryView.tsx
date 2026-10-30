@@ -163,26 +163,56 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
 
       {/* Grid of Opportunities */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filtered.map((opp) => {
-          const style = getTypeStyle(opp.type);
-          const Icon = style.icon;
-          const isSaved = profile.savedOpportunityIds.includes(opp.id);
-
-          return (
-            <div
-              key={opp.id}
-              className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-card transition-all flex flex-col justify-between group relative"
+        {filtered.length === 0 ? (
+          <div className="col-span-full py-12 px-6 text-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-2xs">
+            <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-[#5034df] dark:text-[#a594fd] flex items-center justify-center mx-auto mb-3.5 border border-indigo-100 dark:border-indigo-900/50">
+              <Search className="w-7 h-7" />
+            </div>
+            <h4 className="text-base font-bold text-slate-800 dark:text-white mb-1.5">
+              {lang === 'hi' ? 'कोई अवसर नहीं मिला' : 'No matching opportunities found'}
+            </h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-5 leading-relaxed font-medium">
+              {searchQuery
+                ? (lang === 'hi'
+                    ? `"${searchQuery}" के लिए कोई अवसर नहीं मिला। कृपया अलग खोज शब्द या फ़िल्टर का उपयोग करें।`
+                    : `We couldn't find any opportunities matching "${searchQuery}". Try different keywords or reset filters.`)
+                : (lang === 'hi'
+                    ? 'चयनित श्रेणी या राज्य के लिए कोई अवसर उपलब्ध नहीं है।'
+                    : 'No opportunities matched the selected type and state filters.')}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedType('ALL');
+                setSelectedState('All India');
+                setSearchQuery('');
+              }}
+              className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white text-xs font-bold transition shadow-xs"
             >
-              <div>
-                {/* Header Badge & Save Bookmark */}
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${style.bg}`}>
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{style.label}</span>
-                  </span>
+              <span>{lang === 'hi' ? 'फ़िल्टर रीसेट करें' : 'Reset all filters'}</span>
+            </button>
+          </div>
+        ) : (
+          filtered.map((opp) => {
+            const style = getTypeStyle(opp.type);
+            const Icon = style.icon;
+            const isSaved = profile.savedOpportunityIds.includes(opp.id);
 
-                  <button
-                    onClick={() => onToggleSave(opp.id)}
+            return (
+              <div
+                key={opp.id}
+                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-card transition-all flex flex-col justify-between group relative"
+              >
+                <div>
+                  {/* Header Badge & Save Bookmark */}
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${style.bg}`}>
+                      <Icon className="w-3.5 h-3.5" />
+                      <span>{style.label}</span>
+                    </span>
+
+                    <button
+                      onClick={() => onToggleSave(opp.id)}
                     className={`cursor-pointer p-1.5 rounded-lg border transition-colors ${
                       isSaved
                         ? 'bg-amber-500 border-amber-600 text-white'
@@ -275,8 +305,9 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
               </div>
             </div>
           );
-        })}
-      </div>
+        })
+      )}
+    </div>
     </div>
   );
 };

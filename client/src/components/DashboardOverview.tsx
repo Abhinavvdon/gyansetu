@@ -34,6 +34,8 @@ interface DashboardOverviewProps {
   onInspectOpportunity: (id: string) => void;
   onOpenAiModal?: () => void;
   lang: 'en' | 'hi';
+  searchQuery?: string;
+  onClearSearch?: () => void;
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -45,7 +47,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onToggleSave,
   onInspectOpportunity,
   onOpenAiModal,
-  lang
+  lang,
+  searchQuery = '',
+  onClearSearch
 }) => {
   // Time of day greeting
   const getGreeting = () => {
@@ -57,8 +61,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   const rawStudentName = currentUser?.name
     ? currentUser.name.split(' ')[0]
-    : profile?.fullName
-    ? profile.fullName.split(' ')[0]
     : 'Student';
 
   const studentName = formatStudentName(rawStudentName, lang);
@@ -139,10 +141,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       <div className="space-y-3.5">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'आपके अवसरों की रूपरेखा' : 'Your opportunity overview'}
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi'
                 ? 'आपकी योग्यता और प्रोफ़ाइल के आधार पर एक समग्र दृष्टिकोण।'
                 : 'A smarter view of what is possible for you.'}
@@ -151,7 +153,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('Scholarship')}
-            className="cursor-pointer text-xs font-bold text-[#5034df] hover:text-[#3e23c7] flex items-center gap-1 group"
+            className="cursor-pointer text-xs font-bold text-[#5034df] dark:text-[#a594fd] hover:text-[#3e23c7] flex items-center gap-1 group"
           >
             <span>{lang === 'hi' ? 'सभी देखें' : 'Browse all'}</span>
             <span className="text-[10px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
@@ -169,14 +171,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {lang === 'hi' ? 'छात्रवृत्तियां' : 'Scholarships'}
               </div>
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {scholarshipCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'वित्तीय सहायता देखें' : 'Explore financial support'}
             </div>
           </div>
@@ -190,14 +192,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Landmark className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {lang === 'hi' ? 'सरकारी परीक्षाएं व योजनाएं' : 'Government exams'}
               </div>
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {govtExamsCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'अपने भविष्य की तैयारी करें' : 'Prepare for your future'}
             </div>
           </div>
@@ -211,14 +213,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {lang === 'hi' ? 'उच्च शिक्षा प्रवेश' : 'Higher studies'}
               </div>
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 {higherStudiesCount}
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'अपना पसंदीदा कैंपस चुनें' : 'Find your next campus'}
             </div>
           </div>
@@ -232,14 +234,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {lang === 'hi' ? 'दस्तावेज़ व तैयारी' : 'Documents & Internships'}
               </div>
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
                 100%
               </div>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'कागजात तैयार रखें' : 'Build real-world readiness'}
             </div>
           </div>
@@ -264,113 +266,142 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'आपके लिए अनुशंसित' : 'Recommended for you'}
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'पात्रता और समय-सीमा के अनुसार चुनिंदा अवसर' : 'Sample opportunities to explore based on your profile'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5 sm:gap-5">
-            {recommendedOpps.map((opp) => {
-              const rep = reportMap.get(opp.id);
-              const isSaved = profile.savedOpportunityIds.includes(opp.id);
-              const confidenceScore = rep ? rep.confidenceScore : 85;
+            {recommendedOpps.length === 0 ? (
+              <div className="sm:col-span-2 p-8 text-center bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-[#5034df] dark:text-[#a594fd] flex items-center justify-center mx-auto mb-3 border border-indigo-100 dark:border-indigo-900/50">
+                  <Search className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1">
+                  {lang === 'hi' ? 'कोई मेल खाने वाला अवसर नहीं मिला' : 'No matching opportunities found'}
+                </h4>
+                <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-4 leading-relaxed font-medium">
+                  {searchQuery
+                    ? (lang === 'hi'
+                        ? `"${searchQuery}" के लिए कोई अवसर नहीं मिला। छात्रवृत्ति, यूपीएससी, गेट या इंजीनियरिंग खोज कर देखें।`
+                        : `No opportunities matched "${searchQuery}". Try searching for UPSC, GATE, OBC, or engineering.`)
+                    : (lang === 'hi'
+                        ? 'वर्तमान में कोई अवसर प्रदर्शित करने के लिए नहीं है।'
+                        : 'No opportunities are currently available for this view.')}
+                </p>
+                {onClearSearch && (
+                  <button
+                    type="button"
+                    onClick={onClearSearch}
+                    className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5034df] hover:bg-[#3f25c7] text-white text-xs font-bold transition shadow-xs"
+                  >
+                    <span>{lang === 'hi' ? 'खोज साफ़ करें' : 'Clear search query'}</span>
+                  </button>
+                )}
+              </div>
+            ) : (
+              recommendedOpps.map((opp) => {
+                const rep = reportMap.get(opp.id);
+                const isSaved = profile.savedOpportunityIds.includes(opp.id);
+                const confidenceScore = rep ? rep.confidenceScore : 85;
 
-              return (
-                <div
-                  key={opp.id}
-                  className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-5 sm:p-5.5 hover:shadow-md hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-4 relative group"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span
-                        className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
-                          opp.type === 'SCHOLARSHIP'
-                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                return (
+                  <div
+                    key={opp.id}
+                    className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 p-5 sm:p-5.5 hover:shadow-md hover:border-[#5034df]/50 transition-all flex flex-col justify-between space-y-4 relative group"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                            opp.type === 'SCHOLARSHIP'
+                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                              : opp.type === 'GOVT_EXAM'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                              : 'bg-purple-50 dark:bg-purple-950/40 text-[#5034df] dark:text-[#c4b5fd] border border-purple-200 dark:border-purple-800'
+                          }`}
+                        >
+                          {opp.type === 'SCHOLARSHIP'
+                            ? 'Scholarships'
                             : opp.type === 'GOVT_EXAM'
-                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                            : 'bg-purple-50 dark:bg-purple-950/40 text-[#5034df] dark:text-[#c4b5fd] border border-purple-200 dark:border-purple-800'
-                        }`}
-                      >
-                        {opp.type === 'SCHOLARSHIP'
-                          ? 'Scholarships'
-                          : opp.type === 'GOVT_EXAM'
-                          ? 'Govt Schemes'
-                          : 'Higher Studies'}
-                      </span>
+                            ? 'Govt Schemes'
+                            : 'Higher Studies'}
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2 py-0.5 rounded-md">
+                            {confidenceScore}% {lang === 'hi' ? 'मैच' : 'Match'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleSave(opp.id);
+                            }}
+                            className={`cursor-pointer p-1.5 rounded-lg transition ${
+                              isSaved
+                                ? 'text-amber-600 bg-amber-50 dark:bg-amber-950/50'
+                                : 'text-slate-300 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            }`}
+                            title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
+                          >
+                            <Bookmark className="w-4 h-4 fill-current" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition line-clamp-2 leading-snug">
+                          {opp.title}
+                        </h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-1 line-clamp-1">
+                          {opp.organization}
+                        </p>
+                      </div>
+
+                      {opp.benefitsOrSalary && (
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">●</span>
+                          <span className="line-clamp-1">{opp.benefitsOrSalary}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700/80">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 text-[11px]">
+                          <Clock className="w-3.5 h-3.5 text-amber-500" />
+                          <span className="font-medium">{opp.applicationDeadline}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                          {lang === 'hi' ? 'अंतिम तिथि' : 'Deadline'}
+                        </span>
+                      </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-[#5034df] dark:text-[#c4b5fd] bg-[#ece8ff] dark:bg-[#5034df]/20 px-2 py-0.5 rounded-md">
-                          {confidenceScore}% {lang === 'hi' ? 'मैच' : 'Match'}
-                        </span>
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleSave(opp.id);
-                          }}
-                          className={`cursor-pointer p-1.5 rounded-lg transition ${
-                            isSaved
-                              ? 'text-amber-600 bg-amber-50 dark:bg-amber-950/50'
-                              : 'text-slate-300 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
-                          }`}
-                          title={isSaved ? 'Saved in Planner' : 'Save opportunity'}
+                          onClick={() => onInspectOpportunity(opp.id)}
+                          className="cursor-pointer flex-1 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-700/60 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 text-slate-700 dark:text-slate-200 hover:text-[#5034df] dark:hover:text-[#c4b5fd] font-bold text-xs transition text-center border border-slate-200/60 dark:border-slate-600 hover:border-[#5034df]/30"
                         >
-                          <Bookmark className="w-4 h-4 fill-current" />
+                          {lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
                         </button>
+
+                        <a
+                          href={opp.officialUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="cursor-pointer p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition"
+                          title="Open official portal"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
                       </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition line-clamp-2 leading-snug">
-                        {opp.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 line-clamp-1">
-                        {opp.organization}
-                      </p>
-                    </div>
-
-                    {opp.benefitsOrSalary && (
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
-                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">●</span>
-                        <span className="line-clamp-1">{opp.benefitsOrSalary}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700/80">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[11px]">
-                        <Clock className="w-3.5 h-3.5 text-amber-500" />
-                        <span className="font-medium">{opp.applicationDeadline}</span>
-                      </div>
-                      <span className="text-[11px] text-slate-400 font-medium">
-                        {lang === 'hi' ? 'अंतिम तिथि' : 'Deadline'}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onInspectOpportunity(opp.id)}
-                        className="cursor-pointer flex-1 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-700/60 hover:bg-[#ece8ff] dark:hover:bg-[#5034df]/30 text-slate-700 dark:text-slate-200 hover:text-[#5034df] dark:hover:text-[#c4b5fd] font-bold text-xs transition text-center border border-slate-200/60 dark:border-slate-600 hover:border-[#5034df]/30"
-                      >
-                        {lang === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
-                      </button>
-
-                      <a
-                        href={opp.officialUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="cursor-pointer p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition"
-                        title="Open official portal"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -380,7 +411,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'त्वरित कार्य' : 'Quick actions'}
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'शुरुआत करने के लिए शॉर्टकट' : 'Shortcuts to get started fast'}
             </p>
           </div>

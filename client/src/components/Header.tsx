@@ -77,10 +77,10 @@ export const Header: React.FC<HeaderProps> = ({
   }, [isNotificationsOpen]);
 
   return (
-    <header className="sticky top-0 z-20 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-6 py-3 flex items-center justify-between gap-4 transition-colors duration-200">
+    <header aria-label="Main Site Header" className="sticky top-0 z-20 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-6 py-3 flex items-center justify-between gap-4 transition-colors duration-200">
       {/* Search Input Bar (matching screenshot pill) */}
       <div className="relative flex-1 max-w-xl">
-        <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3 pointer-events-none" />
+        <Search className="w-4 h-4 text-slate-500 absolute left-4 top-3 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'छात्रवृत्ति, सरकारी परीक्षा, कॉलेज, प्रवेश खोजें...'
               : 'Search scholarships, exams, colleges, internships...'
           }
-          className="w-full pl-11 pr-4 py-2 bg-[#f3f4f8] dark:bg-slate-800/80 hover:bg-[#ebedf3] dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-full border border-transparent focus:border-[#5034df] focus:ring-2 focus:ring-[#5034df]/20 outline-none transition-all shadow-2xs"
+          className="w-full pl-11 pr-4 py-2 bg-[#f3f4f8] dark:bg-slate-800/80 hover:bg-[#ebedf3] dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 rounded-full border border-transparent focus:border-[#5034df] focus:ring-2 focus:ring-[#5034df]/20 outline-none transition-all shadow-2xs"
         />
       </div>
 
