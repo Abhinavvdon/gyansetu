@@ -242,6 +242,18 @@ public class GyanSetuApiController {
         return ResponseEntity.ok(trustService.getScamAlerts());
     }
 
+    @PostMapping("/scam-alerts/report")
+    public ResponseEntity<ScamAlert> reportScam(@RequestBody ScamAlert report) {
+        return ResponseEntity.ok(trustService.reportScamAlert(report));
+    }
+
+    @PostMapping("/scam-alerts/analyze-text")
+    public ResponseEntity<Map<String, Object>> analyzeScamText(@RequestBody Map<String, String> payload) {
+        String text = payload != null ? payload.get("text") : "";
+        String apiKey = payload != null ? payload.get("apiKey") : null;
+        return ResponseEntity.ok(trustService.analyzeNoticeOrMessage(text, apiKey));
+    }
+
     @PostMapping("/verify-url")
     public ResponseEntity<UrlVerificationResult> verifyUrl(@RequestBody Map<String, String> payload) {
         String url = payload != null ? payload.get("url") : "";

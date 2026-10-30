@@ -549,5 +549,10 @@ public class DataRepository {
     public List<DocumentItem> getDefaultDocuments() { return defaultDocuments; }
     public List<NotificationChange> getNotificationChanges() { return notificationChanges; }
     public List<ScamAlert> getScamAlerts() { return scamAlerts; }
+    public void addScamAlert(ScamAlert alert) {
+        if (alert != null) {
+            scamAlerts.add(0, alert);
+        }
+    }
     public List<PeerSuccessStory> getPeerStories() { return peerStories; }
 }

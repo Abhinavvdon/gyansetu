@@ -265,6 +265,17 @@ export interface UrlVerificationResult {
   guidance: string;
 }
 
+export interface NoticeAnalysisResult {
+  verdict: 'CONFIRMED_SCAM' | 'HIGH_RISK_HOAX' | 'UNVERIFIED_CIRCULAR' | 'GENUINE_OFFICIAL_NOTICE' | 'INVALID_INPUT';
+  trustScore: number;
+  redFlags: string[];
+  trustSignals: string[];
+  extractedUrls: string[];
+  safeOfficialAlternative: string;
+  guidance: string;
+  suggestedScamAlert?: ScamAlert;
+}
+
 export interface PeerSuccessStory {
   id: string;
   studentAlias: string;

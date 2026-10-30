@@ -15,6 +15,7 @@ import type {
   ExamClashWarning,
   ScamAlert,
   UrlVerificationResult,
+  NoticeAnalysisResult,
   PeerSuccessStory,
   WeeklyDigest,
   User,
@@ -1655,6 +1656,58 @@ export const GyanSetuApi = {
           dateReported: '2026-10-18'
         }
       ];
+    }
+  },
+
+  reportScamAlert: async (report: Partial<ScamAlert>): Promise<ScamAlert> => {
+    try {
+      const res = await api.post('/scam-alerts/report', report);
+      return res.data;
+    } catch {
+      return {
+        id: 'scam_community_' + Date.now(),
+        fakeClaimOrDomain: report.fakeClaimOrDomain || 'Reported Fake Circular',
+        officialGenuinePortal: report.officialGenuinePortal || 'Official Portal: https://www.india.gov.in',
+        warningLevel: report.warningLevel || 'FRAUD_ALERT',
+        scamPatternDescription: report.scamPatternDescription || 'Community reported unauthorized fee demand / impersonation.',
+        safetyTip: report.safetyTip || 'Reported by GyanSetu community. Always check official apex portals (.gov.in).',
+        dateReported: new Date().toISOString().split('T')[0]
+      };
+    }
+  },
+
+  analyzeScamText: async (text: string, apiKey?: string): Promise<NoticeAnalysisResult> => {
+    try {
+      const res = await api.post('/scam-alerts/analyze-text', { text, apiKey });
+      return res.data;
+    } catch {
+      const lower = text.toLowerCase();
+      const hasUpi = lower.includes('upi') || lower.includes('qr') || lower.includes('pay');
+      const hasDirect = lower.includes('without exam') || lower.includes('direct joining') || lower.includes('free laptop');
+      const isDangerous = hasUpi || hasDirect;
+      return {
+        verdict: isDangerous ? 'CONFIRMED_SCAM' : 'UNVERIFIED_CIRCULAR',
+        trustScore: isDangerous ? 15 : 45,
+        redFlags: [
+          ...(hasUpi ? ['Demands payment via UPI or unverified payment channel.'] : []),
+          ...(hasDirect ? ['Promises direct recruitment or unconditional cash without merit exam.'] : [])
+        ],
+        trustSignals: [],
+        extractedUrls: [],
+        safeOfficialAlternative: 'https://www.india.gov.in',
+        guidance: isDangerous
+          ? 'HIGH RISK FRAUD: Official Indian recruitment bodies never accept private UPI QR fees.'
+          : 'UNVERIFIED: Always cross-reference notices on .gov.in or .nic.in portals.',
+        suggestedScamAlert: {
+          id: 'scam_ai_' + Date.now(),
+          fakeClaimOrDomain: text.slice(0, 50) + '...',
+          officialGenuinePortal: 'Official Portal: https://www.india.gov.in',
+          warningLevel: isDangerous ? 'DANGER' : 'CAUTION',
+          scamPatternDescription: isDangerous ? 'Detected unauthorized fee demand or unverified scheme forward.' : 'Unverified notice forward.',
+          safetyTip: 'Never transfer money to personal UPI accounts for government jobs or scholarships.',
+          dateReported: new Date().toISOString().split('T')[0]
+        }
+      };
     }
   },
 
