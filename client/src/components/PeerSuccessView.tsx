@@ -24,11 +24,11 @@ export const PeerSuccessView: React.FC<PeerSuccessViewProps> = ({ peerStories, l
           <Users className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'साथियों के सफल रास्ते (Peer Success Paths)' : 'Peer Success Paths & Combination Blueprints'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'समान प्रोफ़ाइल वाले विद्यार्थियों ने कैसे पाई सफलता?'
             : 'How Students with Similar Marks & Backgrounds Succeeded'}
-        </h2>
+        </h1>
         <p className="text-sm text-purple-200 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'औसत अंक होने के बावजूद सही परीक्षाओं और छात्रवृत्तियों का संयोजन चुनकर साथियों ने सरकारी नौकरियां व उच्च शिक्षा छात्रवृत्ति प्राप्त की। उनके सफल संयोजन देखें।'
@@ -47,9 +47,9 @@ export const PeerSuccessView: React.FC<PeerSuccessViewProps> = ({ peerStories, l
               {/* Alias & Origin */}
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="font-extrabold text-slate-900 text-base">
+                  <h2 className="font-extrabold text-slate-900 text-base">
                     {story.studentAlias}
-                  </h3>
+                  </h2>
                   <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
                     <MapPin className="w-3 h-3 text-amber-600" />
                     <span>{story.homeState}</span>

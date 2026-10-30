@@ -249,9 +249,9 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight">
+                <h2 className="text-base sm:text-lg font-black tracking-tight leading-tight">
                   {lang === 'hi' ? 'Adaption AI डेटासेट प्रबंधक' : 'Adaption AI Dataset Ingestion'}
-                </h3>
+                </h2>
                 <span className="text-[10px] bg-emerald-700 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">
                   Abhinav Dongre Run
                 </span>
@@ -318,11 +318,11 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <div>
-                    <h4 className="text-sm font-bold">
+                    <h3 className="text-sm font-bold">
                       {lang === 'hi'
                         ? `${importedOpps.length} नए अवसर सफलतापूर्वक जोड़े गए!`
                         : `Successfully loaded ${importedOpps.length} verified opportunities from Adaption AI!`}
-                    </h4>
+                    </h3>
                     <p className="text-xs text-emerald-700 dark:text-emerald-300 font-medium">
                       {lang === 'hi' ? 'डैशबोर्ड और प्राथमिकता बार ग्राफ़ अपडेट हो चुके हैं।' : 'Saved to PostgreSQL database and active on your dashboard.'}
                     </p>
@@ -349,9 +349,9 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
                             {opp.organization}
                           </span>
                         </div>
-                        <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
                           {opp.title}
-                        </h5>
+                        </h4>
                         <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
                           {opp.benefitsOrSalary} • Deadline: <strong className="text-slate-700 dark:text-slate-300">{opp.applicationDeadline}</strong>
                         </div>
@@ -394,9 +394,9 @@ export const AdaptionAiModal: React.FC<AdaptionAiModalProps> = ({
             /* Adaption AI Dataset Selection View */
             <div className="space-y-5 animate-in fade-in">
               <div>
-                <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2">
                   {lang === 'hi' ? 'Adaption Labs से पूर्ण डेटासेट (सत्यापित रन)' : 'Completed Datasets from Adaption Labs (Abhinav Dongre)'}
-                </h4>
+                </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                   {lang === 'hi'
                     ? 'नीचे दिए गए दोनों डेटासेट आपके Adaption Labs खाते में सफलतापूर्वक उत्पन्न हो चुके हैं। किसी भी एक पर क्लिक करके तुरंत लोड करें:'

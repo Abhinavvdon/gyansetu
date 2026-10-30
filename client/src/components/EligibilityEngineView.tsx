@@ -89,11 +89,11 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
               {lang === 'hi' ? 'क्रॉस-अपॉर्चुनिटी पात्रता इंजन' : 'Cross-Opportunity Eligibility Engine'}
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             {lang === 'hi'
               ? `${profile.fullName} के लिए AI पात्रता रिपोर्ट`
               : `AI Eligibility Report for ${profile.fullName}`}
-          </h2>
+          </h1>
           <p className="text-sm text-teal-100 mt-2 leading-relaxed">
             {lang === 'hi'
               ? 'एक ही प्रोफ़ाइल से छात्रवृत्ति, उच्च शिक्षा और सरकारी परीक्षाओं की पात्रता का पारदर्शी विश्लेषण, कारण और आधिकारिक लिंक सहित।'
@@ -175,9 +175,9 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-slate-900 text-base mt-1.5">
+                    <h2 className="font-bold text-slate-900 text-base mt-1.5">
                       {report.opportunityTitle}
-                    </h3>
+                    </h2>
 
                     <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1">
                       <span className="flex items-center gap-1">
@@ -220,10 +220,10 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                   {/* Why you qualify */}
                   {report.reasonsWhyQualified.length > 0 && (
                     <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-200/80">
-                      <h4 className="font-bold text-emerald-900 flex items-center gap-1.5 mb-2 text-xs">
+                      <h3 className="font-bold text-emerald-900 flex items-center gap-1.5 mb-2 text-xs">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                         <span>{lang === 'hi' ? 'आप क्यों पात्र हैं (Why You Qualify):' : 'Why You Qualify:'}</span>
-                      </h4>
+                      </h3>
                       <ul className="space-y-1.5 text-slate-700 pl-5 list-disc">
                         {report.reasonsWhyQualified.map((reason, idx) => (
                           <li key={idx} className="leading-relaxed">{reason}</li>
@@ -235,10 +235,10 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                   {/* Missing Criteria or Next Actions */}
                   {report.missingCriteria.length > 0 && (
                     <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80">
-                      <h4 className="font-bold text-amber-900 flex items-center gap-1.5 mb-2 text-xs">
+                      <h3 className="font-bold text-amber-900 flex items-center gap-1.5 mb-2 text-xs">
                         <AlertTriangle className="w-4 h-4 text-amber-600" />
                         <span>{lang === 'hi' ? 'अपेक्षित शर्तें अथवा छूटे हुए बिंदु (Missing / Verification Criteria):' : 'Missing Criteria / Attention Required:'}</span>
-                      </h4>
+                      </h3>
                       <ul className="space-y-1.5 text-slate-700 pl-5 list-disc">
                         {report.missingCriteria.map((item, idx) => (
                           <li key={idx} className="leading-relaxed">{item}</li>
@@ -250,10 +250,10 @@ export const EligibilityEngineView: React.FC<EligibilityEngineViewProps> = ({
                   {/* Relaxations Applied */}
                   {report.appliedRelaxations.length > 0 && (
                     <div className="p-3.5 rounded-xl bg-purple-50/60 border border-purple-200/80">
-                      <h4 className="font-bold text-purple-900 flex items-center gap-1.5 mb-2 text-xs">
+                      <h3 className="font-bold text-purple-900 flex items-center gap-1.5 mb-2 text-xs">
                         <Sparkles className="w-4 h-4 text-purple-600" />
                         <span>{lang === 'hi' ? 'लागू विशेष छूटें (Relaxations Applied):' : 'Social / Category Relaxations Applied:'}</span>
-                      </h4>
+                      </h3>
                       <ul className="space-y-1 text-slate-700 pl-5 list-disc">
                         {report.appliedRelaxations.map((rel, idx) => (
                           <li key={idx} className="leading-relaxed">{rel}</li>

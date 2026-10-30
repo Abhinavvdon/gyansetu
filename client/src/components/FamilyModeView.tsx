@@ -281,11 +281,11 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
               </div>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
               {lang === 'hi'
                 ? `${studentName} के करियर व छात्रवृत्ति की स्थिति`
                 : `Career & Scholarship Status for ${studentName}`}
-            </h2>
+            </h1>
 
             <p className="text-xs sm:text-sm text-amber-100 leading-relaxed max-w-2xl">
               {lang === 'hi'
@@ -437,9 +437,9 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
             </div>
 
             <div>
-              <h3 className="font-black text-slate-900 text-lg">
+              <h2 className="font-black text-slate-900 text-lg">
                 {lang === 'hi' ? 'आगामी अंतिम तारीखें' : 'Upcoming Deadlines'}
-              </h3>
+              </h2>
               <p className="text-xs text-slate-600 leading-relaxed mt-1">
                 {lang === 'hi'
                   ? `इस महीने ${digest.upcomingDeadlinesCount} परीक्षाओं व छात्रवृत्ति फॉर्म की अंतिम तिथि नजदीक है।`
@@ -516,9 +516,9 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
             </div>
 
             <div>
-              <h3 className="font-black text-slate-900 text-lg">
+              <h2 className="font-black text-slate-900 text-lg">
                 {lang === 'hi' ? 'फीस में सरकारी छूट व छात्रवृत्ति' : 'Government Waivers & Grants'}
-              </h3>
+              </h2>
               <p className="text-xs text-slate-600 leading-relaxed mt-1">
                 {lang === 'hi'
                   ? `${categoryLabel} श्रेणी व मेरिट के तहत परिवार के लिए आर्थिक लाभ:`
@@ -585,9 +585,9 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
             </div>
 
             <div>
-              <h3 className="font-black text-slate-900 text-lg">
+              <h2 className="font-black text-slate-900 text-lg">
                 {lang === 'hi' ? 'कागजात जो तुरंत बनवाने हैं' : 'Documents to Prepare Now'}
-              </h3>
+              </h2>
               <p className="text-xs text-slate-600 leading-relaxed mt-1">
                 {lang === 'hi'
                   ? 'तहसील या लोक सेवा केंद्र (CSC / जन सेवा केंद्र) से नया प्रमाण पत्र बनवाएं:'
@@ -646,14 +646,14 @@ export const FamilyModeView: React.FC<FamilyModeViewProps> = ({
         }`}
       >
         <div className="flex items-center justify-between">
-          <h3 className="font-black text-slate-900 text-lg flex items-center gap-2">
+          <h2 className="font-black text-slate-900 text-lg flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-amber-500" />
             <span>
               {lang === 'hi'
                 ? 'अभिभावकों के लिए मुख्य सलाह व मार्गदर्शन'
                 : 'Parent Advisory & Guidance Report'}
             </span>
-          </h3>
+          </h2>
 
           <button
             type="button"

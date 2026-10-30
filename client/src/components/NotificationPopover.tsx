@@ -118,9 +118,9 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-extrabold tracking-tight">
+                <h2 className="text-sm font-extrabold tracking-tight">
                   {lang === 'hi' ? 'समय-सीमा अलर्ट व सूचनाएं' : 'Deadline Alerts & Notices'}
-                </h3>
+                </h2>
                 {unreadCount > 0 && (
                   <span className="text-[10px] bg-rose-700 text-white font-bold px-2 py-0.2 rounded-full shadow-xs">
                     {unreadCount} {lang === 'hi' ? 'नए' : 'New'}
@@ -256,9 +256,9 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
                   )}
                 </div>
 
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
                   {notif.title}
-                </h4>
+                </h3>
 
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                   {notif.message}

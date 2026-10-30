@@ -66,11 +66,11 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
           <Sparkles className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'व्हाट-इफ़ पात्रता प्रयोगशाला' : 'What-If Eligibility Simulation Lab'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'अगर आपके अंक या योग्यता बदलें, तो कौन-से नए अवसर खुलेंगे?'
             : 'Explore Newly Unlocked Doors: Test Changes in Marks, Category & Income'}
-        </h2>
+        </h1>
         <p className="text-sm text-emerald-100 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'स्लाइडर्स को हिलाकर देखें कि कॉलेज में थोड़ा बेहतर स्कोर, आय में बदलाव या आरक्षण प्रमाणपत्र होने पर कितनी नई सरकारी नौकरियां व छात्रवृत्तियां अनलॉक हो सकती हैं।'
@@ -83,10 +83,10 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
         {/* Left Column: Interactive Sliders (5 cols) */}
         <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+            <h2 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-emerald-600" />
               <span>{lang === 'hi' ? 'सिम्युलेशन पैरामीटर्स' : 'Simulation Controls'}</span>
-            </h3>
+            </h2>
             <button
               onClick={resetToProfile}
               className="cursor-pointer text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
@@ -236,10 +236,10 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
 
           {/* Unlocked Cards */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
               <Unlock className="w-3.5 h-3.5 text-emerald-600" />
               <span>{lang === 'hi' ? 'सिम्युलेशन से खुले नए अवसर (Newly Unlocked Opportunities)' : 'Opportunities Unlocked with Current Sliders'}</span>
-            </h4>
+            </h2>
 
             {simulationResult?.unlockedOpportunities.map((item) => (
               <div
@@ -252,9 +252,9 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
                 </div>
 
                 <div className="pr-16">
-                  <h4 className="font-extrabold text-slate-900 text-base">
+                  <h3 className="font-extrabold text-slate-900 text-base">
                     {item.title}
-                  </h4>
+                  </h3>
                   <div className="text-xs text-emerald-800 font-semibold mt-1">
                     {item.benefits}
                   </div>
@@ -270,10 +270,10 @@ export const WhatIfSimulatorView: React.FC<WhatIfSimulatorViewProps> = ({ profil
           {/* AI Strategic Insights */}
           {simulationResult && simulationResult.strategicInsights.length > 0 && (
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200 p-5 space-y-2">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
+              <h2 className="font-bold text-xs uppercase tracking-wider text-indigo-950 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
                 <span>{lang === 'hi' ? 'एआई रणनीतिक सुझाव' : 'Strategic Action Plan'}</span>
-              </h4>
+              </h2>
               <ul className="space-y-1.5 text-xs text-slate-700 pl-4 list-disc">
                 {simulationResult.strategicInsights.map((insight, idx) => (
                   <li key={idx} className="leading-relaxed">{insight}</li>

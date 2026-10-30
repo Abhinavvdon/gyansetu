@@ -332,18 +332,18 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
       // Heading level 3
       if (paragraph.startsWith('### ')) {
         return (
-          <h4 key={idx} className="font-extrabold text-slate-900 text-sm mt-2.5 mb-1.5 flex items-center gap-1.5">
+          <h3 key={idx} className="font-extrabold text-slate-900 text-sm mt-2.5 mb-1.5 flex items-center gap-1.5">
             <span className="w-1.5 h-4 bg-[#5034df] rounded-full inline-block"></span>
             {paragraph.replace('### ', '')}
-          </h4>
+          </h3>
         );
       }
       // Heading level 4
       if (paragraph.startsWith('#### ')) {
         return (
-          <h5 key={idx} className="font-bold text-[#1c1257] text-xs mt-2 mb-1 bg-indigo-50/90 px-2.5 py-1 rounded-lg border border-indigo-100">
+          <h4 key={idx} className="font-bold text-[#1c1257] text-xs mt-2 mb-1 bg-indigo-50/90 px-2.5 py-1 rounded-lg border border-indigo-100">
             {paragraph.replace('#### ', '')}
-          </h5>
+          </h4>
         );
       }
       // Blockquote / Alert
@@ -428,9 +428,9 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <h3 className="text-sm font-extrabold tracking-tight">
+                  <h2 className="text-sm font-extrabold tracking-tight">
                     {lang === 'hi' ? 'ज्ञानसेतु टाइमटेबल AI' : 'GyanSetu Study AI'}
-                  </h3>
+                  </h2>
                   
                   {/* Active AI / Mentor Status Badge */}
                   {geminiApiKey === 'OFFLINE_MODE' ? (
@@ -549,9 +549,9 @@ export const StudyChatbot: React.FC<StudyChatbotProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <Key className="w-4 h-4 text-amber-400" />
-                  <h4 className="text-xs font-bold text-white">
+                  <h3 className="text-xs font-bold text-white">
                     {lang === 'hi' ? 'AI मेंटर इंजन सेटिंग्स' : 'AI Mentor Engine Settings'}
-                  </h4>
+                  </h3>
                 </div>
                 <button
                   type="button"

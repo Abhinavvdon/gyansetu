@@ -173,9 +173,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 {formatStudentName(formData.fullName, lang)}
-              </h2>
+              </h1>
               <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-[#ece8ff] dark:bg-[#5034df]/20 text-[#5034df] dark:text-[#c4b5fd]">
                 {formData.category}
               </span>
@@ -236,10 +236,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         
         {/* 1. PERSONAL INFORMATION */}
         <div>
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
             <UserIcon className="w-4 h-4" />
             <span>{lang === 'hi' ? '1. व्यक्तिगत विवरण' : '1. Personal Information'}</span>
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -289,10 +289,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {/* 2. ACADEMIC QUALIFICATIONS & MARKS (REVAMPED) */}
         <div className="pt-5 border-t border-slate-100 dark:border-slate-800 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
+            <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
               <GraduationCap className="w-4.5 h-4.5" />
               <span>{lang === 'hi' ? '2. शैक्षणिक योग्यता व प्राप्तांक' : '2. Academic Qualifications & Marks'}</span>
-            </h3>
+            </h2>
             <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
               Hierarchical qualifications & ongoing pursuit
             </span>
@@ -717,10 +717,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
         {/* 3. SOCIAL CATEGORY & FAMILY INCOME */}
         <div className="pt-5 border-t border-slate-100 dark:border-slate-800">
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-[#5034df] dark:text-[#a594fd] flex items-center gap-2">
             <Landmark className="w-4 h-4" />
             <span>{lang === 'hi' ? '3. सामाजिक श्रेणी व पारिवारिक आय' : '3. Social Category & Family Income'}</span>
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">

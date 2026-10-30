@@ -50,9 +50,9 @@ export const WeeklyDigestModal: React.FC<WeeklyDigestModalProps> = ({
               <Share2 className="w-5 h-5 text-amber-300" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base">
+              <h2 className="font-extrabold text-base">
                 {lang === 'hi' ? 'साप्ताहिक एक्शन डाइजेस्ट' : 'Weekly Action Digest'}
-              </h3>
+              </h2>
               <p className="text-xs text-emerald-200">
                 {digest.weekLabel} • {digest.studentName}
               </p>

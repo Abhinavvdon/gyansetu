@@ -35,11 +35,11 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
           <FileCheck2 className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'दस्तावेज़ तत्परता संसूचक' : 'Document Readiness & Paperwork Lead-Time Tracker'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'कागजात की देरी से न छूटे कोई अवसर: आवश्यक प्रमाणपत्र चेकलिस्ट'
             : 'Never Miss a Deadline Due to Paperwork: Readiness Tracker'}
-        </h2>
+        </h1>
         <p className="text-sm text-amber-100 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'कई विद्यार्थी पात्रता के कारण नहीं, बल्कि आय या जाति प्रमाणपत्र बनने में लगने वाले 14-21 दिनों की देरी से आवेदन से वंचित रह जाते हैं। यहां ट्रैक करें कि कौन-सा दस्तावेज़ तुरंत बनवाना आवश्यक है।'
@@ -107,9 +107,9 @@ export const DocumentReadinessView: React.FC<DocumentReadinessViewProps> = ({
                     </span>
                   </div>
 
-                  <h3 className="font-extrabold text-slate-900 text-base">
+                  <h2 className="font-extrabold text-slate-900 text-base">
                     {doc.name}
-                  </h3>
+                  </h2>
 
                   <div className="text-xs text-slate-600 flex flex-wrap items-center gap-3">
                     <span className="flex items-center gap-1">

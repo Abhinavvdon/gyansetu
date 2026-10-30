@@ -32,11 +32,11 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
           <IndianRupee className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'फीस बजट व परीक्षा टकराव संसूचक' : 'Application Cost Planner & Exam Clash Radar'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'फीस में छूट की बचत और परीक्षा तिथियों का टकराव रोकें'
             : 'Track Fee Waivers, Savings & Avoid Exam Travel Clashes'}
-        </h2>
+        </h1>
         <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'आपकी श्रेणी (SC/ST/OBC/EWS/महिला) के आधार पर मिलने वाली १००% फीस छूट का सटीक हिसाब और एक ही तारीख या आसपास होने वाली परीक्षाओं की पूर्व चेतावनी।'
@@ -82,10 +82,10 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
       {/* Exam Clash Radar */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+          <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-amber-500" />
             <span>{lang === 'hi' ? 'परीक्षा तिथि टकराव संसूचक (Exam Clash Radar)' : 'Exam Clash & Date Collision Detector'}</span>
-          </h3>
+          </h2>
           <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">
             {clashes.length} Conflicts Detected
           </span>
@@ -110,9 +110,9 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
                     }`}>
                       {c.daysApart === 0 ? 'Same Day Clash' : `${c.daysApart} Days Apart`}
                     </span>
-                    <h4 className="font-bold text-slate-900 text-sm">
+                    <h3 className="font-bold text-slate-900 text-sm">
                       {c.exam1Title} ⚡ {c.exam2Title}
-                    </h4>
+                    </h3>
                   </div>
 
                   <div className="text-xs font-mono font-semibold text-slate-600">
@@ -131,10 +131,10 @@ export const CostAndClashView: React.FC<CostAndClashViewProps> = ({
 
       {/* Itemized Fee Breakdown Table */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+        <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
           <IndianRupee className="w-5 h-5 text-emerald-600" />
           <span>{lang === 'hi' ? 'आवेदन शुल्क विवरण (Itemized Fee Breakdown)' : 'Itemized Form Fee & Concession Breakdown'}</span>
-        </h3>
+        </h2>
 
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">

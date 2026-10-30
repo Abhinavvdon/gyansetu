@@ -58,11 +58,11 @@ export const NotificationTrackerView: React.FC<NotificationTrackerViewProps> = (
           <Bell className="w-3.5 h-3.5" />
           <span>{lang === 'hi' ? 'अधिसूचना परिवर्तन संसूचक (Change Tracker)' : 'Live Notification Change Tracker'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'सरकारी शुद्धिपत्र, बढ़ाई गई तिथियां व पद वृद्धि की ताज़ा सूचना'
             : 'Track Live Notification Amendments, Extensions & Corrigendums'}
-        </h2>
+        </h1>
         <p className="text-sm text-blue-200 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'सरकारी आयोग अक्सर सर्वर लोड या नियमों के कारण आवेदन की अंतिम तिथि बढ़ाते हैं या रिक्त पदों की संख्या जोड़ते हैं। यहां आधिकारिक राजपत्र से सत्यापित बदलाव देखें।'
@@ -101,9 +101,9 @@ export const NotificationTrackerView: React.FC<NotificationTrackerViewProps> = (
 
               {/* Title & Summary */}
               <div>
-                <h3 className="font-extrabold text-slate-900 text-lg leading-snug">
+                <h2 className="font-extrabold text-slate-900 text-lg leading-snug">
                   {item.headline}
-                </h3>
+                </h2>
                 <div className="text-xs font-semibold text-indigo-600 mt-0.5">
                   Target: {item.opportunityTitle}
                 </div>

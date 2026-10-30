@@ -523,9 +523,9 @@ export function App() {
                     <Award className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'छात्रवृत्तियां व वित्तीय सहायता' : 'Scholarships & Financial Aid'}
-                    </h2>
+                    </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       {scholarshipOpps.length} {lang === 'hi' ? 'सत्यापित छात्रवृत्तियां उपलब्ध' : 'Verified Central & State Scholarships'}
                     </p>
@@ -608,9 +608,9 @@ export function App() {
                     <Landmark className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'सरकारी योजनाएं व भर्ती परीक्षाएं' : 'Government Schemes & Exams'}
-                    </h2>
+                    </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       SSC CGL, IBPS PO, UPSC Civil Services &amp; State PSCs
                     </p>
@@ -695,9 +695,9 @@ export function App() {
                     <GraduationCap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    <h1 className="text-lg font-black text-slate-900 tracking-tight">
                       {lang === 'hi' ? 'उच्च शिक्षा एवं राष्ट्रीय प्रवेश परीक्षाएं' : 'Higher Studies & National Entrances'}
-                    </h2>
+                    </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                       GATE 2027 (IITs), CAT 2027 (IIMs), NTA CUET-PG (Central Universities)
                     </p>

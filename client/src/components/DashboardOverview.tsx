@@ -141,9 +141,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       <div className="space-y-3.5">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'आपके अवसरों की रूपरेखा' : 'Your opportunity overview'}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi'
                 ? 'आपकी योग्यता और प्रोफ़ाइल के आधार पर एक समग्र दृष्टिकोण।'
@@ -263,9 +263,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* Left Column: Recommended for you (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'आपके लिए अनुशंसित' : 'Recommended for you'}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'पात्रता और समय-सीमा के अनुसार चुनिंदा अवसर' : 'Sample opportunities to explore based on your profile'}
             </p>
@@ -277,9 +277,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-[#5034df] dark:text-[#a594fd] flex items-center justify-center mx-auto mb-3 border border-indigo-100 dark:border-indigo-900/50">
                   <Search className="w-6 h-6" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1">
+                <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-1">
                   {lang === 'hi' ? 'कोई मेल खाने वाला अवसर नहीं मिला' : 'No matching opportunities found'}
-                </h4>
+                </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-4 leading-relaxed font-medium">
                   {searchQuery
                     ? (lang === 'hi'
@@ -351,9 +351,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition line-clamp-2 leading-snug">
+                        <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#5034df] dark:group-hover:text-[#a594fd] transition line-clamp-2 leading-snug">
                           {opp.title}
-                        </h4>
+                        </h3>
                         <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-1 line-clamp-1">
                           {opp.organization}
                         </p>
@@ -408,9 +408,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* Right Column: Quick actions (4 cols) shifted downwards with matching outer header */}
         <div className="lg:col-span-4 space-y-4">
           <div>
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               {lang === 'hi' ? 'त्वरित कार्य' : 'Quick actions'}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {lang === 'hi' ? 'शुरुआत करने के लिए शॉर्टकट' : 'Shortcuts to get started fast'}
             </p>

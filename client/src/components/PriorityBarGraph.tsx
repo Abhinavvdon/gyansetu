@@ -174,9 +174,9 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
                   <span className="text-[10px] font-extrabold text-slate-600 dark:text-slate-400">
                     0{stepNumber}.
                   </span>
-                  <h4 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+                  <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                     {lang === 'hi' ? titleHi : title}
-                  </h4>
+                  </h3>
                 </div>
                 <div className="text-[10px] text-slate-600 dark:text-slate-400 font-medium mt-0.5 flex items-center gap-1">
                   <span>{rankedList.length} Top Opportunities</span>
@@ -341,12 +341,12 @@ export const PriorityBarGraph: React.FC<PriorityBarGraphProps> = ({
       {/* Top Section Title & Legend */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
             <span>{lang === 'hi' ? 'प्राथमिकता बार ग्राफ़ (श्रेणी अनुसार)' : 'Category Priority Bar Graphs'}</span>
             <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
               {lang === 'hi' ? 'उच्च ➔ निम्न क्रम' : 'Sorted High ➔ Low'}
             </span>
-          </h3>
+          </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
             {lang === 'hi'
               ? 'छात्रवृत्ति, सरकारी योजनाएं व उच्च शिक्षा के अवसर प्राथमिकता के अनुसार घटते क्रम में'

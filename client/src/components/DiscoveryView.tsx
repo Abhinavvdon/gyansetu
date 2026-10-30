@@ -88,11 +88,11 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
                 : 'Official Verified Opportunities & Direct Portals'}
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             {lang === 'hi'
               ? 'खोजें छात्रवृत्तियां, सरकारी नौकरियां व उच्च शिक्षा'
               : 'Discover Scholarships, Higher Studies & Govt Exams'}
-          </h2>
+          </h1>
           <p className="text-sm text-indigo-200 mt-2">
             {lang === 'hi'
               ? 'आधिकारिक स्रोतों से सत्यापित तिथियां, फॉर्म फीस में छूट, और आवेदन की अंतिम तारीख।'
@@ -168,9 +168,9 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-[#5034df] dark:text-[#a594fd] flex items-center justify-center mx-auto mb-3.5 border border-indigo-100 dark:border-indigo-900/50">
               <Search className="w-7 h-7" />
             </div>
-            <h4 className="text-base font-bold text-slate-800 dark:text-white mb-1.5">
+            <h2 className="text-base font-bold text-slate-800 dark:text-white mb-1.5">
               {lang === 'hi' ? 'कोई अवसर नहीं मिला' : 'No matching opportunities found'}
-            </h4>
+            </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-5 leading-relaxed font-medium">
               {searchQuery
                 ? (lang === 'hi'
@@ -225,9 +225,9 @@ export const DiscoveryView: React.FC<DiscoveryViewProps> = ({
                 </div>
 
                 {/* Title & Organization */}
-                <h3 className="font-bold text-slate-900 text-base leading-snug group-hover:text-indigo-600 transition-colors">
+                <h2 className="font-bold text-slate-900 text-base leading-snug group-hover:text-indigo-600 transition-colors">
                   {opp.title}
-                </h3>
+                </h2>
                 <p className="text-xs font-semibold text-slate-500 mt-1 flex items-center gap-1">
                   <span>🏛️</span>
                   <span className="truncate">{opp.organization}</span>

@@ -44,9 +44,9 @@ export const SmartPlannerView: React.FC<SmartPlannerViewProps> = ({
             <Sparkles className="w-3.5 h-3.5" />
             <span>{lang === 'hi' ? 'स्मार्ट अवसर योजनाकार' : 'Smart Opportunity Planner & Priority Matrix'}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             {lang === 'hi' ? 'डेडलाइन, पात्रता व तैयारी समय का सही तालमेल' : 'Balance Deadlines, Eligibility & Preparation Effort'}
-          </h2>
+          </h1>
           <p className="text-sm text-slate-300 mt-2 leading-relaxed">
             {lang === 'hi'
               ? 'एल्गोरिदम आपकी पात्रता, बची हुई समय-सीमा और तैयारी के महीनों का विश्लेषण करके अवसरों को शीर्ष प्राथमिकताओं में क्रमबद्ध करता है।'
@@ -156,9 +156,9 @@ export const SmartPlannerView: React.FC<SmartPlannerViewProps> = ({
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-slate-900 text-base mt-1.5">
+                  <h2 className="font-bold text-slate-900 text-base mt-1.5">
                     {item.title}
-                  </h3>
+                  </h2>
 
                   <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-1.5">
                     <span className="flex items-center gap-1 font-medium text-slate-700">

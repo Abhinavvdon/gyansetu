@@ -29,11 +29,11 @@ export const GapAnalysisView: React.FC<GapAnalysisViewProps> = ({
           <Target className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'गैप विश्लेषण संसूचक (Missed-It-By-How-Much)' : 'Backward Gap Analysis & Closest Alternatives'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'कितने अंतर से छूटे? सटीक गैप और तुरंत उपलब्ध सर्वोत्तम विकल्प'
             : 'Target Backward Analysis: Discover the Exact Gap & Immediate Alternatives'}
-        </h2>
+        </h1>
         <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'जिन परीक्षाओं या छात्रवृत्तियों में आप थोड़े अंतर से चूक रहे हैं, वहां सटीक अंतर देखें (जैसे "२.५% अंक कम हैं" या "उम्र ४ महीने अधिक है") और तुरंत उन समान विकल्पों पर जाएं जिनके लिए आप आज ही पूरी तरह पात्र हैं।'
@@ -54,9 +54,9 @@ export const GapAnalysisView: React.FC<GapAnalysisViewProps> = ({
                 <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800">
                   Cutoff / Requirement Gap
                 </span>
-                <h3 className="font-extrabold text-slate-900 text-lg mt-1">
+                <h2 className="font-extrabold text-slate-900 text-lg mt-1">
                   {item.opportunityTitle}
-                </h3>
+                </h2>
               </div>
             </div>
 

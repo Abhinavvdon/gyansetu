@@ -54,11 +54,11 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
           <Zap className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'तैयारी ओवरलैप संसूचक (Syllabus Overlap Detector)' : 'Preparation Overlap & Syllabus Synergy Engine'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'एक तैयारी से दें अनेक परीक्षाएं: कॉमन सिलेबस का पता लगाएं'
             : 'Prepare Once, Clear Multiple Exams: Master Common Syllabi'}
-        </h2>
+        </h1>
         <p className="text-sm text-purple-200 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'अलग-अलग सरकारी परीक्षाओं के सामान्य विषयों की पहचान करें ताकि कम समय में ज्यादा अवसरों को क्रैक किया जा सके।'
@@ -104,9 +104,9 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
             <div className="text-xs font-bold uppercase tracking-wider text-slate-600">
               {lang === 'hi' ? 'कुल सिलेबस ओवरलैप' : 'Syllabus Overlap'}
             </div>
-            <h3 className="text-base font-extrabold text-slate-900 mt-0.5">
+            <h2 className="text-base font-extrabold text-slate-900 mt-0.5">
               {lang === 'hi' ? 'उच्च तालमेल (High Synergy)' : 'High Syllabus Synergy'}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-600 mt-1 font-medium">
               {selectedExamIds.length} {lang === 'hi' ? 'परीक्षाओं के बीच साझा सामग्री' : 'Target examinations combined'}
             </p>
@@ -121,9 +121,9 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
             <div className="text-xs font-bold uppercase tracking-wider text-slate-600">
               {lang === 'hi' ? 'बचाए गए अध्ययन घंटे' : 'Study Time Saved'}
             </div>
-            <h3 className="text-2xl font-black text-emerald-700 mt-0.5">
+            <h2 className="text-2xl font-black text-emerald-700 mt-0.5">
               ~{overlapData.estimatedStudyHoursSaved} hrs
-            </h3>
+            </h2>
             <p className="text-xs text-slate-500 mt-1">
               {lang === 'hi' ? 'अनावश्यक दोहराव से बचत' : 'Avoided redundant foundation prep'}
             </p>
@@ -143,10 +143,10 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
 
       {/* Common Subjects Breakdown */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+        <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
           <Layers className="w-5 h-5 text-indigo-600" />
           <span>{lang === 'hi' ? 'साझा विषय एवं गहराई विश्लेषण (Common Subjects)' : 'Shared Subjects & Overlap Depth'}</span>
-        </h3>
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {overlapData.subjectBreakdown.map((item) => (
@@ -176,17 +176,17 @@ export const PreparationOverlapView: React.FC<PreparationOverlapViewProps> = ({
 
       {/* Unique Subjects Delta Matrix */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+        <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-amber-600" />
           <span>{lang === 'hi' ? 'प्रत्येक परीक्षा के विशिष्ट विषय (Unique Delta to Prepare)' : 'Unique Delta Topics to Cover Separately'}</span>
-        </h3>
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(overlapData.uniqueSubjectsPerExam).map(([examName, uniques]) => (
             <div key={examName} className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/40">
-              <h4 className="font-bold text-xs text-amber-950 mb-2 truncate">
+              <h3 className="font-bold text-xs text-amber-950 mb-2 truncate">
                 {examName}
-              </h4>
+              </h3>
               <ul className="space-y-1.5 text-xs text-slate-700 pl-4 list-disc">
                 {uniques.map((u, i) => (
                   <li key={i}>{u}</li>

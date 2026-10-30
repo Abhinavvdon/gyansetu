@@ -30,11 +30,11 @@ export const EligibilityTimelineView: React.FC<EligibilityTimelineViewProps> = (
           <Milestone className="w-3.5 h-3.5 text-amber-300" />
           <span>{lang === 'hi' ? 'भविष्य पात्रता समयरेखा (Eligibility Timeline)' : '1 to 3-Year Future Eligibility Horizon'}</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
           {lang === 'hi'
             ? 'केवल आज नहीं, १ से ३ वर्ष आगे की योजना बनाएं'
             : 'Plan 1 to 3 Years Ahead: Unlock Opportunities as You Progress'}
-        </h2>
+        </h1>
         <p className="text-sm text-indigo-200 mt-2 max-w-2xl leading-relaxed">
           {lang === 'hi'
             ? 'जानें कि ग्रेजुएशन पूरा होने पर, उम्र २१ या २३ वर्ष होने पर कौन-कौन से बड़े अवसर खुलेंगे ताकि आप आज से ही उनकी लक्षित तैयारी कर सकें।'
@@ -59,9 +59,9 @@ export const EligibilityTimelineView: React.FC<EligibilityTimelineViewProps> = (
                     <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-900">
                       {node.timeframe}
                     </span>
-                    <h3 className="font-extrabold text-slate-900 text-lg mt-1">
+                    <h2 className="font-extrabold text-slate-900 text-lg mt-1">
                       {node.milestoneTitle}
-                    </h3>
+                    </h2>
                   </div>
 
                   <span className="text-xs text-slate-500 font-medium bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 self-start sm:self-center">
@@ -71,10 +71,10 @@ export const EligibilityTimelineView: React.FC<EligibilityTimelineViewProps> = (
 
                 {/* Unlocked Opportunities Grid */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-1.5">
                     <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
                     <span>{lang === 'hi' ? 'इस चरण में खुलने वाले मुख्य अवसर:' : 'Opportunities Unlocking in this Window:'}</span>
-                  </h4>
+                  </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {node.unlockingOpportunities.map((op) => (
